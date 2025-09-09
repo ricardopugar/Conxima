@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { servicios } from "../../../data/servicios";
+import { servicios } from "@/data/servicios";
 
 type Props = { params: { slug: string } };
 
@@ -8,68 +9,82 @@ export function generateStaticParams() {
   return servicios.map((s) => ({ slug: s.slug }));
 }
 
-export async function generateMetadata({ params }: Props) {
-  const s = servicios.find((x) => x.slug === params.slug);
-  if (!s) return {};
-  return {
-    title: `${s.title} — CONXIMA`,
-    description: s.resumen,
-    alternates: { canonical: `/servicios/${s.slug}` },
-  };
+export function generateMetadata({ params }: Props): Metadata {
+  const svc = servicios.find((s) => s.slug === params.slug);
+  const title = svc ? `${svc.title} | CONXIMA` : "Servicio | CONXIMA";
+  const description = svc?.resumen ?? "Detalle del servicio de CONXIMA";
+  return { title, description };
 }
 
 export default function ServicioPage({ params }: Props) {
-  const s = servicios.find((x) => x.slug === params.slug);
-  if (!s) notFound();
+  const svc = servicios.find((s) => s.slug === params.slug);
+
+  if (!svc) {
+    return (
+      <main className="mx-auto max-w-5xl px-4 py-20">
+        <h1 className="text-2xl font-semibold">Servicio no encontrado</h1>
+        <p className="mt-3 text-slate-500">El servicio solicitado no existe.</p>
+        <Link href="/#servicios" className="mt-6 inline-block underline">
+          Volver a servicios
+        </Link>
+      </main>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
-      <header className="sticky top-0 z-40 bg-transparent">
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-sm hover:underline">
-            ← Volver al inicio
-          </Link>
-          <Link href="/#contacto" className="btn-outline-tech text-xs rounded-full px-3 py-1.5">
-            Cotiza ahora
-          </Link>
+    <main className="mx-auto max-w-6xl px-4 py-16">
+      <Link href="/#servicios" className="text-sm text-slate-400 hover:underline">
+        ← Volver
+      </Link>
+
+      <header className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold">{svc.title}</h1>
+          <p className="mt-2 text-slate-500 max-w-2xl">{svc.resumen}</p>
         </div>
+        <Link href="/#contacto" className="btn-tech rounded-xl px-4 py-2">
+          Solicitar cotización
+        </Link>
       </header>
 
-      <section className="relative overflow-hidden">
-        {s.cover ? (
-          <img src={s.cover} alt={s.title} className="h-64 md:h-80 w-full object-cover opacity-80" />
-        ) : (
-          <div className="h-56 md:h-72 bg-gradient-to-r from-primary/30 to-primary/10" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 py-6">
-          <h1 className="font-heading text-3xl md:text-4xl font-bold">{s.title}</h1>
-          <p className="mt-2 max-w-3xl text-slate-300">{s.resumen}</p>
+      {svc.imagen && (
+        <div className="mt-8 overflow-hidden rounded-2xl ring-1 ring-black/10">
+          <Image
+            src={svc.imagen}
+            alt={svc.title}
+            width={1600}
+            height={900}
+            className="h-auto w-full object-cover"
+            priority
+          />
         </div>
+      )}
+
+      {/* Aquí puedes ampliar el contenido específico de cada servicio */}
+      <section className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <article className="lg:col-span-2 rounded-2xl bg-[var(--color-card)] p-6 ring-1 ring-white/10">
+          <h2 className="text-xl font-semibold">¿Qué incluye?</h2>
+          <ul className="mt-4 list-disc pl-5 space-y-2 text-slate-300">
+            <li>Levantamiento técnico y diseño de la solución.</li>
+            <li>Instalación, configuración y pruebas de funcionamiento.</li>
+            <li>Documentación y capacitación al usuario.</li>
+            <li>Garantía y soporte postventa.</li>
+          </ul>
+        </article>
+
+        <aside className="rounded-2xl bg-[var(--color-card)] p-6 ring-1 ring-white/10">
+          <h3 className="font-semibold">Contacto</h3>
+          <p className="mt-2 text-slate-300">
+            ¿Listo para cotizar {svc.title}? Escríbenos.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            <a className="btn-tech rounded-xl px-4 py-2 text-center" href="/#contacto">Formulario</a>
+            <a className="btn-outline-tech rounded-xl px-4 py-2 text-center" href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotización%20-%20Conxima">
+              Email
+            </a>
+          </div>
+        </aside>
       </section>
-
-      <main className="mx-auto max-w-7xl px-4 py-12">
-        <h2 className="font-heading text-2xl md:text-3xl font-semibold">¿Qué incluye?</h2>
-        <ul className="mt-4 grid gap-3">
-          {s.bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <span className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-black text-xs">
-                ✓
-              </span>
-              <span className="text-slate-200">{b}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/#contacto" className="btn-tech">
-            Solicitar asesoría
-          </Link>
-          <Link href="/#servicios" className="btn-outline-tech">
-            Ver otros servicios
-          </Link>
-        </div>
-      </main>
-    </div>
+    </main>
   );
 }

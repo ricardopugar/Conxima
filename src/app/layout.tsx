@@ -1,23 +1,11 @@
 import type { Metadata } from "next";
-import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
 import RouteTransition from "./RouteTransition";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-});
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "CONXIMA S.A.S — Seguridad y Conectividad",
-  description:
-    "Soluciones integrales en telecomunicaciones y seguridad electrónica. Diseño, instalación y mantenimiento con profesionales certificados.",
+  title: "CONXIMA S.A.S",
+  description: "Tecnología al servicio de tu Seguridad y Conectividad",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,8 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body className={`${montserrat.variable} ${inter.variable} antialiased`}>
-        <RouteTransition>{children}</RouteTransition>
+      <body className="antialiased">
+        <Suspense>
+          <RouteTransition>{children}</RouteTransition>
+        </Suspense>
       </body>
     </html>
   );

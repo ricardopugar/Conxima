@@ -2,42 +2,24 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { servicios } from "@/data/servicios";
+
+// 👉 Mover la constante fuera del componente para evitar el warning del Hook
+const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"];
 
 export default function ConximaLanding() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
-  // Refs para reveal por sección
+  // ——— Reveal por sección con IntersectionObserver ———
   const revealRefs = useRef<Array<HTMLElement | null>>([]);
   const setRevealRef = (idx: number) => (el: HTMLElement | null) => {
     revealRefs.current[idx] = el;
   };
-
-  // Preferencias de tema (persistentes)
-  useEffect(() => {
-    try {
-      const saved =
-        typeof window !== "undefined"
-          ? (window.localStorage.getItem("conxima_theme") as "light" | "dark" | null)
-          : null;
-      if (saved) setTheme(saved);
-      else if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
-        setTheme("light");
-      }
-    } catch {}
-  }, []);
-  useEffect(() => {
-    try {
-      document.documentElement.setAttribute("data-theme", theme);
-      if (typeof window !== "undefined") window.localStorage.setItem("conxima_theme", theme);
-    } catch {}
-  }, [theme]);
-
-  // IntersectionObserver: reveal por sección al hacer scroll
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-
     const nodes = revealRefs.current.filter(Boolean) as HTMLElement[];
     if (nodes.length === 0) return;
 
@@ -62,16 +44,34 @@ export default function ConximaLanding() {
     return () => io.disconnect();
   }, []);
 
-  // Hero video (rota por refresh)
-  const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"];
+  // ——— Tema persistente ———
+  useEffect(() => {
+    try {
+      const saved = (typeof window !== "undefined"
+        ? (window.localStorage.getItem("conxima_theme") as "light" | "dark" | null)
+        : null);
+      if (saved) setTheme(saved);
+      else if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+        setTheme("light");
+      }
+    } catch {}
+  }, []);
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute("data-theme", theme);
+      if (typeof window !== "undefined") window.localStorage.setItem("conxima_theme", theme);
+    } catch {}
+  }, [theme]);
+
+  // ——— Hero video rotatorio ———
   const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
   useEffect(() => {
     try {
       const key = "conxima_hero_idx";
-      const last = Number(window.localStorage.getItem(key));
+      const last = Number(localStorage.getItem(key));
       const next = Number.isInteger(last) ? (last + 1) % HERO_VIDEOS.length : 0;
       setSelectedVideo(HERO_VIDEOS[next]);
-      window.localStorage.setItem(key, String(next));
+      localStorage.setItem(key, String(next));
     } catch {
       setSelectedVideo(HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]);
     }
@@ -79,14 +79,18 @@ export default function ConximaLanding() {
 
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
-      {/* Tokens/utilidades locales (mueve a globals.css si prefieres) */}
+      {/* —— Tokens / utilidades (puedes mover a globals.css si prefieres) —— */}
       <style>{`
         :root {
           --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
           --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 
-          --brand-primary: #007CC6; --brand-primary-600: #0A6CA9; --brand-primary-900: #003554;
-          --brand-accent: #008DC5; --brand-gray-900: #333333; --brand-gray-300: #C8CAC9;
+          --brand-primary: #007CC6;
+          --brand-primary-600: #0A6CA9;
+          --brand-primary-900: #003554;
+          --brand-accent: #008DC5;
+          --brand-gray-900: #333333;
+          --brand-gray-300: #C8CAC9;
 
           --color-primary: var(--brand-primary);
           --color-secondary: var(--brand-accent);
@@ -102,6 +106,7 @@ export default function ConximaLanding() {
           --color-bg:#ffffff; --color-card:#f6f8fb; --color-muted:#475569;
           --app-bg:#ffffff; --app-fg:#0b1220;
         }
+
         .font-heading { font-family: var(--font-heading); }
         .bg-card { background-color: var(--color-card); }
         .text-secondary { color: var(--color-secondary); }
@@ -116,7 +121,6 @@ export default function ConximaLanding() {
         .reveal-in { opacity:1!important; transform: translateY(0)!important; }
         @media (prefers-reduced-motion: reduce) { .reveal { transition: none; } }
 
-        /* Ajustes de tema claro para utilidades comunes */
         [data-theme="light"] .app .text-white, [data-theme="light"] .app .hover\\:text-white:hover { color: var(--app-fg) !important; }
         [data-theme="light"] .app .text-slate-300 { color: #475569 !important; }
         [data-theme="light"] .app .text-slate-200 { color: #334155 !important; }
@@ -125,31 +129,28 @@ export default function ConximaLanding() {
         [data-theme="light"] .app .ring-white\\/20 { --tw-ring-color: rgba(0,0,0,.12) !important; }
       `}</style>
       <style>{`
-        /* —— Estilos “tech” para inputs y botones —— */
-        .btn-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: #0b1220; background: linear-gradient(180deg, var(--color-secondary), var(--color-primary)); box-shadow: 0 8px 30px -12px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease; overflow:hidden; }
-        .btn-tech::before { content: ""; position: absolute; inset: -2px; border-radius: inherit; background: conic-gradient(from 0deg, var(--color-secondary), var(--color-primary), var(--color-secondary)); filter: blur(10px); opacity: .35; z-index: -1; animation: spin 6s linear infinite; }
-        .btn-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
-        .btn-tech:hover { transform: translateY(-1px); box-shadow: 0 12px 34px -14px var(--color-secondary); }
-        .btn-tech:active { transform: translateY(0); }
-        .btn-tech:active::after { transform: scale(1.35); opacity:.35; transition: none; }
+        .btn-tech{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.2rem;border-radius:1rem;font-weight:600;color:#0b1220;background:linear-gradient(180deg,var(--color-secondary),var(--color-primary));box-shadow:0 8px 30px -12px rgba(0,0,0,.6);transition:transform .2s ease,box-shadow .2s ease;overflow:hidden}
+        .btn-tech::before{content:"";position:absolute;inset:-2px;border-radius:inherit;background:conic-gradient(from 0deg,var(--color-secondary),var(--color-primary),var(--color-secondary));filter:blur(10px);opacity:.35;z-index:-1;animation:spin 6s linear infinite}
+        .btn-tech::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(closest-side,rgba(255,255,255,.35),transparent 60%);transform:scale(0);opacity:0;transition:transform .45s ease,opacity .6s ease}
+        .btn-tech:hover{transform:translateY(-1px);box-shadow:0 12px 34px -14px var(--color-secondary)}
+        .btn-tech:active{transform:translateY(0)}
+        .btn-tech:active::after{transform:scale(1.35);opacity:.35;transition:none}
 
-        .btn-outline-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: currentColor; background: transparent; overflow:hidden; }
-        .btn-outline-tech::before { content:""; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(90deg, var(--color-secondary), var(--color-primary)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .btn-outline-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(0,0,0,.2), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
-        .btn-outline-tech:hover { color: var(--app-fg); background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%); }
-        .btn-outline-tech:active::after { transform: scale(1.35); opacity:.25; transition: none; }
+        .btn-outline-tech{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.2rem;border-radius:1rem;font-weight:600;color:currentColor;background:transparent;overflow:hidden}
+        .btn-outline-tech::before{content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;background:linear-gradient(90deg,var(--color-secondary),var(--color-primary));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+        .btn-outline-tech::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(closest-side,rgba(0,0,0,.2),transparent 60%);transform:scale(0);opacity:0;transition:transform .45s ease,opacity .6s ease}
+        .btn-outline-tech:hover{color:var(--app-fg);background:linear-gradient(90deg,var(--color-secondary) 0%,var(--color-primary) 100%)}
+        .btn-outline-tech:active::after{transform:scale(1.35);opacity:.25;transition:none}
 
-        .input-tech { position: relative; }
-        .input-tech-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); opacity: .8; pointer-events: none; }
-        .input-tech-field { width: 100%; background: rgba(255,255,255,.06); border-radius: 1rem; padding: 1rem 1rem 1rem 2.75rem; border: 1px solid rgba(255,255,255,.08); outline: none; color: inherit; transition: box-shadow .2s ease, background .2s ease, border-color .2s ease; }
-        .input-tech-field:focus { box-shadow: 0 0 0 2px var(--color-secondary); background: rgba(255,255,255,.09); }
-        .textarea-tech { min-height: 7.5rem; }
-        .input-tech-label { position: absolute; left: 2.75rem; top: .95rem; font-size: .875rem; color: var(--color-muted); pointer-events: none; transform-origin: left center; transition: transform .2s ease, opacity .2s ease; opacity:.9; }
-        .input-tech-field:focus + .input-tech-label, .input-tech-field:not(:placeholder-shown) + .input-tech-label { transform: translateY(-1.55rem) scale(.9); opacity: .95; }
+        .input-tech{position:relative}
+        .input-tech-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);opacity:.8;pointer-events:none}
+        .input-tech-field{width:100%;background:rgba(255,255,255,.06);border-radius:1rem;padding:1rem 1rem 1rem 2.75rem;border:1px solid rgba(255,255,255,.08);outline:none;color:inherit;transition:box-shadow .2s ease,background .2s ease,border-color .2s ease}
+        .input-tech-field:focus{box-shadow:0 0 0 2px var(--color-secondary);background:rgba(255,255,255,.09)}
+        .textarea-tech{min-height:7.5rem}
+        .input-tech-label{position:absolute;left:2.75rem;top:.95rem;font-size:.875rem;color:var(--color-muted);pointer-events:none;transform-origin:left center;transition:transform .2s ease,opacity .2s ease;opacity:.9}
+        .input-tech-field:focus + .input-tech-label,.input-tech-field:not(:placeholder-shown) + .input-tech-label{transform:translateY(-1.55rem) scale(.9);opacity:.95}
 
-        [data-theme="light"] .input-tech-field { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.08); }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin{to{transform:rotate(360deg)}}
       `}</style>
 
       {/* ——— Navbar ——— */}
@@ -157,17 +158,14 @@ export default function ConximaLanding() {
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <a href="#inicio" className="group inline-flex items-center gap-3">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
-              <img
+              <Image
                 src="/images/logo-conxima.svg"
                 alt="Logo Conxima"
+                width={24}
+                height={24}
                 className="h-6 w-6"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
+                priority
               />
-              <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
-                <path d="M3 12h7l2-8 2 16 2-8h5" fill="none" stroke="currentColor" strokeWidth="2" />
-              </svg>
             </span>
             <span className="font-heading text-lg tracking-wide">CONXIMA S.A.S</span>
           </a>
@@ -254,7 +252,13 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(2)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <img src="/images/team-install.jpg" alt="Equipo técnico instalando cableado estructurado" className="h-full w-full object-cover" />
+                <Image
+                  src="/images/team-install.jpg"
+                  alt="Equipo técnico instalando cableado estructurado"
+                  width={1600}
+                  height={1066}
+                  className="h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/30 to-transparent" />
               </div>
             </div>
@@ -262,7 +266,7 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Servicios (cada card → su página) ——— */}
+      {/* ——— Servicios (cards → páginas) ——— */}
       <section id="servicios" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <header className="reveal" ref={setRevealRef(3)}>
@@ -272,84 +276,27 @@ export default function ConximaLanding() {
           </header>
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                slug: "control-de-acceso",
-                title: "Control de Acceso Biométrico",
-                desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <path d="M12 3a6 6 0 0 0-6 6v2a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z" fill="none" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M8 20a8 8 0 0 0 8 0" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ),
-              },
-              {
-                slug: "sistemas-de-alarma",
-                title: "Sistemas de Alarma",
-                desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <path d="M4 12h16l-8 8-8-8Z" fill="none" stroke="currentColor" strokeWidth="2"/>
-                    <circle cx="12" cy="10" r="3" fill="currentColor"/>
-                  </svg>
-                ),
-              },
-              {
-                slug: "cuarto-de-monitoreo",
-                title: "Cuarto de Monitoreo",
-                desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M8 20h8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ),
-              },
-              {
-                slug: "cableado-estructurado",
-                title: "Cableado Estructurado",
-                desc: "Planos, canalización, racks, certificación y documentación.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ),
-              },
-              {
-                slug: "racks-y-gabinetes",
-                title: "Racks y Gabinetes",
-                desc: "Montaje seguro, ventilación, orden y crecimiento.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M8 7h8M8 12h8M8 17h8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ),
-              },
-              {
-                slug: "servicios-en-la-nube",
-                title: "Servicios en la Nube",
-                desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",
-                icon: (
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                    <path d="M7 16a4 4 0 1 1 0-8 5 5 0 0 1 9.7 1.5A4.5 4.5 0 1 1 17 16H7Z" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ),
-              },
-            ].map((s, i) => (
-              <Link key={s.slug} href={`/servicios/${s.slug}`} className="group block" aria-label={`Abrir servicio: ${s.title}`}>
+            {servicios.map((s, i) => (
+              <Link
+                key={s.slug}
+                href={`/servicios/${s.slug}`}
+                className="group block"
+                aria-label={`Abrir servicio: ${s.title}`}
+              >
                 <article
                   ref={setRevealRef(4 + i)}
                   className="reveal rounded-2xl bg-card/80 p-6 ring-1 ring-white/10 hover:ring-white/20 hover:translate-y-[-2px] transition"
                 >
                   <div className="flex items-center gap-3">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-secondary ring-1 ring-inset ring-white/10 group-hover:bg-white/10">
-                      {s.icon}
+                      {/* Ícono genérico; puedes variarlo por slug si quieres */}
+                      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+                        <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2" />
+                      </svg>
                     </span>
                     <h3 className="font-heading text-xl font-semibold">{s.title}</h3>
                   </div>
-                  <p className="mt-3 text-slate-300">{s.desc}</p>
+                  <p className="mt-3 text-slate-300">{s.resumen}</p>
                   <span className="mt-4 inline-flex items-center gap-2 text-sm text-secondary">
                     Ver detalle
                     <svg className="h-4 w-4" viewBox="0 0 24 24"><path d="M7 12h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
@@ -386,7 +333,13 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(11)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <img src="/images/monitoring-room.jpg" alt="Centro de monitoreo y cableado ordenado" className="h-full w-full object-cover" />
+                <Image
+                  src="/images/monitoring-room.jpg"
+                  alt="Centro de monitoreo y cableado ordenado"
+                  width={1600}
+                  height={1066}
+                  className="h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                   <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Implementaciones profesionales</span>
