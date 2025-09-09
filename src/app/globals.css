@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+body { font-family: var(--font-body), system-ui, sans-serif; }
+
+/* ===== Variables de marca + tema (global) ===== */
+:root {
+  --brand-primary: #007CC6;
+  --brand-primary-600: #0A6CA9;
+  --brand-primary-900: #003554;
+  --brand-accent: #008DC5;
+  --brand-gray-900: #333333;
+  --brand-gray-300: #C8CAC9;
+
+  --color-primary: var(--brand-primary);
+  --color-secondary: var(--brand-accent);
+  --color-accent: var(--brand-primary-600);
+  --color-bg: #070a12;
+  --color-card: #0f172a;
+  --color-muted: #94a3b8;
+
+  --app-bg: var(--color-bg);
+  --app-fg: #ffffff;
+}
+
+[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-card: #f6f8fb;
+  --color-muted: #475569;
+
+  --app-bg: #ffffff;
+  --app-fg: #0b1220;
+}
+
+.font-heading { font-family: var(--font-heading), system-ui, sans-serif; }
+.font-body { font-family: var(--font-body), system-ui, sans-serif; }
+.bg-primary { background-color: var(--color-primary); }
+.bg-card { background-color: var(--color-card); }
+.text-secondary { color: var(--color-secondary); }
+.text-muted { color: var(--color-muted); }
+.ring-secondary { --tw-ring-color: var(--color-secondary); }
+.from-primary { --tw-gradient-from: var(--color-primary); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(10, 61, 98, 0)); }
+.to-bg { --tw-gradient-to: var(--color-bg); }
+html[data-scroll-behavior="smooth"] { scroll-behavior: smooth; }
+
+/* Ajustes de tema claro para clases Tailwind duras */
+[data-theme="light"] .app .text-white, [data-theme="light"] .app .hover\:text-white:hover { color: var(--app-fg) !important; }
+[data-theme="light"] .app .text-slate-300 { color: #475569 !important; }
+[data-theme="light"] .app .text-slate-200 { color: #334155 !important; }
+[data-theme="light"] .app .text-slate-400 { color: #64748b !important; }
+[data-theme="light"] .app .bg-white\/5 { background-color: rgba(0,0,0,.05) !important; }
+[data-theme="light"] .app .border-white\/10 { border-color: rgba(0,0,0,.08) !important; }
+[data-theme="light"] .app .border-white\/20 { border-color: rgba(0,0,0,.12) !important; }
+[data-theme="light"] .app .ring-white\/10 { --tw-ring-color: rgba(0,0,0,.08) !important; }
+[data-theme="light"] .app .ring-white\/20 { --tw-ring-color: rgba(0,0,0,.12) !important; }
+
+/* Accesibilidad */
+a:focus-visible, button:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 4px; }
+
+/* Animación reveal (para IntersectionObserver) */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+.reveal-in { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* Overlay del hero video */
+.hero-overlay {
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
+    linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
+}
+
+/* —— Estilos “tech” (botones/inputs) ————————— */
+.btn-tech {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem;
+  padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600;
+  color: #0b1220; background: linear-gradient(180deg, var(--color-secondary), var(--color-primary));
+  box-shadow: 0 8px 30px -12px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease; overflow:hidden;
+}
+.btn-tech::before {
+  content: ""; position: absolute; inset: -2px; border-radius: inherit;
+  background: conic-gradient(from 0deg, var(--color-secondary), var(--color-primary), var(--color-secondary));
+  filter: blur(10px); opacity: .35; z-index: -1; animation: spin 6s linear infinite;
+}
+.btn-tech::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent 60%);
+  transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease;
+}
+.btn-tech:hover { transform: translateY(-1px); box-shadow: 0 12px 34px -14px var(--color-secondary); }
+.btn-tech:active { transform: translateY(0); }
+.btn-tech:active::after { transform: scale(1.35); opacity:.35; transition: none; }
+
+.btn-outline-tech {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem;
+  padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: currentColor; background: transparent; overflow:hidden;
+}
+.btn-outline-tech::before {
+  content:""; position: absolute; inset: 0; padding: 1px; border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.btn-outline-tech::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background: radial-gradient(closest-side, rgba(0,0,0,.2), transparent 60%);
+  transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease;
+}
+.btn-outline-tech:hover { color: var(--app-fg); background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%); }
+.btn-outline-tech:active::after { transform: scale(1.35); opacity:.25; transition: none; }
+
+.input-tech { position: relative; }
+.input-tech-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); opacity: .8; pointer-events: none; }
+.input-tech-field {
+  width: 100%; background: rgba(255,255,255,.06); border-radius: 1rem; padding: 1rem 1rem 1rem 2.75rem;
+  border: 1px solid rgba(255,255,255,.08); outline: none; color: inherit; transition: box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.input-tech-field:focus { box-shadow: 0 0 0 2px var(--color-secondary); background: rgba(255,255,255,.09); }
+.textarea-tech { min-height: 7.5rem; }
+.input-tech-label {
+  position: absolute; left: 2.75rem; top: .95rem; font-size: .875rem; color: var(--color-muted);
+  pointer-events: none; transform-origin: left center; transition: transform .2s ease, opacity .2s ease; opacity:.9;
+}
+.input-tech-field:focus + .input-tech-label,
+.input-tech-field:not(:placeholder-shown) + .input-tech-label { transform: translateY(-1.55rem) scale(.9); opacity: .95; }
+
+[data-theme="light"] .input-tech-field { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.08); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
