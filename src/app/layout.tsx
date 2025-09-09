@@ -10,12 +10,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-      data-theme="dark"
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
-    >
+    <html lang="es" data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="antialiased">
         <Suspense>
           <RouteTransition>{children}</RouteTransition>
