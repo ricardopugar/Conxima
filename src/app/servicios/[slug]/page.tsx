@@ -60,7 +60,6 @@ export default function ServicioPage({ params }: Props) {
         </div>
       )}
 
-      {/* Aquí puedes ampliar el contenido específico de cada servicio */}
       <section className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <article className="lg:col-span-2 rounded-2xl bg-[var(--color-card)] p-6 ring-1 ring-white/10">
           <h2 className="text-xl font-semibold">¿Qué incluye?</h2>
@@ -78,8 +77,14 @@ export default function ServicioPage({ params }: Props) {
             ¿Listo para cotizar {svc.title}? Escríbenos.
           </p>
           <div className="mt-4 flex flex-col gap-2">
-            <a className="btn-tech rounded-xl px-4 py-2 text-center" href="/#contacto">Formulario</a>
-            <a className="btn-outline-tech rounded-xl px-4 py-2 text-center" href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotización%20-%20Conxima">
+            {/* ⬇️ Cambiado a Link para evitar el error de ESLint */}
+            <Link href="/#contacto" className="btn-tech rounded-xl px-4 py-2 text-center">
+              Formulario
+            </Link>
+            <a
+              className="btn-outline-tech rounded-xl px-4 py-2 text-center"
+              href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotización%20-%20Conxima"
+            >
               Email
             </a>
           </div>
