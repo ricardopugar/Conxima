@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "export": "next export",
+    "start": "next start",
     "lint": "eslint .",
-    "preview:pages": "npx @cloudflare/next-on-pages@1 --serve"
+    "deploy": "npm run build && npm run export && npx wrangler pages deploy ./out --project-name conxima"
   },
   "dependencies": {
     "framer-motion": "^12.23.12",
@@ -25,8 +26,5 @@
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "engines": {
-    "node": ">=18.18"
   }
 }
