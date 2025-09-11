@@ -1,4 +1,3 @@
-/* Tailwind v4 */
 @import "tailwindcss";
 
 /* ===== Paleta/tema global (oscuro por defecto) ===== */
@@ -8,10 +7,8 @@
 
   --brand-primary: #007CC6;
   --brand-primary-600: #0A6CA9;
-  --brand-primary-900: #003554;
-  --brand-accent: #008DC5;
+  --brand-accent: #22d3ee; /* cian */
   --brand-gray-900: #333333;
-  --brand-gray-300: #C8CAC9;
 
   --color-primary: var(--brand-primary);
   --color-secondary: var(--brand-accent);
@@ -24,17 +21,14 @@
   --app-fg: #ffffff;
 }
 
-/* Tema claro opcional (no se usa, pero queda listo) */
 [data-theme="light"] {
   --color-bg: #ffffff;
   --color-card: #f6f8fb;
   --color-muted: #475569;
-
   --app-bg: #ffffff;
   --app-fg: #0b1220;
 }
 
-/* ===== Base global (se aplica a TODAS las páginas, incl. /servicios/*) ===== */
 html, body { background: var(--app-bg); color: var(--app-fg); }
 body { font-family: var(--font-body), system-ui, sans-serif; }
 
@@ -43,37 +37,29 @@ body { font-family: var(--font-body), system-ui, sans-serif; }
 .text-secondary { color: var(--color-secondary); }
 .text-muted { color: var(--color-muted); }
 
-/* Smooth scroll y anclajes (navbar fija) */
 html[data-scroll-behavior="smooth"] { scroll-behavior: smooth; }
 section { scroll-margin-top: 88px; }
 
-/* Ajustes en tema claro para algunas utilidades de Tailwind */
+/* Ajustes light para utilidades */
 [data-theme="light"] .app .text-white,
 [data-theme="light"] .app .hover\:text-white:hover { color: var(--app-fg) !important; }
-[data-theme="light"] .app .text-slate-300 { color: #475569 !important; }
-[data-theme="light"] .app .text-slate-200 { color: #334155 !important; }
-[data-theme="light"] .app .text-slate-400 { color: #64748b !important; }
 [data-theme="light"] .app .bg-white\/5 { background-color: rgba(0,0,0,.05) !important; }
-[data-theme="light"] .app .border-white\/10 { border-color: rgba(0,0,0,.08) !important; }
 [data-theme="light"] .app .ring-white\/10 { --tw-ring-color: rgba(0,0,0,.08) !important; }
-[data-theme="light"] .app .ring-white\/20 { --tw-ring-color: rgba(0,0,0,.12) !important; }
 
 /* Accesibilidad */
 a:focus-visible, button:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 4px; }
 
-/* ===== Aparición (reveal) ===== */
+/* ===== Animación reveal ===== */
 .reveal {
   opacity: 0;
   transform: translateY(16px);
   will-change: opacity, transform;
-  transition:
-    opacity .7s cubic-bezier(.22,1,.36,1),
-    transform .7s cubic-bezier(.22,1,.36,1);
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
 }
 .reveal-in { opacity: 1 !important; transform: translateY(0) !important; }
 @media (prefers-reduced-motion: reduce) { .reveal { transition: none; } }
 
-/* ===== Overlay del video del hero ===== */
+/* ===== Overlay del hero ===== */
 .hero-overlay {
   background:
     radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
@@ -123,3 +109,43 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-secondary
 .input-tech-field:not(:placeholder-shown) + .input-tech-label { transform: translateY(-1.55rem) scale(.9); opacity:.95; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== PRELOADER (pantalla de carga) ===== */
+.preloader {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center;
+  background: radial-gradient(800px 400px at 70% 30%, rgba(255,255,255,.03), transparent 40%), var(--app-bg);
+  transition: opacity .6s ease, visibility .6s ease;
+}
+.preloader--hidden { opacity: 0; visibility: hidden; }
+
+.preloader__card {
+  display: grid; gap: 16px; justify-items: center;
+  padding: 24px 28px; border-radius: 20px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 20px 60px -20px rgba(0,0,0,.6);
+}
+
+.preloader__spinner {
+  width: 56px; height: 56px; border-radius: 9999px; position: relative;
+  border: 3px solid rgba(255,255,255,.12);
+  border-top-color: var(--color-secondary);
+  animation: spin 1s linear infinite;
+}
+.preloader__logo {
+  position: absolute; inset: 0; display:grid; place-items: center;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.35));
+}
+
+.preloader__progress {
+  width: 240px; height: 6px; border-radius: 9999px;
+  background: rgba(255,255,255,.08); overflow: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.preloader__progress-inner {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+  transition: width .35s ease;
+}
+.preloader__text { font-size: 12px; color: var(--color-muted); }

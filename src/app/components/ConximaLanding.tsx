@@ -5,30 +5,116 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-/** Mantener fuera del componente para no disparar la regla react-hooks/exhaustive-deps */
+/** Lista fuera del componente para evitar advertencias de dependencias en useEffect */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
 
 export default function ConximaLanding() {
-  // Refs para reveal por sección (compatibilidad + control fino)
+  /* =========================
+   *  PRELOADER (pantalla de carga)
+   * ========================= */
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const MIN_SHOW_MS = 600; // evita parpadeo
+    const TIMEOUT_MS = 5000; // tope de espera
+    const start = Date.now();
+
+    const targets: Array<HTMLVideoElement | HTMLImageElement> = [];
+    document
+      .querySelectorAll<HTMLElement>('[data-preload="true"]')
+      .forEach((el) => {
+        if (el instanceof HTMLVideoElement || el instanceof HTMLImageElement) {
+          targets.push(el);
+        }
+      });
+
+    if (targets.length === 0) {
+      const delay = Math.max(0, MIN_SHOW_MS - (Date.now() - start));
+      const t = window.setTimeout(() => setLoading(false), delay);
+      return () => clearTimeout(t);
+    }
+
+    let loaded = 0;
+    const update = () => {
+      loaded += 1;
+      setProgress(Math.round((loaded / targets.length) * 100));
+      if (loaded >= targets.length) {
+        const delay = Math.max(0, MIN_SHOW_MS - (Date.now() - start));
+        window.setTimeout(() => setLoading(false), delay);
+      }
+    };
+
+    const cleanups: Array<() => void> = [];
+
+    targets.forEach((el) => {
+      if (el instanceof HTMLVideoElement) {
+        const already =
+          el.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA ||
+          el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+        if (already) {
+          update();
+        } else {
+          const onReady = () => {
+            el.removeEventListener("loadeddata", onReady);
+            el.removeEventListener("canplaythrough", onReady);
+            update();
+          };
+          el.addEventListener("loadeddata", onReady, { once: true });
+          el.addEventListener("canplaythrough", onReady, { once: true });
+          cleanups.push(() => {
+            el.removeEventListener("loadeddata", onReady);
+            el.removeEventListener("canplaythrough", onReady);
+          });
+        }
+      } else if (el instanceof HTMLImageElement) {
+        if (el.complete && el.naturalWidth > 0) {
+          update();
+        } else {
+          const onLoad = () => {
+            el.removeEventListener("load", onLoad);
+            el.removeEventListener("error", onLoad);
+            update();
+          };
+          el.addEventListener("load", onLoad, { once: true });
+          el.addEventListener("error", onLoad, { once: true });
+          cleanups.push(() => {
+            el.removeEventListener("load", onLoad);
+            el.removeEventListener("error", onLoad);
+          });
+        }
+      }
+    });
+
+    const timeout = window.setTimeout(() => setLoading(false), TIMEOUT_MS);
+    return () => {
+      cleanups.forEach((fn) => fn());
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  /* =========================
+   *  REVEAL ON SCROLL
+   * ========================= */
   const revealRefs = useRef<Array<HTMLElement | null>>([]);
   const setRevealRef = (idx: number) => (el: HTMLElement | null) => {
     revealRefs.current[idx] = el;
   };
 
-  // IntersectionObserver: reveal por sección al hacer scroll
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-    // Unir refs + todos los elementos .reveal del DOM (por si algún ref no se asigna)
+    // Unir refs + todos los elementos .reveal (fallback si un ref no se asigna)
     const nodeSet = new Set<HTMLElement>();
     revealRefs.current.forEach((el) => el && nodeSet.add(el));
     document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => nodeSet.add(el));
-
     if (nodeSet.size === 0) return;
 
-    // Fallback: sin animación si reduce motion o si no existe IO
+    // Fallback: mostrar sin animación si reduce motion o no hay IntersectionObserver
     if (reduce || !("IntersectionObserver" in window)) {
       nodeSet.forEach((el) => el.classList.add("reveal-in"));
       return;
@@ -50,7 +136,9 @@ export default function ConximaLanding() {
     return () => io.disconnect();
   }, []);
 
-  // Hero video (rota por refresh)
+  /* =========================
+   *  HERO VIDEO ROTATIVO
+   * ========================= */
   const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
   useEffect(() => {
     try {
@@ -64,7 +152,9 @@ export default function ConximaLanding() {
     }
   }, []);
 
-  // Iconos para Servicios (SVGs inline; usan currentColor)
+  /* =========================
+   *  ICONOS DE SERVICIOS (SVG inline, heredan currentColor)
+   * ========================= */
   const Icons = {
     acceso: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
@@ -110,7 +200,27 @@ export default function ConximaLanding() {
 
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
-      {/* Tokens/utilidades locales + estilos de paleta para iconos */}
+      {/* =========================
+          PRELOADER OVERLAY
+      ========================== */}
+      <div className={`preloader ${loading ? "" : "preloader--hidden"}`} aria-hidden={!loading} aria-live="polite">
+        <div className="preloader__card">
+          <div className="preloader__spinner">
+            <div className="preloader__logo">
+              {/* Marca como crítico y prioridad de carga */}
+              <Image src="/images/logo-conxima.png" alt="Conxima" width={26} height={26} priority data-preload="true" />
+            </div>
+          </div>
+          <div className="preloader__progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
+            <div className="preloader__progress-inner" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="preloader__text">Cargando experiencia… {progress}%</div>
+        </div>
+      </div>
+
+      {/* =========================
+          Estilos locales (tokens + helpers)
+      ========================== */}
       <style>{`
         :root {
           --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
@@ -120,13 +230,11 @@ export default function ConximaLanding() {
         .bg-card { background-color: var(--color-card); }
         .text-secondary { color: var(--color-secondary); }
         .text-muted { color: var(--color-muted); }
-
         .hero-overlay {
           background:
             radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
             linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
         }
-
         .icon-badge {
           color: var(--color-secondary);
           background: color-mix(in srgb, var(--color-secondary) 16%, transparent);
@@ -137,32 +245,9 @@ export default function ConximaLanding() {
         }
       `}</style>
 
-      {/* —— Estilos “tech” (helpers visuales) —— */}
-      <style>{`
-        .btn-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: #0b1220; background: linear-gradient(180deg, var(--color-secondary), var(--color-primary)); box-shadow: 0 8px 30px -12px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease; overflow:hidden; }
-        .btn-tech::before { content: ""; position: absolute; inset: -2px; border-radius: inherit; background: conic-gradient(from 0deg, var(--color-secondary), var(--color-primary), var(--color-secondary)); filter: blur(10px); opacity: .35; z-index: -1; animation: spin 6s linear infinite; }
-        .btn-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
-        .btn-tech:hover { transform: translateY(-1px); box-shadow: 0 12px 34px -14px var(--color-secondary); }
-        .btn-tech:active { transform: translateY(0); }
-        .btn-tech:active::after { transform: scale(1.35); opacity:.35; transition: none; }
-
-        .btn-outline-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: currentColor; background: transparent; overflow:hidden; }
-        .btn-outline-tech::before { content:""; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(90deg, var(--color-secondary), var(--color-primary)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .btn-outline-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(0,0,0,.2), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
-        .btn-outline-tech:hover { color: var(--app-fg); background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%); }
-        .btn-outline-tech:active::after { transform: scale(1.35); opacity:.25; transition: none; }
-
-        .input-tech { position: relative; }
-        .input-tech-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); opacity: .8; pointer-events: none; }
-        .input-tech-field { width: 100%; background: rgba(255,255,255,.06); border-radius: 1rem; padding: 1rem 1rem 1rem 2.75rem; border: 1px solid rgba(255,255,255,.08); outline: none; color: inherit; transition: box-shadow .2s ease, background .2s ease, border-color .2s ease; }
-        .input-tech-field:focus { box-shadow: 0 0 0 2px var(--color-secondary); background: rgba(255,255,255,.09); }
-        .textarea-tech { min-height: 7.5rem; }
-        .input-tech-label { position: absolute; left: 2.75rem; top: .95rem; font-size: .875rem; color: var(--color-muted); pointer-events: none; transform-origin: left center; transition: transform .2s ease, opacity .2s ease; opacity:.9; }
-        .input-tech-field:focus + .input-tech-label, .input-tech-field:not(:placeholder-shown) + .input-tech-label { transform: translateY(-1.55rem) scale(.9); opacity: .95; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
-
-      {/* ——— Navbar ——— */}
+      {/* =========================
+          NAVBAR
+      ========================== */}
       <header className="sticky top-0 z-40 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <a href="#inicio" className="group inline-flex items-center gap-3">
@@ -173,12 +258,13 @@ export default function ConximaLanding() {
                 width={24}
                 height={24}
                 priority
+                data-preload="true"
               />
             </span>
             <span className="font-heading text-lg tracking-wide">CONXIMA S.A.S</span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm text-slate-200">
+        <nav className="hidden md:flex items-center gap-6 text-sm text-slate-200">
             <a href="#quienes" className="hover:text-white">Quiénes somos</a>
             <a href="#servicios" className="hover:text-white">Servicios</a>
             <a href="#porque" className="hover:text-white">Por qué nosotros</a>
@@ -196,7 +282,9 @@ export default function ConximaLanding() {
         </div>
       </header>
 
-      {/* ——— Hero ——— */}
+      {/* =========================
+          HERO
+      ========================== */}
       <section id="inicio" className="relative isolate min-h-[85vh] w-full overflow-hidden">
         <video
           key={selectedVideo}
@@ -205,9 +293,10 @@ export default function ConximaLanding() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster="/images/hero-poster.jpg"
           aria-label="Video de actividades y soluciones tecnológicas de seguridad y conectividad"
+          data-preload="true"
         >
           <source src={`/videos/${selectedVideo}.mp4`} type="video/mp4" />
         </video>
@@ -224,8 +313,12 @@ export default function ConximaLanding() {
               Soluciones integrales en telecomunicaciones y seguridad electrónica. Diseño, instalación y mantenimiento con profesionales certificados.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className="btn-tech">Solicita una asesoría</motion.a>
-              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#servicios" className="btn-outline-tech">Explorar servicios</motion.a>
+              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className="btn-tech">
+                Solicita una asesoría
+              </motion.a>
+              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#servicios" className="btn-outline-tech">
+                Explorar servicios
+              </motion.a>
             </div>
           </div>
         </div>
@@ -233,24 +326,34 @@ export default function ConximaLanding() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-bg)]" />
       </section>
 
-      {/* ——— Quiénes somos ——— */}
+      {/* =========================
+          QUIÉNES SOMOS
+      ========================== */}
       <section id="quienes" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="reveal" ref={setRevealRef(1)}>
-              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">Quiénes somos</span>
-              <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">Líderes en telecomunicaciones y seguridad electrónica</h2>
+              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
+                Quiénes somos
+              </span>
+              <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">
+                Líderes en telecomunicaciones y seguridad electrónica
+              </h2>
               <p className="mt-4 text-slate-300">
                 CONXIMA S.A.S es una empresa comprometida con ofrecer tecnología de vanguardia y servicio de excelencia. Nuestro equipo cuenta con amplia experiencia en el diseño, instalación y mantenimiento de sistemas integrales adaptados a cada cliente.
               </p>
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <article className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10">
                   <h3 className="font-heading font-semibold">Misión</h3>
-                  <p className="mt-2 text-sm text-slate-300">Proporcionar soluciones tecnológicas innovadoras que garanticen la seguridad y eficiencia en las operaciones de nuestros clientes.</p>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Proporcionar soluciones tecnológicas innovadoras que garanticen la seguridad y eficiencia en las operaciones de nuestros clientes.
+                  </p>
                 </article>
                 <article className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10">
                   <h3 className="font-heading font-semibold">Visión</h3>
-                  <p className="mt-2 text-sm text-slate-300">Ser referente en soluciones integrales de telecomunicaciones y seguridad electrónica.</p>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Ser referente en soluciones integrales de telecomunicaciones y seguridad electrónica.
+                  </p>
                 </article>
               </div>
             </div>
@@ -274,25 +377,68 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Servicios (cada card → su página) ——— */}
+      {/* =========================
+          SERVICIOS
+      ========================== */}
       <section id="servicios" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <header className="reveal" ref={setRevealRef(3)}>
-            <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">Servicios</span>
-            <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">Seguridad electrónica & Telecomunicaciones</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">Implementamos sistemas de última generación, integrados a tus operaciones.</p>
+            <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
+              Servicios
+            </span>
+            <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">
+              Seguridad electrónica &amp; Telecomunicaciones
+            </h2>
+            <p className="mt-3 max-w-3xl text-slate-300">
+              Implementamos sistemas de última generación, integrados a tus operaciones.
+            </p>
           </header>
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { slug: "control-de-acceso",     title: "Control de Acceso Biométrico", desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.", icon: Icons.acceso },
-              { slug: "sistemas-de-alarma",    title: "Sistemas de Alarma",           desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",                    icon: Icons.alarma },
-              { slug: "cuarto-de-monitoreo",   title: "Cuarto de Monitoreo",          desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",        icon: Icons.monitoreo },
-              { slug: "cableado-estructurado", title: "Cableado Estructurado",        desc: "Planos, canalización, racks, certificación y documentación.",                       icon: Icons.cableado },
-              { slug: "racks-y-gabinetes",     title: "Racks y Gabinetes",            desc: "Montaje seguro, ventilación, orden y crecimiento.",                                 icon: Icons.racks },
-              { slug: "servicios-en-la-nube",  title: "Servicios en la Nube",         desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",                      icon: Icons.nube },
+              {
+                slug: "control-de-acceso",
+                title: "Control de Acceso Biométrico",
+                desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
+                icon: Icons.acceso,
+              },
+              {
+                slug: "sistemas-de-alarma",
+                title: "Sistemas de Alarma",
+                desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
+                icon: Icons.alarma,
+              },
+              {
+                slug: "cuarto-de-monitoreo",
+                title: "Cuarto de Monitoreo",
+                desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
+                icon: Icons.monitoreo,
+              },
+              {
+                slug: "cableado-estructurado",
+                title: "Cableado Estructurado",
+                desc: "Planos, canalización, racks, certificación y documentación.",
+                icon: Icons.cableado,
+              },
+              {
+                slug: "racks-y-gabinetes",
+                title: "Racks y Gabinetes",
+                desc: "Montaje seguro, ventilación, orden y crecimiento.",
+                icon: Icons.racks,
+              },
+              {
+                slug: "servicios-en-la-nube",
+                title: "Servicios en la Nube",
+                desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",
+                icon: Icons.nube,
+              },
             ].map((s, i) => (
-              <Link key={s.slug} href={`/servicios/${s.slug}`} className="group block" aria-label={`Abrir servicio: ${s.title}`}>
+              <Link
+                key={s.slug}
+                href={`/servicios/${s.slug}`}
+                className="group block"
+                aria-label={`Abrir servicio: ${s.title}`}
+              >
                 <article
                   ref={setRevealRef(4 + i)}
                   className="reveal rounded-2xl bg-card/80 p-6 ring-1 ring-white/10 hover:ring-white/20 hover:translate-y-[-2px] transition"
@@ -318,13 +464,17 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Por qué nosotros ——— */}
+      {/* =========================
+          POR QUÉ NOSOTROS
+      ========================== */}
       <section id="porque" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
             <div className="reveal" ref={setRevealRef(10)}>
               <h2 className="font-heading text-3xl md:text-4xl font-bold">¿Por qué nosotros?</h2>
-              <p className="mt-3 text-slate-300 max-w-xl">Soluciones a medida, tecnología certificada y acompañamiento experto de principio a fin.</p>
+              <p className="mt-3 text-slate-300 max-w-xl">
+                Soluciones a medida, tecnología certificada y acompañamiento experto de principio a fin.
+              </p>
               <ul className="mt-6 space-y-4">
                 {[
                   "Soluciones personalizadas según tus necesidades",
@@ -334,7 +484,9 @@ export default function ConximaLanding() {
                   "Asesoría profesional continua",
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-black text-sm font-bold">{idx + 1}</span>
+                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-black text-sm font-bold">
+                      {idx + 1}
+                    </span>
                     <span className="text-slate-200">{item}</span>
                   </li>
                 ))}
@@ -363,14 +515,20 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Contacto ——— */}
+      {/* =========================
+          CONTACTO
+      ========================== */}
       <section id="contacto" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3 reveal" ref={setRevealRef(12)}>
-              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">Contacto</span>
+              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
+                Contacto
+              </span>
               <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">Hablemos de tu proyecto</h2>
-              <p className="mt-3 text-slate-300 max-w-2xl">Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.</p>
+              <p className="mt-3 text-slate-300 max-w-2xl">
+                Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
+              </p>
 
               <form className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => e.preventDefault()}>
                 <div className="input-tech">
@@ -407,11 +565,31 @@ export default function ConximaLanding() {
                 </div>
 
                 <div className="sm:col-span-2 flex flex-wrap gap-3">
-                  <motion.button whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" className="btn-tech">Enviar consulta</motion.button>
-                  <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Consulta%20web" className="btn-outline-tech">Escribir correo</motion.a>
-                  <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20una%20cotizaci%C3%B3n" target="_blank" rel="noopener noreferrer" className="btn-outline-tech">WhatsApp</motion.a>
+                  <motion.button whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" className="btn-tech">
+                    Enviar consulta
+                  </motion.button>
+                  <motion.a
+                    whileHover={{ y: -1, scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Consulta%20web"
+                    className="btn-outline-tech"
+                  >
+                    Escribir correo
+                  </motion.a>
+                  <motion.a
+                    whileHover={{ y: -1, scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    href="https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20una%20cotizaci%C3%B3n"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline-tech"
+                  >
+                    WhatsApp
+                  </motion.a>
                 </div>
-                <p className="sm:col-span-2 text-xs text-muted">Al enviar aceptas nuestro tratamiento de datos personales.</p>
+                <p className="sm:col-span-2 text-xs text-muted">
+                  Al enviar aceptas nuestro tratamiento de datos personales.
+                </p>
               </form>
             </div>
 
@@ -419,13 +597,32 @@ export default function ConximaLanding() {
               <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
                 <h3 className="font-heading text-xl font-semibold">Contacto directo</h3>
                 <ul className="mt-4 space-y-3 text-slate-200">
-                  <li className="flex items-center gap-3"><span className="text-secondary">📞</span> <a href="tel:+593939011017" className="hover:underline">+593 93 901 1017</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:arivera@conxima.com" className="hover:underline">arivera@conxima.com</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:rguambo@conxima.com" className="hover:underline">rguambo@conxima.com</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18</li>
+                  <li className="flex items-center gap-3">
+                    <span className="text-secondary">📞</span>{" "}
+                    <a href="tel:+593939011017" className="hover:underline">
+                      +593 93 901 1017
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="text-secondary">✉️</span>{" "}
+                    <a href="mailto:arivera@conxima.com" className="hover:underline">
+                      arivera@conxima.com
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="text-secondary">✉️</span>{" "}
+                    <a href="mailto:rguambo@conxima.com" className="hover:underline">
+                      rguambo@conxima.com
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18
+                  </li>
                 </ul>
                 <div className="mt-6 rounded-xl border border-white/10 p-4">
-                  <p className="text-sm text-slate-300">Podemos añadir mapa de Google y botones de WhatsApp con mensaje pre-llenado.</p>
+                  <p className="text-sm text-slate-300">
+                    Podemos añadir mapa de Google y botones de WhatsApp con mensaje pre-llenado.
+                  </p>
                 </div>
               </div>
             </aside>
@@ -433,7 +630,9 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Footer ——— */}
+      {/* =========================
+          FOOTER
+      ========================== */}
       <footer className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-slate-400 flex flex-col md:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} CONXIMA S.A.S · Todos los derechos reservados</p>
