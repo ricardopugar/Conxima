@@ -2,7 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+
+/** Mantener fuera del componente para no disparar la regla react-hooks/exhaustive-deps */
+const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
 
 export default function ConximaLanding() {
   // Refs para reveal por sección (compatibilidad + control fino)
@@ -25,7 +29,7 @@ export default function ConximaLanding() {
     if (nodeSet.size === 0) return;
 
     // Fallback: sin animación si reduce motion o si no existe IO
-    if (reduce || !(window as any).IntersectionObserver) {
+    if (reduce || !("IntersectionObserver" in window)) {
       nodeSet.forEach((el) => el.classList.add("reveal-in"));
       return;
     }
@@ -39,7 +43,7 @@ export default function ConximaLanding() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -15% 0px" } // dispara un poco antes
+      { threshold: 0.12, rootMargin: "0px 0px -15% 0px" }
     );
 
     nodeSet.forEach((el) => io.observe(el));
@@ -47,7 +51,6 @@ export default function ConximaLanding() {
   }, []);
 
   // Hero video (rota por refresh)
-  const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"];
   const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
   useEffect(() => {
     try {
@@ -118,14 +121,12 @@ export default function ConximaLanding() {
         .text-secondary { color: var(--color-secondary); }
         .text-muted { color: var(--color-muted); }
 
-        /* Overlay del hero */
         .hero-overlay {
           background:
             radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
             linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
         }
 
-        /* —— Badge de icono siguiendo la paleta —— */
         .icon-badge {
           color: var(--color-secondary);
           background: color-mix(in srgb, var(--color-secondary) 16%, transparent);
@@ -166,11 +167,12 @@ export default function ConximaLanding() {
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <a href="#inicio" className="group inline-flex items-center gap-3">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
-              <img
+              <Image
                 src="/images/logo-conxima.png"
                 alt="Logo Conxima"
-                className="h-6 w-6"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                width={24}
+                height={24}
+                priority
               />
             </span>
             <span className="font-heading text-lg tracking-wide">CONXIMA S.A.S</span>
@@ -182,7 +184,12 @@ export default function ConximaLanding() {
             <a href="#porque" className="hover:text-white">Por qué nosotros</a>
             <a href="#contacto" className="hover:text-white">Contacto</a>
 
-            <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className="btn-outline-tech text-xs ml-2 rounded-full px-3 py-1.5">
+            <motion.a
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              href="#contacto"
+              className="btn-outline-tech text-xs ml-2 rounded-full px-3 py-1.5"
+            >
               Cotiza ahora
             </motion.a>
           </nav>
@@ -250,8 +257,17 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(2)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <img src="/images/team-install.jpg" alt="Equipo técnico instalando cableado estructurado" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/30 to-transparent" />
+                <div className="relative h-72 w-full">
+                  <Image
+                    src="/images/team-install.jpg"
+                    alt="Equipo técnico instalando cableado estructurado"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    priority={false}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/30 to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -280,7 +296,7 @@ export default function ConximaLanding() {
                 <article
                   ref={setRevealRef(4 + i)}
                   className="reveal rounded-2xl bg-card/80 p-6 ring-1 ring-white/10 hover:ring-white/20 hover:translate-y-[-2px] transition"
-                  style={{ transitionDelay: `${i * 80}ms` }}   // stagger suave
+                  style={{ transitionDelay: `${i * 80}ms` }}
                 >
                   <div className="flex items-center gap-3">
                     <span className="icon-badge inline-flex h-10 w-10 items-center justify-center rounded-xl">
@@ -327,8 +343,16 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(11)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <img src="/images/monitoring-room.jpg" alt="Centro de monitoreo y cableado ordenado" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
+                <div className="relative h-72 w-full">
+                  <Image
+                    src="/images/monitoring-room.jpg"
+                    alt="Centro de monitoreo y cableado ordenado"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                   <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Implementaciones profesionales</span>
                   <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Integración de plataformas</span>
