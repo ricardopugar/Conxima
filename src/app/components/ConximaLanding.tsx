@@ -2,29 +2,31 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { servicios } from "@/data/servicios";
-
-// 👉 Mover la constante fuera del componente para evitar el warning del Hook
-const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"];
 
 export default function ConximaLanding() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  // ——— Reveal por sección con IntersectionObserver ———
+  // Refs para reveal por sección (compatibilidad + control fino)
   const revealRefs = useRef<Array<HTMLElement | null>>([]);
   const setRevealRef = (idx: number) => (el: HTMLElement | null) => {
     revealRefs.current[idx] = el;
   };
+
+  // IntersectionObserver: reveal por sección al hacer scroll
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const nodes = revealRefs.current.filter(Boolean) as HTMLElement[];
-    if (nodes.length === 0) return;
 
-    if (reduce) {
-      nodes.forEach((el) => el.classList.add("reveal-in"));
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    // Unir refs + todos los elementos .reveal del DOM (por si algún ref no se asigna)
+    const nodeSet = new Set<HTMLElement>();
+    revealRefs.current.forEach((el) => el && nodeSet.add(el));
+    document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => nodeSet.add(el));
+
+    if (nodeSet.size === 0) return;
+
+    // Fallback: sin animación si reduce motion o si no existe IO
+    if (reduce || !(window as any).IntersectionObserver) {
+      nodeSet.forEach((el) => el.classList.add("reveal-in"));
       return;
     }
 
@@ -37,120 +39,126 @@ export default function ConximaLanding() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -15% 0px" } // dispara un poco antes
     );
 
-    nodes.forEach((el) => io.observe(el));
+    nodeSet.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
-  // ——— Tema persistente ———
-  useEffect(() => {
-    try {
-      const saved = (typeof window !== "undefined"
-        ? (window.localStorage.getItem("conxima_theme") as "light" | "dark" | null)
-        : null);
-      if (saved) setTheme(saved);
-      else if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
-        setTheme("light");
-      }
-    } catch {}
-  }, []);
-  useEffect(() => {
-    try {
-      document.documentElement.setAttribute("data-theme", theme);
-      if (typeof window !== "undefined") window.localStorage.setItem("conxima_theme", theme);
-    } catch {}
-  }, [theme]);
-
-  // ——— Hero video rotatorio ———
+  // Hero video (rota por refresh)
+  const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"];
   const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
   useEffect(() => {
     try {
       const key = "conxima_hero_idx";
-      const last = Number(localStorage.getItem(key));
+      const last = Number(window.localStorage.getItem(key));
       const next = Number.isInteger(last) ? (last + 1) % HERO_VIDEOS.length : 0;
       setSelectedVideo(HERO_VIDEOS[next]);
-      localStorage.setItem(key, String(next));
+      window.localStorage.setItem(key, String(next));
     } catch {
       setSelectedVideo(HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]);
     }
   }, []);
 
+  // Iconos para Servicios (SVGs inline; usan currentColor)
+  const Icons = {
+    acceso: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <path d="M12 3a6 6 0 0 0-6 6v2a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M9 12a3 3 0 1 0 6 0" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M8 20a8 8 0 0 0 8 0" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+    alarma: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <path d="M4 12h16l-8 8-8-8Z" fill="none" stroke="currentColor" strokeWidth="2" />
+        <circle cx="12" cy="10" r="3" fill="currentColor" />
+        <path d="M5 5 3 7M21 7l-2-2" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+    monitoreo: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M8 20h8" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M6 10h5l2 2 5-4" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+    cableado: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <path d="M4 7h16M4 12h10M4 17h7" fill="none" stroke="currentColor" strokeWidth="2" />
+        <circle cx="18" cy="12" r="2" fill="currentColor" />
+        <circle cx="15" cy="17" r="2" fill="currentColor" />
+      </svg>
+    ),
+    racks: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M8 7h8M8 12h8M8 17h8" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+    nube: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <path d="M7 16a4 4 0 1 1 0-8 5 5 0 0 1 9.7 1.5A4.5 4.5 0 1 1 17 16H7Z" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M10 13h6M8 15h8" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+  } as const;
+
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
-      {/* —— Tokens / utilidades (puedes mover a globals.css si prefieres) —— */}
+      {/* Tokens/utilidades locales + estilos de paleta para iconos */}
       <style>{`
         :root {
           --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
           --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
-
-          --brand-primary: #007CC6;
-          --brand-primary-600: #0A6CA9;
-          --brand-primary-900: #003554;
-          --brand-accent: #008DC5;
-          --brand-gray-900: #333333;
-          --brand-gray-300: #C8CAC9;
-
-          --color-primary: var(--brand-primary);
-          --color-secondary: var(--brand-accent);
-          --color-accent: var(--brand-primary-600);
-          --color-bg: #070a12;
-          --color-card: #0f172a;
-          --color-muted: #94a3b8;
-
-          --app-bg: var(--color-bg);
-          --app-fg: #ffffff;
         }
-        [data-theme="light"] {
-          --color-bg:#ffffff; --color-card:#f6f8fb; --color-muted:#475569;
-          --app-bg:#ffffff; --app-fg:#0b1220;
-        }
-
         .font-heading { font-family: var(--font-heading); }
         .bg-card { background-color: var(--color-card); }
         .text-secondary { color: var(--color-secondary); }
         .text-muted { color: var(--color-muted); }
 
+        /* Overlay del hero */
         .hero-overlay {
           background:
             radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
             linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
         }
-        .reveal { opacity:0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
-        .reveal-in { opacity:1!important; transform: translateY(0)!important; }
-        @media (prefers-reduced-motion: reduce) { .reveal { transition: none; } }
 
-        [data-theme="light"] .app .text-white, [data-theme="light"] .app .hover\\:text-white:hover { color: var(--app-fg) !important; }
-        [data-theme="light"] .app .text-slate-300 { color: #475569 !important; }
-        [data-theme="light"] .app .text-slate-200 { color: #334155 !important; }
-        [data-theme="light"] .app .bg-white\\/5 { background-color: rgba(0,0,0,.05) !important; }
-        [data-theme="light"] .app .ring-white\\/10 { --tw-ring-color: rgba(0,0,0,.08) !important; }
-        [data-theme="light"] .app .ring-white\\/20 { --tw-ring-color: rgba(0,0,0,.12) !important; }
+        /* —— Badge de icono siguiendo la paleta —— */
+        .icon-badge {
+          color: var(--color-secondary);
+          background: color-mix(in srgb, var(--color-secondary) 16%, transparent);
+          border: 1px solid color-mix(in srgb, var(--color-secondary) 36%, transparent);
+        }
+        .group:hover .icon-badge {
+          background: color-mix(in srgb, var(--color-secondary) 24%, transparent);
+        }
       `}</style>
+
+      {/* —— Estilos “tech” (helpers visuales) —— */}
       <style>{`
-        .btn-tech{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.2rem;border-radius:1rem;font-weight:600;color:#0b1220;background:linear-gradient(180deg,var(--color-secondary),var(--color-primary));box-shadow:0 8px 30px -12px rgba(0,0,0,.6);transition:transform .2s ease,box-shadow .2s ease;overflow:hidden}
-        .btn-tech::before{content:"";position:absolute;inset:-2px;border-radius:inherit;background:conic-gradient(from 0deg,var(--color-secondary),var(--color-primary),var(--color-secondary));filter:blur(10px);opacity:.35;z-index:-1;animation:spin 6s linear infinite}
-        .btn-tech::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(closest-side,rgba(255,255,255,.35),transparent 60%);transform:scale(0);opacity:0;transition:transform .45s ease,opacity .6s ease}
-        .btn-tech:hover{transform:translateY(-1px);box-shadow:0 12px 34px -14px var(--color-secondary)}
-        .btn-tech:active{transform:translateY(0)}
-        .btn-tech:active::after{transform:scale(1.35);opacity:.35;transition:none}
+        .btn-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: #0b1220; background: linear-gradient(180deg, var(--color-secondary), var(--color-primary)); box-shadow: 0 8px 30px -12px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease; overflow:hidden; }
+        .btn-tech::before { content: ""; position: absolute; inset: -2px; border-radius: inherit; background: conic-gradient(from 0deg, var(--color-secondary), var(--color-primary), var(--color-secondary)); filter: blur(10px); opacity: .35; z-index: -1; animation: spin 6s linear infinite; }
+        .btn-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
+        .btn-tech:hover { transform: translateY(-1px); box-shadow: 0 12px 34px -14px var(--color-secondary); }
+        .btn-tech:active { transform: translateY(0); }
+        .btn-tech:active::after { transform: scale(1.35); opacity:.35; transition: none; }
 
-        .btn-outline-tech{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.2rem;border-radius:1rem;font-weight:600;color:currentColor;background:transparent;overflow:hidden}
-        .btn-outline-tech::before{content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;background:linear-gradient(90deg,var(--color-secondary),var(--color-primary));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-        .btn-outline-tech::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(closest-side,rgba(0,0,0,.2),transparent 60%);transform:scale(0);opacity:0;transition:transform .45s ease,opacity .6s ease}
-        .btn-outline-tech:hover{color:var(--app-fg);background:linear-gradient(90deg,var(--color-secondary) 0%,var(--color-primary) 100%)}
-        .btn-outline-tech:active::after{transform:scale(1.35);opacity:.25;transition:none}
+        .btn-outline-tech { position: relative; display: inline-flex; align-items: center; justify-content: center; gap:.5rem; padding: .9rem 1.2rem; border-radius: 1rem; font-weight: 600; color: currentColor; background: transparent; overflow:hidden; }
+        .btn-outline-tech::before { content:""; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(90deg, var(--color-secondary), var(--color-primary)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .btn-outline-tech::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(closest-side, rgba(0,0,0,.2), transparent 60%); transform: scale(0); opacity:0; transition: transform .45s ease, opacity .6s ease; }
+        .btn-outline-tech:hover { color: var(--app-fg); background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%); }
+        .btn-outline-tech:active::after { transform: scale(1.35); opacity:.25; transition: none; }
 
-        .input-tech{position:relative}
-        .input-tech-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);opacity:.8;pointer-events:none}
-        .input-tech-field{width:100%;background:rgba(255,255,255,.06);border-radius:1rem;padding:1rem 1rem 1rem 2.75rem;border:1px solid rgba(255,255,255,.08);outline:none;color:inherit;transition:box-shadow .2s ease,background .2s ease,border-color .2s ease}
-        .input-tech-field:focus{box-shadow:0 0 0 2px var(--color-secondary);background:rgba(255,255,255,.09)}
-        .textarea-tech{min-height:7.5rem}
-        .input-tech-label{position:absolute;left:2.75rem;top:.95rem;font-size:.875rem;color:var(--color-muted);pointer-events:none;transform-origin:left center;transition:transform .2s ease,opacity .2s ease;opacity:.9}
-        .input-tech-field:focus + .input-tech-label,.input-tech-field:not(:placeholder-shown) + .input-tech-label{transform:translateY(-1.55rem) scale(.9);opacity:.95}
-
-        @keyframes spin{to{transform:rotate(360deg)}}
+        .input-tech { position: relative; }
+        .input-tech-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); opacity: .8; pointer-events: none; }
+        .input-tech-field { width: 100%; background: rgba(255,255,255,.06); border-radius: 1rem; padding: 1rem 1rem 1rem 2.75rem; border: 1px solid rgba(255,255,255,.08); outline: none; color: inherit; transition: box-shadow .2s ease, background .2s ease, border-color .2s ease; }
+        .input-tech-field:focus { box-shadow: 0 0 0 2px var(--color-secondary); background: rgba(255,255,255,.09); }
+        .textarea-tech { min-height: 7.5rem; }
+        .input-tech-label { position: absolute; left: 2.75rem; top: .95rem; font-size: .875rem; color: var(--color-muted); pointer-events: none; transform-origin: left center; transition: transform .2s ease, opacity .2s ease; opacity:.9; }
+        .input-tech-field:focus + .input-tech-label, .input-tech-field:not(:placeholder-shown) + .input-tech-label { transform: translateY(-1.55rem) scale(.9); opacity: .95; }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
       {/* ——— Navbar ——— */}
@@ -158,13 +166,11 @@ export default function ConximaLanding() {
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <a href="#inicio" className="group inline-flex items-center gap-3">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
-              <Image
-                src="/images/logo-conxima.svg"
+              <img
+                src="/images/logo-conxima.png"
                 alt="Logo Conxima"
-                width={24}
-                height={24}
                 className="h-6 w-6"
-                priority
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
             </span>
             <span className="font-heading text-lg tracking-wide">CONXIMA S.A.S</span>
@@ -179,14 +185,6 @@ export default function ConximaLanding() {
             <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className="btn-outline-tech text-xs ml-2 rounded-full px-3 py-1.5">
               Cotiza ahora
             </motion.a>
-
-            <button
-              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-              className="ml-2 inline-flex items-center rounded-full border border-white/20 px-3 py-1.5 text-xs hover:border-white/40"
-              aria-label="Cambiar tema"
-            >
-              {theme === "light" ? "🌙 Oscuro" : "☀️ Claro"}
-            </button>
           </nav>
         </div>
       </header>
@@ -252,13 +250,7 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(2)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <Image
-                  src="/images/team-install.jpg"
-                  alt="Equipo técnico instalando cableado estructurado"
-                  width={1600}
-                  height={1066}
-                  className="h-full w-full object-cover"
-                />
+                <img src="/images/team-install.jpg" alt="Equipo técnico instalando cableado estructurado" className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/30 to-transparent" />
               </div>
             </div>
@@ -266,7 +258,7 @@ export default function ConximaLanding() {
         </div>
       </section>
 
-      {/* ——— Servicios (cards → páginas) ——— */}
+      {/* ——— Servicios (cada card → su página) ——— */}
       <section id="servicios" className="relative">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <header className="reveal" ref={setRevealRef(3)}>
@@ -276,30 +268,32 @@ export default function ConximaLanding() {
           </header>
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {servicios.map((s, i) => (
-              <Link
-                key={s.slug}
-                href={`/servicios/${s.slug}`}
-                className="group block"
-                aria-label={`Abrir servicio: ${s.title}`}
-              >
+            {[
+              { slug: "control-de-acceso",     title: "Control de Acceso Biométrico", desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.", icon: Icons.acceso },
+              { slug: "sistemas-de-alarma",    title: "Sistemas de Alarma",           desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",                    icon: Icons.alarma },
+              { slug: "cuarto-de-monitoreo",   title: "Cuarto de Monitoreo",          desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",        icon: Icons.monitoreo },
+              { slug: "cableado-estructurado", title: "Cableado Estructurado",        desc: "Planos, canalización, racks, certificación y documentación.",                       icon: Icons.cableado },
+              { slug: "racks-y-gabinetes",     title: "Racks y Gabinetes",            desc: "Montaje seguro, ventilación, orden y crecimiento.",                                 icon: Icons.racks },
+              { slug: "servicios-en-la-nube",  title: "Servicios en la Nube",         desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",                      icon: Icons.nube },
+            ].map((s, i) => (
+              <Link key={s.slug} href={`/servicios/${s.slug}`} className="group block" aria-label={`Abrir servicio: ${s.title}`}>
                 <article
                   ref={setRevealRef(4 + i)}
                   className="reveal rounded-2xl bg-card/80 p-6 ring-1 ring-white/10 hover:ring-white/20 hover:translate-y-[-2px] transition"
+                  style={{ transitionDelay: `${i * 80}ms` }}   // stagger suave
                 >
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-secondary ring-1 ring-inset ring-white/10 group-hover:bg-white/10">
-                      {/* Ícono genérico; puedes variarlo por slug si quieres */}
-                      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-                        <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2" />
-                      </svg>
+                    <span className="icon-badge inline-flex h-10 w-10 items-center justify-center rounded-xl">
+                      {s.icon}
                     </span>
                     <h3 className="font-heading text-xl font-semibold">{s.title}</h3>
                   </div>
-                  <p className="mt-3 text-slate-300">{s.resumen}</p>
+                  <p className="mt-3 text-slate-300">{s.desc}</p>
                   <span className="mt-4 inline-flex items-center gap-2 text-sm text-secondary">
                     Ver detalle
-                    <svg className="h-4 w-4" viewBox="0 0 24 24"><path d="M7 12h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M7 12h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" />
+                    </svg>
                   </span>
                 </article>
               </Link>
@@ -333,13 +327,7 @@ export default function ConximaLanding() {
 
             <div className="reveal" ref={setRevealRef(11)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <Image
-                  src="/images/monitoring-room.jpg"
-                  alt="Centro de monitoreo y cableado ordenado"
-                  width={1600}
-                  height={1066}
-                  className="h-full w-full object-cover"
-                />
+                <img src="/images/monitoring-room.jpg" alt="Centro de monitoreo y cableado ordenado" className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                   <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Implementaciones profesionales</span>
