@@ -261,7 +261,7 @@ export default function ConximaLanding() {
                 data-preload="true"
               />
             </span>
-            <span className="font-heading text-lg tracking-wide">CONXIMA S.A.S</span>
+            <span className="font-heading text-lg tracking-wide">CONXIMA</span>
           </a>
 
         <nav className="hidden md:flex items-center gap-6 text-sm text-slate-200">
@@ -571,7 +571,7 @@ export default function ConximaLanding() {
                   <motion.a
                     whileHover={{ y: -1, scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Consulta%20web"
+                    href="mailto:info@conxima.com,rguambo@conxima.com?subject=Consulta%20web"
                     className="btn-outline-tech"
                   >
                     Escribir correo
@@ -595,7 +595,7 @@ export default function ConximaLanding() {
 
             <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
               <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
-                <h3 className="font-heading text-xl font-semibold">Contacto directo</h3>
+                <h3 className="font-heading text-xl font-semibold">Contacto</h3>
                 <ul className="mt-4 space-y-3 text-slate-200">
                   <li className="flex items-center gap-3">
                     <span className="text-secondary">📞</span>{" "}
@@ -606,14 +606,10 @@ export default function ConximaLanding() {
                   <li className="flex items-center gap-3">
                     <span className="text-secondary">✉️</span>{" "}
                     <a href="mailto:arivera@conxima.com" className="hover:underline">
-                      arivera@conxima.com
+                      info@conxima.com
                     </a>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="text-secondary">✉️</span>{" "}
-                    <a href="mailto:rguambo@conxima.com" className="hover:underline">
-                      rguambo@conxima.com
-                    </a>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18
