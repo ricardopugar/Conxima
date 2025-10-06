@@ -46,6 +46,6 @@ export const servicios: Servicio[] = [
     title: "Servicios en la Nube",
     resumen:
       "Instancias seguras, almacenamiento, backups y acceso remoto.",
-    imagen: "/images/servicios/nube.jfif"
+    imagen: "/images/servicios/nube.jpg"
   }
 ];
