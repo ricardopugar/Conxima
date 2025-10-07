@@ -11,7 +11,7 @@ export const servicios: Servicio[] = [
     title: "Control de Acceso Biométrico",
     resumen:
       "Lectores de huella, reconocimiento facial, tarjetas inteligentes e integración con software de gestión.",
-    imagen: "/images/servicios/acceso.jpg"
+    imagen: "/images/servicios/acceso.png"
   },
   {
     slug: "sistemas-de-alarma",
@@ -47,5 +47,17 @@ export const servicios: Servicio[] = [
     resumen:
       "Instancias seguras, almacenamiento, backups y acceso remoto.",
     imagen: "/images/servicios/nube.jpg"
+  },
+  {
+    slug: "cableado-fibra-optica",
+    title: "Cableado de Fibra Óptica",
+    resumen: "Instalación profesional de fibra óptica monomodo y multimodo para backbone y redes empresariales.",
+    imagen: "/images/servicios/fibra-optica.jpg"
+  },
+  {
+    slug: "cctv",
+    title: "Circuito Cerrado de Televisión (CCTV)",
+    resumen: "Diseño e instalación de sistemas de videovigilancia con cámaras IP, NVR y monitoreo remoto.",
+    imagen: "/images/servicios/cctv.jpg"
   }
 ];

@@ -264,7 +264,7 @@ export default function ConximaLanding() {
         .text-muted { color: var(--color-muted); }
         .hero-overlay {
           background:
-            radial-gradient(1200px 600px at 70% 30%, rgba(0,0,0,.06), transparent 40%),
+            radial-gradient(1200px 600px at 70% 30%, rgba(0, 4, 48, 0.06), transparent 40%),
             linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
         }
         .icon-badge {
@@ -329,6 +329,7 @@ export default function ConximaLanding() {
       {/* =========================
           HERO
       ========================== */}
+      {/* (Hero se queda sin .section para no afectar el video de fondo) */}
       <section id="inicio" className="relative isolate min-h-[85vh] w-full overflow-hidden">
         <video
           key={selectedVideo}
@@ -365,7 +366,7 @@ export default function ConximaLanding() {
       {/* =========================
           QUIÉNES SOMOS
       ========================== */}
-      <section id="quienes" className="relative">
+      <section id="quienes" className="section relative" data-tone="1">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             {/* TEXTO */}
@@ -413,8 +414,7 @@ export default function ConximaLanding() {
 
                 {/* Pie de foto opcional */}
                 <div className="px-4 py-3 text-xs text-slate-300 bg-black/40 backdrop-blur-sm flex justify-between">
-                  <span>Instalación profesional</span>
-                  <span className="text-white/70">Cableado estructurado</span>
+                  <span>Instalaciones profesional con equipo altamente calificado y certificado</span>
                 </div>
               </div>
             </div>
@@ -426,7 +426,7 @@ export default function ConximaLanding() {
       {/* =========================
           SERVICIOS
       ========================== */}
-      <section id="servicios" className="relative">
+      <section id="servicios" className="section relative" data-tone="2">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <header className="reveal" ref={setRevealRef(3)}>
             <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
@@ -444,6 +444,10 @@ export default function ConximaLanding() {
               { slug: "cableado-estructurado", title: "Cableado Estructurado", desc: "Planos, canalización, racks, certificación y documentación.", icon: Icons.cableado },
               { slug: "racks-y-gabinetes", title: "Racks y Gabinetes", desc: "Montaje seguro, ventilación, orden y crecimiento.", icon: Icons.racks },
               { slug: "servicios-en-la-nube", title: "Servicios en la Nube", desc: "Instancias seguras, almacenamiento, backups y acceso remoto.", icon: Icons.nube },
+
+              // 🆕 Nuevos servicios:
+              { slug: "cableado-fibra-optica", title: "Cableado de Fibra Óptica", desc: "Tendido, fusión y certificación de enlaces de fibra para redes empresariales y backbone.", icon: Icons.cableado },
+              { slug: "cctv", title: "Circuito Cerrado de Televisión (CCTV)", desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.", icon: Icons.monitoreo },
             ].map((s, i) => (
               <Link key={s.slug} href={`/servicios/${s.slug}`} className="group block" aria-label={`Abrir servicio: ${s.title}`}>
                 <article
@@ -472,7 +476,7 @@ export default function ConximaLanding() {
       {/* =========================
           POR QUÉ NOSOTROS
       ========================== */}
-      <section id="porque" className="relative">
+      <section id="porque" className="section relative" data-tone="t1">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
             {/* IMAGEN — izquierda en lg */}
@@ -523,7 +527,7 @@ export default function ConximaLanding() {
       {/* =========================
           CONTACTO
       ========================== */}
-      <section id="contacto" className="relative">
+      <section id="contacto" className="section relative" data-tone="3">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3 reveal" ref={setRevealRef(12)}>
@@ -587,7 +591,7 @@ export default function ConximaLanding() {
             <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
               <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
                 <h3 className="font-heading text-xl font-semibold">Contacto</h3>
-                <ul className="mt-4 space-y-3 text-slate-200">
+                <ul className="mt-4 space-y-3 text-slate-2 00">
                   <li className="flex items-center gap-3"><span className="text-secondary">📞</span> <a href="tel:+593939011017" className="hover:underline">+593 93 901 1017</a></li>
                   <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:info@conxima.com" className="hover:underline">info@conxima.com</a></li>
                   <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18</li>

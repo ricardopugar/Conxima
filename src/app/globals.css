@@ -21,13 +21,6 @@
   --app-fg: #ffffff;
 }
 
-[data-theme="light"] {
-  --color-bg: #ffffff;
-  --color-card: #f6f8fb;
-  --color-muted: #475569;
-  --app-bg: #ffffff;
-  --app-fg: #0b1220;
-}
 
 html, body { background: var(--app-bg); color: var(--app-fg); }
 body { font-family: var(--font-body), system-ui, sans-serif; }
@@ -149,3 +142,35 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-secondary
   transition: width .35s ease;
 }
 .preloader__text { font-size: 12px; color: var(--color-muted); }
+
+/* ====== Escala tonal por sección — UN SOLO TONO AZUL OSCURO ====== */
+:root {
+  --blue-base: #0a1426; /* base azul noche */
+
+  /* Un solo tono calculado una vez */
+  --bg-unico: color-mix(in srgb, var(--blue-base) 50%, black);
+
+  /* Todas las “variantes” apuntan al mismo tono */
+  --bg-0: var(--bg-unico);
+  --bg-1: var(--bg-unico);
+  --bg-2: var(--bg-unico);
+  --bg-3: var(--bg-unico);
+  --bg-t1: var(--bg-unico);
+  --bg-t2: var(--bg-unico);
+}
+
+/* No cambies esto: .section ya usa --section-bg y recalcula --color-card */
+.section {
+  position: relative;
+  isolation: isolate;
+  background: var(--section-bg, var(--bg-0));
+  --color-card: color-mix(in srgb, var(--section-bg) 86%, white);
+}
+
+/* Mapeo permanece igual (todos terminan en el mismo color) */
+.section[data-tone="0"] { --section-bg: var(--bg-0); }
+.section[data-tone="1"] { --section-bg: var(--bg-1); }
+.section[data-tone="2"] { --section-bg: var(--bg-2); }
+.section[data-tone="3"] { --section-bg: var(--bg-3); }
+.section[data-tone="t1"]{ --section-bg: var(--bg-t1); }
+.section[data-tone="t2"]{ --section-bg: var(--bg-t2); }
