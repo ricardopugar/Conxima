@@ -39,7 +39,7 @@ export const servicios: Servicio[] = [
     title: "Racks y Gabinetes",
     resumen:
       "Montaje seguro, ventilación, orden y crecimiento.",
-    imagen: "/images/servicios/racks.jpg"
+    imagen: "/images/servicios/racks-gabinetes.jfif"
   },
   {
     slug: "servicios-en-la-nube",
