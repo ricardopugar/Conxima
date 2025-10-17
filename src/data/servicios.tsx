@@ -25,7 +25,7 @@ export const servicios: Servicio[] = [
     title: "Cuarto de Monitoreo",
     resumen:
       "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
-    imagen: "/images/servicios/monitoreo.jpg"
+    imagen: "/images/servicios/monitoreo.jfif"
   },
   {
     slug: "cableado-estructurado",
@@ -46,7 +46,7 @@ export const servicios: Servicio[] = [
     title: "Servicios en la Nube",
     resumen:
       "Instancias seguras, almacenamiento, backups y acceso remoto.",
-    imagen: "/images/servicios/nube.jpg"
+    imagen: "/images/servicios/nube.jfif"
   },
   {
     slug: "cableado-fibra-optica",
