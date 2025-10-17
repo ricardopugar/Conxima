@@ -222,6 +222,33 @@ export default function ConximaLanding() {
     ),
   } as const;
 
+  /* =========================
+   *  WhatsApp helpers (mensaje prellenado)
+   * ========================= */
+  const WA_NUMBER = "593939011017"; // Conxima
+
+  const buildWhatsAppURL = () => {
+    const name  = (document.getElementById("name")  as HTMLInputElement)?.value?.trim()  || "";
+    const email = (document.getElementById("email") as HTMLInputElement)?.value?.trim() || "";
+    const phone = (document.getElementById("phone") as HTMLInputElement)?.value?.trim() || "";
+    const msg   = (document.getElementById("msg")   as HTMLTextAreaElement)?.value?.trim() || "";
+
+    const text =
+      `Hola CONXIMA, vengo desde la web.` +
+      (name  ? ` Soy ${name}.` : "") +
+      (phone ? ` Tel: ${phone}.` : "") +
+      (email ? ` Email: ${email}.` : "") +
+      (msg   ? `\nResumen: ${msg}` : "");
+
+    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+  };
+
+  const openWhatsApp = (e?: React.MouseEvent) => {
+    e?.preventDefault?.();
+    const url = buildWhatsAppURL();
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
       {/* =========================
@@ -580,27 +607,59 @@ export default function ConximaLanding() {
                   <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="mailto:info@conxima.com?subject=Consulta%20web" className="btn-outline-tech">
                     Escribir correo
                   </motion.a>
-                  <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20una%20cotizaci%C3%B3n" target="_blank" rel="noopener noreferrer" className="btn-outline-tech">
-                    WhatsApp
-                  </motion.a>
                 </div>
                 <p className="sm:col-span-2 text-xs text-muted">Al enviar aceptas nuestro tratamiento de datos personales.</p>
               </form>
+              
             </div>
 
             <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
               <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
                 <h3 className="font-heading text-xl font-semibold">Contacto</h3>
-                <ul className="mt-4 space-y-3 text-slate-2 00">
+                <ul className="mt-4 space-y-3 text-slate-200">
                   <li className="flex items-center gap-3"><span className="text-secondary">📞</span> <a href="tel:+593939011017" className="hover:underline">+593 93 901 1017</a></li>
                   <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:info@conxima.com" className="hover:underline">info@conxima.com</a></li>
                   <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18</li>
                 </ul>
-                <div className="mt-6 rounded-xl border border-white/10 p-4">
-                  <p className="text-sm text-slate-300">Podemos añadir mapa de Google y botones de WhatsApp con mensaje pre-llenado.</p>
+
+                {/* Botón de WhatsApp en la tarjeta de contacto */}
+                <div className="mt-4">
+                  <button
+                    onClick={openWhatsApp}
+                    className="btn-tech w-full"
+                    aria-label="Abrir WhatsApp con mensaje prellenado"
+                  >
+                    Escribir por WhatsApp
+                  </button>
                 </div>
+
+                {/* Mapa de Google - ubicación exacta CONXIMA */}
+                <div className="mt-6 overflow-hidden rounded-xl ring-1 ring-white/10">
+                  <iframe
+                    title="Ubicación CONXIMA"
+                    className="w-full h-[300px] border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=-2.15133452415466,-79.8876800537109&z=16&output=embed"
+                    allowFullScreen
+                  />
+                </div>
+
+                {/* Enlace para abrir la ubicación en Google Maps */}
+                <div className="mt-3 text-sm">
+                  <a
+                    href="https://www.google.com/maps?q=-2.15133452415466,-79.8876800537109"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-80"
+                  >
+                    Abrir en Google Maps
+                  </a>
+                </div>
+
               </div>
             </aside>
+
           </div>
         </div>
       </section>
