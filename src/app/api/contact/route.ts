@@ -2,10 +2,19 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
+    // Comprobamos que exista la API key
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Falta RESEND_API_KEY en las variables de entorno");
+      return NextResponse.json(
+        { error: "Error de configuración del servidor." },
+        { status: 500 }
+      );
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const body = await req.json();
     const { name, email, phone, msg, to } = body;
 
@@ -19,7 +28,7 @@ export async function POST(req: Request) {
     const toEmail = to || process.env.CONTACT_TO_EMAIL || "info@conxima.com";
 
     const result = await resend.emails.send({
-      from: "Conxima <no-reply@conxima.com>", // usa aquí el dominio verificado en Resend
+      from: "Conxima <no-reply@conxima.com>", // usa un dominio verificado en Resend
       to: toEmail,
       subject: `Nueva consulta desde la web - ${name}`,
       replyTo: email,
