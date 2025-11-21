@@ -11,14 +11,14 @@ export const servicios: Servicio[] = [
     title: "Control de Acceso Biométrico",
     resumen:
       "Lectores de huella, reconocimiento facial, tarjetas inteligentes e integración con software de gestión.",
-    imagen: "/images/servicios/acceso.png"
+    imagen: "/images/servicios/acceso.jpeg"
   },
   {
     slug: "sistemas-de-alarma",
     title: "Sistemas de Alarma",
     resumen:
       "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
-    imagen: "/images/servicios/alarma.jpg"
+    imagen: "/images/servicios/alarma.jpeg"
   },
   {
     slug: "cuarto-de-monitoreo",

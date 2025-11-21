@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -249,6 +250,49 @@ export default function ConximaLanding() {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  /* =========================
+   *  Estado para envío de formulario
+   * ========================= */
+  const [sending, setSending] = useState(false);
+  const [sendStatus, setSendStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (sending) return;
+
+    const name  = (document.getElementById("name")  as HTMLInputElement)?.value?.trim()  || "";
+    const email = (document.getElementById("email") as HTMLInputElement)?.value?.trim() || "";
+    const phone = (document.getElementById("phone") as HTMLInputElement)?.value?.trim() || "";
+    const msg   = (document.getElementById("msg")   as HTMLTextAreaElement)?.value?.trim() || "";
+
+    // Validación sencilla
+    if (!name || !email || !msg) {
+      setSendStatus("error");
+      return;
+    }
+
+    try {
+      setSending(true);
+      setSendStatus("idle");
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, msg, to: "info@conxima.com" }),
+      });
+
+      if (!res.ok) throw new Error("Error al enviar");
+
+      setSendStatus("success");
+      (e.currentTarget as HTMLFormElement).reset();
+    } catch (err) {
+      console.error(err);
+      setSendStatus("error");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
       {/* =========================
@@ -328,15 +372,15 @@ export default function ConximaLanding() {
         />
         <div className={["mx-auto max-w-7xl px-4 flex items-center justify-between", scrolled ? "py-2" : "py-3"].join(" ")}>
           <a href="#inicio" className="group inline-flex items-center gap-3">
-            <span className={["inline-flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden ring-1", scrolled ? "bg-white/90 ring-black/10" : "bg-white/5 ring-white/10"].join(" ")}>
+            <span className={["inline-flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden ring-1", "bg-white/5 ring-white/10"].join(" ")}>
               <Image
-                src="/images/logo-conxima.png"
+                src="/images/isotipo_blanco.png"
                 alt="Logo Conxima"
                 width={24}
                 height={24}
                 priority
                 data-preload="true"
-                className={scrolled ? "invert-0" : ""}
+                className=""
                 style={{ width: "auto", height: "auto" }}
               />
             </span>
@@ -566,7 +610,10 @@ export default function ConximaLanding() {
                 Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
               </p>
 
-              <form className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => e.preventDefault()}>
+              <form
+                className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
+                onSubmit={handleContactSubmit}
+              >
                 <div className="input-tech">
                   <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
                     <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" fill="currentColor" />
@@ -601,14 +648,31 @@ export default function ConximaLanding() {
                 </div>
 
                 <div className="sm:col-span-2 flex flex-wrap gap-3">
-                  <motion.button whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" className="btn-tech">
-                    Enviar consulta
+                  <motion.button
+                    whileHover={{ y: -1, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="btn-tech"
+                    disabled={sending}
+                  >
+                    {sending ? "Enviando..." : "Enviar consulta"}
                   </motion.button>
-                  <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="mailto:info@conxima.com?subject=Consulta%20web" className="btn-outline-tech">
-                    Escribir correo
-                  </motion.a>
                 </div>
-                <p className="sm:col-span-2 text-xs text-muted">Al enviar aceptas nuestro tratamiento de datos personales.</p>
+
+                {sendStatus === "success" && (
+                  <p className="sm:col-span-2 text-xs text-muted">
+                    Tu mensaje fue enviado correctamente. Te contactaremos pronto.
+                  </p>
+                )}
+                {sendStatus === "error" && (
+                  <p className="sm:col-span-2 text-xs text-muted">
+                    Hubo un problema al enviar tu mensaje. Intenta nuevamente o escríbenos a info@conxima.com.
+                  </p>
+                )}
+
+                <p className="sm:col-span-2 text-xs text-muted">
+                  Al enviar aceptas nuestro tratamiento de datos personales.
+                </p>
               </form>
               
             </div>
@@ -619,7 +683,7 @@ export default function ConximaLanding() {
                 <ul className="mt-4 space-y-3 text-slate-200">
                   <li className="flex items-center gap-3"><span className="text-secondary">📞</span> <a href="tel:+593939011017" className="hover:underline">+593 93 901 1017</a></li>
                   <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:info@conxima.com" className="hover:underline">info@conxima.com</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simon Bolivar Mz.5 V.18</li>
+                  <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simón Bolivar Mz.5 V.18</li>
                 </ul>
 
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
