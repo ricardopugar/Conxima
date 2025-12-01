@@ -256,17 +256,20 @@ export default function ConximaLanding() {
   const [sending, setSending] = useState(false);
   const [sendStatus, setSendStatus] = useState<"idle" | "success" | "error">("idle");
 
+  // ⬇️ Nuevo handler para usar contact.php + FormData
   const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (sending) return;
 
-    const name  = (document.getElementById("name")  as HTMLInputElement)?.value?.trim()  || "";
-    const email = (document.getElementById("email") as HTMLInputElement)?.value?.trim() || "";
-    const phone = (document.getElementById("phone") as HTMLInputElement)?.value?.trim() || "";
-    const msg   = (document.getElementById("msg")   as HTMLTextAreaElement)?.value?.trim() || "";
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const message = String(formData.get("message") || "").trim();
 
     // Validación sencilla
-    if (!name || !email || !msg) {
+    if (!name || !email || !message) {
       setSendStatus("error");
       return;
     }
@@ -275,16 +278,16 @@ export default function ConximaLanding() {
       setSending(true);
       setSendStatus("idle");
 
-      const res = await fetch("/api/contact", {
+      // Importante: aquí llamamos a contact.php, no a /api/contact
+      const res = await fetch("contact.php", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, msg, to: "info@conxima.com" }),
+        body: formData,
       });
 
       if (!res.ok) throw new Error("Error al enviar");
 
       setSendStatus("success");
-      (e.currentTarget as HTMLFormElement).reset();
+      form.reset();
     } catch (err) {
       console.error(err);
       setSendStatus("error");
@@ -618,7 +621,13 @@ export default function ConximaLanding() {
                   <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
                     <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" fill="currentColor" />
                   </svg>
-                  <input id="name" placeholder=" " className="input-tech-field peer" aria-label="Nombre" />
+                  <input
+                    id="name"
+                    name="name"
+                    placeholder=" "
+                    className="input-tech-field peer"
+                    aria-label="Nombre"
+                  />
                   <label htmlFor="name" className="input-tech-label">Nombre</label>
                 </div>
 
@@ -627,7 +636,14 @@ export default function ConximaLanding() {
                     <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" strokeWidth="2" />
                     <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
-                  <input id="email" type="email" placeholder=" " className="input-tech-field peer" aria-label="Email" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder=" "
+                    className="input-tech-field peer"
+                    aria-label="Email"
+                  />
                   <label htmlFor="email" className="input-tech-label">Email</label>
                 </div>
 
@@ -635,7 +651,13 @@ export default function ConximaLanding() {
                   <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.09 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11l-1.27 1.27a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z" fill="currentColor" />
                   </svg>
-                  <input id="phone" placeholder=" " className="input-tech-field peer" aria-label="Teléfono / WhatsApp" />
+                  <input
+                    id="phone"
+                    name="phone"
+                    placeholder=" "
+                    className="input-tech-field peer"
+                    aria-label="Teléfono / WhatsApp"
+                  />
                   <label htmlFor="phone" className="input-tech-label">Teléfono / WhatsApp</label>
                 </div>
 
@@ -643,7 +665,14 @@ export default function ConximaLanding() {
                   <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
-                  <textarea id="msg" placeholder=" " rows={4} className="input-tech-field textarea-tech peer" aria-label="Mensaje" />
+                  <textarea
+                    id="msg"
+                    name="message"
+                    placeholder=" "
+                    rows={4}
+                    className="input-tech-field textarea-tech peer"
+                    aria-label="Mensaje"
+                  />
                   <label htmlFor="msg" className="input-tech-label">Cuéntanos brevemente qué necesitas</label>
                 </div>
 
