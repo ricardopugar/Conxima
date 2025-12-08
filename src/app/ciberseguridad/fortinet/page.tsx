@@ -1,6 +1,7 @@
 // src/app/ciberseguridad/fortinet/page.tsx
 import Navbar from "../../components/Navbar";
 import FortinetSection from "../../components/FortinetSection";
+import Footer from "../../components/Footer";
 
 export default function FortinetPage() {
   return (
@@ -9,6 +10,7 @@ export default function FortinetPage() {
       <main>
         <FortinetSection />
       </main>
+      <Footer />
     </div>
   );
 }

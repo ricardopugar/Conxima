@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
-
+import Footer from "./Footer";
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
 
@@ -845,18 +845,7 @@ export default function ConximaLanding() {
       {/* =========================
           FOOTER
       ========================== */}
-      <footer className="border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-slate-400 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} CONXIMA S.A.S · Todos los derechos reservados</p>
-          <nav className="flex items-center gap-5">
-            <a href="#inicio" className="hover:text-white">Inicio</a>
-            <a href="#quienes" className="hover:text-white">Quiénes somos</a>
-            <a href="#servicios" className="hover:text-white">Servicios</a>
-            <a href="#porque" className="hover:text-white">Por qué nosotros</a>
-            <a href="#contacto" className="hover:text-white">Contacto</a>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
