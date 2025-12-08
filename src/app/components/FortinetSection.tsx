@@ -1,6 +1,7 @@
 // src/app/components/FortinetSection.tsx
 import type React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function FortinetSection() {
   return (
@@ -40,9 +41,9 @@ export default function FortinetSection() {
                 infraestructura.
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-                <a href="/#contacto" className="btn-tech">
+                <Link href="/#contacto" className="btn-tech">
                   Quiero una asesoría
-                </a>
+                </Link>
                 <span className="text-xs text-muted">
                   Integraciones a la medida para empresas en crecimiento.
                 </span>
@@ -83,9 +84,9 @@ export default function FortinetSection() {
               <li>• Acompañamiento local y soporte de CONXIMA.</li>
             </ul>
             <div className="mt-6">
-              <a href="/#contacto" className="btn-outline-tech inline-flex">
+              <Link href="/#contacto" className="btn-outline-tech inline-flex">
                 Quiero evaluar mi seguridad actual
-              </a>
+              </Link>
             </div>
           </div>
         </div>
