@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Navbar from "./Navbar";
 
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
@@ -24,9 +25,12 @@ export default function ConximaLanding() {
     const start = Date.now();
 
     const targets: Array<HTMLVideoElement | HTMLImageElement> = [];
-    document.querySelectorAll<HTMLElement>('[data-preload="true"]').forEach((el) => {
-      if (el instanceof HTMLVideoElement || el instanceof HTMLImageElement) targets.push(el);
-    });
+    document
+      .querySelectorAll<HTMLElement>('[data-preload="true"]')
+      .forEach((el) => {
+        if (el instanceof HTMLVideoElement || el instanceof HTMLImageElement)
+          targets.push(el);
+      });
 
     if (targets.length === 0) {
       const delay = Math.max(0, MIN_SHOW_MS - (Date.now() - start));
@@ -93,17 +97,22 @@ export default function ConximaLanding() {
    *  REVEAL ON SCROLL
    * ========================= */
   const revealRefs = useRef<Array<HTMLElement | null>>([]);
-  const setRevealRef = (idx: number) => (el: HTMLElement | null) => {
-    revealRefs.current[idx] = el;
-  };
+  const setRevealRef =
+    (idx: number) =>
+    (el: HTMLElement | null): void => {
+      revealRefs.current[idx] = el;
+    };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const reduce =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const nodeSet = new Set<HTMLElement>();
     revealRefs.current.forEach((el) => el && nodeSet.add(el));
-    document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => nodeSet.add(el));
+    document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => {
+      nodeSet.add(el);
+    });
     if (nodeSet.size === 0) return;
 
     if (reduce || !("IntersectionObserver" in window)) {
@@ -131,49 +140,19 @@ export default function ConximaLanding() {
    * ========================= */
   const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
 
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 12);
-        ticking = false;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const el = document.documentElement;
-    const setProgressVar = () => {
-      const h = el.scrollHeight - el.clientHeight;
-      const pct = Math.max(0, Math.min(1, window.scrollY / (h || 1)));
-      el.style.setProperty("--scroll", `${pct * 100}%`);
-    };
-    setProgressVar();
-    window.addEventListener("scroll", setProgressVar, { passive: true });
-    window.addEventListener("resize", setProgressVar);
-    return () => {
-      window.removeEventListener("scroll", setProgressVar);
-      window.removeEventListener("resize", setProgressVar);
-    };
-  }, []);
-
   useEffect(() => {
     try {
       const key = "conxima_hero_idx";
       const last = Number(window.localStorage.getItem(key));
-      const next = Number.isInteger(last) ? (last + 1) % HERO_VIDEOS.length : 0;
+      const next = Number.isInteger(last)
+        ? (last + 1) % HERO_VIDEOS.length
+        : 0;
       setSelectedVideo(HERO_VIDEOS[next]);
       window.localStorage.setItem(key, String(next));
     } catch {
-      setSelectedVideo(HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]);
+      setSelectedVideo(
+        HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]
+      );
     }
   }, []);
 
@@ -183,63 +162,139 @@ export default function ConximaLanding() {
   const Icons = {
     acceso: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path d="M12 3a6 6 0 0 0-6 6v2a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M9 12a3 3 0 1 0 6 0" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M8 20a8 8 0 0 0 8 0" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M12 3a6 6 0 0 0-6 6v2a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <path
+          d="M9 12a3 3 0 1 0 6 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <path
+          d="M8 20a8 8 0 0 0 8 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
       </svg>
     ),
     alarma: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path d="M4 12h16l-8 8-8-8Z" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M4 12h16l-8 8-8-8Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
         <circle cx="12" cy="10" r="3" fill="currentColor" />
-        <path d="M5 5 3 7M21 7l-2-2" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M5 5 3 7M21 7l-2-2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
       </svg>
     ),
     monitoreo: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+        <rect
+          x="3"
+          y="4"
+          width="18"
+          height="12"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
         <path d="M8 20h8" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M6 10h5l2 2 5-4" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M6 10h5l2 2 5-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
       </svg>
     ),
     cableado: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path d="M4 7h16M4 12h10M4 17h7" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M4 7h16M4 12h10M4 17h7"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
         <circle cx="18" cy="12" r="2" fill="currentColor" />
         <circle cx="15" cy="17" r="2" fill="currentColor" />
       </svg>
     ),
     racks: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M8 7h8M8 12h8M8 17h8" fill="none" stroke="currentColor" strokeWidth="2" />
+        <rect
+          x="5"
+          y="3"
+          width="14"
+          height="18"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <path
+          d="M8 7h8M8 12h8M8 17h8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
       </svg>
     ),
     nube: (
       <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path d="M7 16a4 4 0 1 1 0-8 5 5 0 0 1 9.7 1.5A4.5 4.5 0 1 1 17 16H7Z" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M10 13h6M8 15h8" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path
+          d="M7 16a4 4 0 1 1 0-8 5 5 0 0 1 9.7 1.5A4.5 4.5 0 1 1 17 16H7Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <path
+          d="M10 13h6M8 15h8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
       </svg>
     ),
   } as const;
 
   /* =========================
-   *  WhatsApp helpers (mensaje prellenado)
+   *  WhatsApp helpers
    * ========================= */
   const WA_NUMBER = "593939011017"; // Conxima
 
   const buildWhatsAppURL = () => {
-    const name  = (document.getElementById("name")  as HTMLInputElement)?.value?.trim()  || "";
-    const email = (document.getElementById("email") as HTMLInputElement)?.value?.trim() || "";
-    const phone = (document.getElementById("phone") as HTMLInputElement)?.value?.trim() || "";
-    const msg   = (document.getElementById("msg")   as HTMLTextAreaElement)?.value?.trim() || "";
+    const name =
+      (document.getElementById("name") as HTMLInputElement)?.value?.trim() ||
+      "";
+    const email =
+      (document.getElementById("email") as HTMLInputElement)?.value?.trim() ||
+      "";
+    const phone =
+      (document.getElementById("phone") as HTMLInputElement)?.value?.trim() ||
+      "";
+    const msg =
+      (document.getElementById("msg") as HTMLTextAreaElement)?.value?.trim() ||
+      "";
 
     const text =
       `Hola CONXIMA, vengo desde la web.` +
-      (name  ? ` Soy ${name}.` : "") +
+      (name ? ` Soy ${name}.` : "") +
       (phone ? ` Tel: ${phone}.` : "") +
       (email ? ` Email: ${email}.` : "") +
-      (msg   ? `\nResumen: ${msg}` : "");
+      (msg ? `\nResumen: ${msg}` : "");
 
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
   };
@@ -251,13 +306,15 @@ export default function ConximaLanding() {
   };
 
   /* =========================
-   *  Estado para envío de formulario
+   *  Estado envío formulario
    * ========================= */
   const [sending, setSending] = useState(false);
-  const [sendStatus, setSendStatus] = useState<"idle" | "success" | "error">("idle");
+  const [sendStatus, setSendStatus] =
+    useState<"idle" | "success" | "error">("idle");
 
-  // ⬇️ Nuevo handler para usar contact.php + FormData
-  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleContactSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     if (sending) return;
 
@@ -268,7 +325,6 @@ export default function ConximaLanding() {
     const email = String(formData.get("email") || "").trim();
     const message = String(formData.get("message") || "").trim();
 
-    // Validación sencilla
     if (!name || !email || !message) {
       setSendStatus("error");
       return;
@@ -278,7 +334,6 @@ export default function ConximaLanding() {
       setSending(true);
       setSendStatus("idle");
 
-      // Importante: aquí llamamos a contact.php, no a /api/contact
       const res = await fetch("contact.php", {
         method: "POST",
         body: formData,
@@ -298,10 +353,12 @@ export default function ConximaLanding() {
 
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
-      {/* =========================
-          PRELOADER OVERLAY
-      ========================== */}
-      <div className={`preloader ${loading ? "" : "preloader--hidden"}`} aria-hidden={!loading} aria-live="polite">
+      {/* PRELOADER */}
+      <div
+        className={`preloader ${loading ? "" : "preloader--hidden"}`}
+        aria-hidden={!loading}
+        aria-live="polite"
+      >
         <div className="preloader__card">
           <div className="preloader__spinner">
             <div className="preloader__logo">
@@ -312,21 +369,29 @@ export default function ConximaLanding() {
                 height={26}
                 priority
                 data-preload="true"
-                /* Evita warning de relación de aspecto */
                 style={{ width: "auto", height: "auto" }}
               />
             </div>
           </div>
-          <div className="preloader__progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
-            <div className="preloader__progress-inner" style={{ width: `${progress}%` }} />
+          <div
+            className="preloader__progress"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+          >
+            <div
+              className="preloader__progress-inner"
+              style={{ width: `${progress}%` }}
+            />
           </div>
-          <div className="preloader__text">Cargando experiencia… {progress}%</div>
+          <div className="preloader__text">
+            Cargando experiencia… {progress}%
+          </div>
         </div>
       </div>
 
-      {/* =========================
-          Estilos locales
-      ========================== */}
+      {/* Estilos locales */}
       <style>{`
         :root {
           --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
@@ -355,56 +420,14 @@ export default function ConximaLanding() {
         .reveal-in { opacity: 1; transform: translateY(0); }
       `}</style>
 
-      {/* =========================
-          NAVBAR
-      ========================== */}
-      <header
-        className={[
-          "sticky top-0 z-40 transition-all duration-300",
-          scrolled
-            ? "backdrop-blur supports-[backdrop-filter]:bg-[color:rgba(6,9,16,0.55)] bg-[color:rgba(6,9,16,0.85)] border-b border-white/10 shadow-[0_2px_20px_rgba(0,0,0,0.25)]"
-            : "bg-transparent",
-        ].join(" ")}
+      {/* NAVBAR reutilizable */}
+      <Navbar />
+
+      {/* HERO */}
+      <section
+        id="inicio"
+        className="relative isolate min-h-[85vh] w-full overflow-hidden"
       >
-        <span
-          aria-hidden
-          className="block h-[2px] w-full bg-transparent"
-          style={{
-            background: "linear-gradient(90deg, var(--color-secondary) var(--scroll), transparent 0)",
-          }}
-        />
-        <div className={["mx-auto max-w-7xl px-4 flex items-center justify-between", scrolled ? "py-2" : "py-3"].join(" ")}>
-          <a href="#inicio" className="group inline-flex items-center gap-3">
-            <span className={["inline-flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden ring-1", "bg-white/5 ring-white/10"].join(" ")}>
-              <Image
-                src="/images/isotipo_blanco.png"
-                alt="Logo Conxima"
-                width={24}
-                height={24}
-                priority
-                data-preload="true"
-                className=""
-                style={{ width: "auto", height: "auto" }}
-              />
-            </span>
-            <span className={["font-heading text-lg tracking-wide transition-colors", scrolled ? "text-white" : ""].join(" ")}>CONXIMA</span>
-          </a>
-
-          <nav className={["hidden md:flex items-center gap-6 text-sm transition-colors", scrolled ? "text-slate-200" : "text-slate-200"].join(" ")}>
-            <a href="#quienes" className="hover:text-white">Quiénes somos</a>
-            <a href="#servicios" className="hover:text-white">Servicios</a>
-            <a href="#porque" className="hover:text-white">Por qué nosotros</a>
-            <a href="#contacto" className="hover:text-white">Contacto</a>
-            <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className={["text-xs ml-2 rounded-full px-3 py-1.5 transition", scrolled ? "btn-tech" : "btn-outline-tech"].join(" ")}>Cotiza ahora</motion.a>
-          </nav>
-        </div>
-      </header>
-
-      {/* =========================
-          HERO
-      ========================== */}
-      {/* (Hero se queda sin .section para no afectar el video de fondo) */}
-      <section id="inicio" className="relative isolate min-h-[85vh] w-full overflow-hidden">
         <video
           key={selectedVideo}
           className="absolute inset-0 h-full w-full object-cover"
@@ -422,19 +445,36 @@ export default function ConximaLanding() {
         <div className="hero-overlay absolute inset-0" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 md:py-32">
           <div className="max-w-3xl reveal" ref={setRevealRef(0)}>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold leading-tight">
-              Tecnología al servicio de tu <span className="block text-secondary">Seguridad y Conectividad</span>
+            <h1 className="font-heading text-4xl font-bold leading-tight md:text-6xl">
+              Tecnología al servicio de tu{" "}
+              <span className="block text-secondary">Seguridad y Conectividad</span>
             </h1>
-            <p className="mt-5 text-lg text-slate-300 max-w-2xl">
-              Soluciones integrales en telecomunicaciones y seguridad electrónica. Diseño, instalación y mantenimiento con profesionales certificados.
+            <p className="mt-5 max-w-2xl text-lg text-slate-300">
+              Soluciones integrales en telecomunicaciones y seguridad
+              electrónica. Diseño, instalación y mantenimiento con profesionales
+              certificados.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#contacto" className="btn-tech">Solicita una asesoría</motion.a>
-              <motion.a whileHover={{ y: -1, scale: 1.01 }} whileTap={{ scale: 0.99 }} href="#servicios" className="btn-outline-tech">Explorar servicios</motion.a>
+              <motion.a
+                whileHover={{ y: -1, scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                href="#contacto"
+                className="btn-tech"
+              >
+                Solicita una asesoría
+              </motion.a>
+              <motion.a
+                whileHover={{ y: -1, scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                href="#servicios"
+                className="btn-outline-tech"
+              >
+                Explorar servicios
+              </motion.a>
             </div>
           </div>
         </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-bg)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-bg)]" />
       </section>
 
       {/* =========================
@@ -767,7 +807,7 @@ export default function ConximaLanding() {
                     className="btn-tech w-full"
                     aria-label="Abrir WhatsApp con mensaje prellenado"
                   >
-                    Escribir por WhatsApp
+                    Escribir por WhatsApp 
                   </button>
                 </div>
 

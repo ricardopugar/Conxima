@@ -1,13 +1,19 @@
+// src/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import RouteTransition from "./RouteTransition";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
 
 export const metadata: Metadata = {
   title: "CONXIMA S.A.S",
-  description: "Soluciones integrales en telecomunicaciones y seguridad electrónica.",
+  description:
+    "Soluciones integrales en telecomunicaciones y seguridad electrónica.",
   icons: {
     icon: [
       { url: "/images/logo-conxima.png", sizes: "32x32", type: "image/png" },
@@ -19,7 +25,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="es"
@@ -30,7 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${montserrat.variable} ${inter.variable} antialiased bg-[var(--app-bg)] text-[var(--app-fg)]`}
       >
-        {children}
+        {/* 👇 Aquí se aplican las transiciones entre páginas */}
+        <RouteTransition>{children}</RouteTransition>
       </body>
     </html>
   );
