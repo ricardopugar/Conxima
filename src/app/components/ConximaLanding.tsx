@@ -613,96 +613,141 @@ export default function ConximaLanding() {
                 Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
               </p>
 
-              <form
-                className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
-                onSubmit={handleContactSubmit}
-              >
-                <div className="input-tech">
-                  <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
-                    <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" fill="currentColor" />
-                  </svg>
-                  <input
-                    id="name"
-                    name="name"
-                    placeholder=" "
-                    className="input-tech-field peer"
-                    aria-label="Nombre"
-                  />
-                  <label htmlFor="name" className="input-tech-label">Nombre</label>
-                </div>
+        <form
+          className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
+          onSubmit={handleContactSubmit}
+        >
+          {/* NOMBRE */}
+          <div className="sm:col-span-2 sm:col-span-1 space-y-1">
+            <label
+              htmlFor="name"
+              className="block text-xs font-medium text-slate-300"
+            >
+              Nombre
+            </label>
+            <div className="input-tech">
+              <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
+                <path
+                  d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <input
+                id="name"
+                name="name"
+                className="input-tech-field"
+                placeholder="Escribe tu nombre"
+                aria-label="Nombre"
+              />
+            </div>
+          </div>
 
-                <div className="input-tech">
-                  <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
-                    <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" strokeWidth="2" />
-                    <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder=" "
-                    className="input-tech-field peer"
-                    aria-label="Email"
-                  />
-                  <label htmlFor="email" className="input-tech-label">Email</label>
-                </div>
+          {/* EMAIL */}
+          <div className="sm:col-span-2 sm:col-span-1 space-y-1">
+            <label
+              htmlFor="email"
+              className="block text-xs font-medium text-slate-300"
+            >
+              Email
+            </label>
+            <div className="input-tech">
+              <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
+                <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" strokeWidth="2" />
+                <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" strokeWidth="2" />
+              </svg>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                className="input-tech-field"
+                placeholder="tu@correo.com"
+                aria-label="Email"
+              />
+            </div>
+          </div>
 
-                <div className="input-tech sm:col-span-2">
-                  <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.09 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11l-1.27 1.27a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z" fill="currentColor" />
-                  </svg>
-                  <input
-                    id="phone"
-                    name="phone"
-                    placeholder=" "
-                    className="input-tech-field peer"
-                    aria-label="Teléfono / WhatsApp"
-                  />
-                  <label htmlFor="phone" className="input-tech-label">Teléfono / WhatsApp</label>
-                </div>
+          {/* TELÉFONO */}
+          <div className="sm:col-span-2 space-y-1">
+            <label
+              htmlFor="phone"
+              className="block text-xs font-medium text-slate-300"
+            >
+              Teléfono / WhatsApp
+            </label>
+            <div className="input-tech">
+              <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.09 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11l-1.27 1.27a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <input
+                id="phone"
+                name="phone"
+                className="input-tech-field"
+                placeholder="+593 99 999 9999"
+                aria-label="Teléfono / WhatsApp"
+              />
+            </div>
+          </div>
 
-                <div className="input-tech sm:col-span-2">
-                  <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
-                  <textarea
-                    id="msg"
-                    name="message"
-                    placeholder=" "
-                    rows={4}
-                    className="input-tech-field textarea-tech peer"
-                    aria-label="Mensaje"
-                  />
-                  <label htmlFor="msg" className="input-tech-label">Cuéntanos brevemente qué necesitas</label>
-                </div>
+          {/* MENSAJE */}
+          <div className="sm:col-span-2 space-y-1">
+            <label
+              htmlFor="msg"
+              className="block text-xs font-medium text-slate-300"
+            >
+              Cuéntanos brevemente qué necesitas
+            </label>
+            <div className="input-tech">
+              <svg viewBox="0 0 24 24" className="input-tech-icon h-5 w-5" aria-hidden>
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+              <textarea
+                id="msg"
+                name="message"
+                rows={4}
+                className="input-tech-field textarea-tech"
+                placeholder="Escribe aquí tu mensaje"
+                aria-label="Mensaje"
+              />
+            </div>
+          </div>
 
-                <div className="sm:col-span-2 flex flex-wrap gap-3">
-                  <motion.button
-                    whileHover={{ y: -1, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="btn-tech"
-                    disabled={sending}
-                  >
-                    {sending ? "Enviando..." : "Enviar consulta"}
-                  </motion.button>
-                </div>
+          {/* BOTÓN + MENSAJES DE ESTADO */}
+          <div className="sm:col-span-2 flex flex-wrap gap-3">
+            <motion.button
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              className="btn-tech"
+              disabled={sending}
+            >
+              {sending ? "Enviando..." : "Enviar consulta"}
+            </motion.button>
+          </div>
 
-                {sendStatus === "success" && (
-                  <p className="sm:col-span-2 text-xs text-muted">
-                    Tu mensaje fue enviado correctamente. Te contactaremos pronto.
-                  </p>
-                )}
-                {sendStatus === "error" && (
-                  <p className="sm:col-span-2 text-xs text-muted">
-                    Hubo un problema al enviar tu mensaje. Intenta nuevamente o escríbenos a info@conxima.com.
-                  </p>
-                )}
+          {sendStatus === "success" && (
+            <p className="sm:col-span-2 text-xs text-muted">
+              Tu mensaje fue enviado correctamente. Te contactaremos pronto.
+            </p>
+          )}
+          {sendStatus === "error" && (
+            <p className="sm:col-span-2 text-xs text-muted">
+              Hubo un problema al enviar tu mensaje. Intenta nuevamente o escríbenos a info@conxima.com.
+            </p>
+          )}
 
-                <p className="sm:col-span-2 text-xs text-muted">
-                  Al enviar aceptas nuestro tratamiento de datos personales.
-                </p>
-              </form>
+          <p className="sm:col-span-2 text-xs text-muted">
+            Al enviar aceptas nuestro tratamiento de datos personales.
+          </p>
+        </form>
+
               
             </div>
 
