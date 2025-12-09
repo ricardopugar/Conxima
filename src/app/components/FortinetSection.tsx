@@ -35,7 +35,7 @@ export default function FortinetSection() {
 
               {/* Frase + sticker de especialistas */}
               <div className="mt-2 inline-flex items-center justify-center gap-2 md:justify-start">
-                <p className="text-sm font-medium text-secondary">
+                <p className="mt-2 text-lg font-bold tracking-wide text-secondary">
                   Especialistas de Seguridad IT Certificados
                 </p>
                 {/* Sticker / logo al lado de la frase */}
