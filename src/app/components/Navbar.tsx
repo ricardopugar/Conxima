@@ -290,13 +290,14 @@ export default function Navbar() {
               Contacto
             </Link>
 
-            <a
+            <Link
               href="/#contacto"
               className="mt-2 inline-flex items-center justify-center rounded-full px-3 py-2 text-xs btn-tech"
               onClick={handleMobileLinkClick}
             >
               Cotiza ahora
-            </a>
+            </Link>
+
           </nav>
         </div>
       )}
