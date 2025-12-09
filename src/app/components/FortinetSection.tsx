@@ -1,16 +1,108 @@
-// src/app/components/FortinetSection.tsx
+// ./components/FortinetSection.tsx
 import type React from "react";
 import Image from "next/image";
-import Link from "next/link";
+
+const FORTINET_PRODUCTS = [
+  {
+    id: "fortigate",
+    name: "FortiGate",
+    tagline: "Network Security Platform",
+  },
+  {
+    id: "fortiswitch",
+    name: "FortiSwitch",
+    tagline: "Secured Access Switch",
+  },
+  {
+    id: "fortiap",
+    name: "FortiAP",
+    tagline: "Advanced Endpoint Protection",
+  },
+  {
+    id: "fortiweb",
+    name: "FortiWeb",
+    tagline: "Web Application Firewall",
+  },
+  {
+    id: "fortimail",
+    name: "FortiMail",
+    tagline: "Messaging Security Server",
+  },
+  {
+    id: "fortianalyzer",
+    name: "FortiAnalyzer",
+    tagline: "Advanced Security Analytics",
+  },
+  {
+    id: "fortimanager",
+    name: "FortiManager",
+    tagline: "Centralized Network Management",
+  },
+  {
+    id: "fortisiem",
+    name: "FortiSIEM",
+    tagline: "Event Correlation & Risk",
+  },
+  {
+    id: "fortiauthenticator",
+    name: "FortiAuthenticator",
+    tagline: "User Identity Management",
+  },
+  {
+    id: "forticlient",
+    name: "FortiClient",
+    tagline: "Endpoint Threat Protection",
+  },
+  {
+    id: "fortitoken",
+    name: "FortiToken",
+    tagline: "One-Time Password Token",
+  },
+  {
+    id: "fortipam",
+    name: "FortiPAM",
+    tagline: "Authenticator Solutions",
+  },
+  {
+    id: "fortiedr",
+    name: "FortiEDR",
+    tagline: "Endpoint Security Solutions",
+  },
+  {
+    id: "fortisandbox",
+    name: "FortiSandbox",
+    tagline: "Advanced Threat Prevention",
+  },
+  {
+    id: "fortinac",
+    name: "FortiNAC",
+    tagline: "Network Access Control",
+  },
+  {
+    id: "fortiddos",
+    name: "FortiDDoS",
+    tagline: "DDoS Attack Mitigation",
+  },
+  {
+    id: "forticasb",
+    name: "FortiCASB",
+    tagline: "Cloud Access Security Broker",
+  },
+  {
+    id: "fortisase",
+    name: "FortiSASE",
+    tagline: "Secure Access Service Edge",
+  },
+];
 
 export default function FortinetSection() {
   return (
     <section id="fortinet" className="section relative" data-tone="2">
       <div className="mx-auto max-w-7xl px-4 py-20">
-        {/* HERO FORTINET: LOGO PROTAGONISTA */}
+        {/* HERO FORTINET: LOGO + TEXTO */}
         <div className="rounded-3xl bg-card/80 p-8 md:p-10 ring-1 ring-white/10 shadow-xl shadow-black/40">
           <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-between">
-            {/* Logo Fortinet MUY visible */}
+            {/* Logo Fortinet protagonista */}
             <div className="flex flex-1 items-center justify-center">
               <div className="relative inline-flex items-center justify-center rounded-3xl bg-black/40 px-8 py-6 ring-1 ring-white/15">
                 <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_0%_0%,rgba(255,255,255,0.1),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(255,255,255,0.1),transparent_55%)]" />
@@ -32,27 +124,27 @@ export default function FortinetSection() {
               </span>
               <h1 className="mt-4 font-heading text-3xl font-bold md:text-4xl">
                 Protección de clase mundial con{" "}
-                <span className="text-secondary">Fortinet</span>
+                <span className="text-secondary">Fortinet</span> y CONXIMA
               </h1>
               <p className="mt-3 text-slate-300">
-                Diseñamos, integramos y operamos soluciones Fortinet para
-                proteger tu red, usuarios y aplicaciones. Desde el perímetro
-                hasta la nube, llevamos la ciberseguridad al centro de tu
-                infraestructura.
+                CONXIMA S.A.S integra soluciones de Fortinet para proteger la
+                red, los usuarios y la información crítica de tu organización.
+                Como partner, te acompañamos en el diseño, implementación y
+                soporte de tu infraestructura de ciberseguridad.
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-                <Link href="/#contacto" className="btn-tech">
-                  Quiero una asesoría
-                </Link>
+                <a href="/#contacto" className="btn-tech">
+                  Hablar con un asesor Fortinet
+                </a>
                 <span className="text-xs text-muted">
-                  Integraciones a la medida para empresas en crecimiento.
+                  Implementaciones a la medida para empresas en crecimiento.
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* CONTENIDO PRINCIPAL */}
+        {/* BLOQUE SOLUCIONES Y BENEFICIOS */}
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
             <h2 className="font-heading text-xl font-semibold">
@@ -84,12 +176,14 @@ export default function FortinetSection() {
               <li>• Acompañamiento local y soporte de CONXIMA.</li>
             </ul>
             <div className="mt-6">
-              <Link href="/#contacto" className="btn-outline-tech inline-flex">
+              <a href="/#contacto" className="btn-outline-tech inline-flex">
                 Quiero evaluar mi seguridad actual
-              </Link>
+              </a>
             </div>
           </div>
         </div>
+
+       
       </div>
     </section>
   );

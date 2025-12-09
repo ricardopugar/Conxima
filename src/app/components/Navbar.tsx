@@ -8,7 +8,9 @@ import { motion } from "framer-motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [isCyberOpen, setIsCyberOpen] = useState(false);
+  const [isCyberOpen, setIsCyberOpen] = useState(false); // dropdown desktop
+  const [isMobileOpen, setIsMobileOpen] = useState(false); // menú móvil
+  const [isMobileCyberOpen, setIsMobileCyberOpen] = useState(false); // submenú móvil
   const cyberRef = useRef<HTMLDivElement | null>(null);
 
   // Cambia estilos de navbar al hacer scroll
@@ -46,7 +48,7 @@ export default function Navbar() {
     };
   }, []);
 
-  // Cerrar dropdown al hacer click fuera
+  // Cerrar dropdown desktop al hacer click fuera
   useEffect(() => {
     const handler = (event: MouseEvent) => {
       if (!cyberRef.current) return;
@@ -57,6 +59,24 @@ export default function Navbar() {
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
   }, []);
+
+  // Cerrar menú móvil cuando se pasa a desktop
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileOpen(false);
+        setIsMobileCyberOpen(false);
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const handleMobileLinkClick = () => {
+    setIsMobileOpen(false);
+    setIsMobileCyberOpen(false);
+  };
 
   return (
     <header
@@ -78,7 +98,7 @@ export default function Navbar() {
       />
 
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        {/* Logo → siempre te lleva al inicio de la home */}
+        {/* Logo → lleva al inicio de la home */}
         <Link href="/#inicio" className="group inline-flex items-center gap-3">
           <span className="inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
             <Image
@@ -168,7 +188,118 @@ export default function Navbar() {
             Cotiza ahora
           </motion.a>
         </nav>
+
+        {/* BOTÓN HAMBURGUESA (MÓVIL) */}
+        <button
+          type="button"
+          className="inline-flex items-center justify-center rounded-lg p-2 text-slate-200 hover:bg-white/10 md:hidden"
+          onClick={() => setIsMobileOpen((open) => !open)}
+          aria-label="Abrir menú"
+        >
+          <span className="relative flex h-5 w-6 items-center justify-center">
+            <span
+              className={`absolute h-[2px] w-full bg-current transition-transform duration-200 ${
+                isMobileOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5"
+              }`}
+            />
+            <span
+              className={`absolute h-[2px] w-full bg-current transition-opacity duration-200 ${
+                isMobileOpen ? "opacity-0" : "opacity-100"
+              }`}
+            />
+            <span
+              className={`absolute h-[2px] w-full bg-current transition-transform duration-200 ${
+                isMobileOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5"
+              }`}
+            />
+          </span>
+        </button>
       </div>
+
+      {/* MENÚ MÓVIL */}
+      {isMobileOpen && (
+        <div className="border-t border-white/10 bg-[color:rgba(6,9,16,0.96)] md:hidden">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm text-slate-200">
+            <Link
+              href="/#quienes"
+              className="rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={handleMobileLinkClick}
+            >
+              Quiénes somos
+            </Link>
+
+            <Link
+              href="/#servicios"
+              className="rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={handleMobileLinkClick}
+            >
+              Servicios
+            </Link>
+
+            {/* Grupo Ciberseguridad en móvil */}
+            <button
+              type="button"
+              className="flex items-center justify-between rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={() =>
+                setIsMobileCyberOpen((open) => !open)
+              }
+            >
+              <span>Ciberseguridad</span>
+              <svg
+                viewBox="0 0 24 24"
+                className={`h-4 w-4 transition-transform ${
+                  isMobileCyberOpen ? "rotate-180" : ""
+                }`}
+                aria-hidden
+              >
+                <path
+                  d="M6 9l6 6 6-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            {isMobileCyberOpen && (
+              <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
+                <Link
+                  href="/ciberseguridad/fortinet"
+                  className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
+                  onClick={handleMobileLinkClick}
+                >
+                  Fortinet · Firewalls, SD-WAN y seguridad perimetral
+                </Link>
+              </div>
+            )}
+
+            <Link
+              href="/#porque"
+              className="rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={handleMobileLinkClick}
+            >
+              Por qué nosotros
+            </Link>
+
+            <Link
+              href="/#contacto"
+              className="rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={handleMobileLinkClick}
+            >
+              Contacto
+            </Link>
+
+            <a
+              href="/#contacto"
+              className="mt-2 inline-flex items-center justify-center rounded-full px-3 py-2 text-xs btn-tech"
+              onClick={handleMobileLinkClick}
+            >
+              Cotiza ahora
+            </a>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
