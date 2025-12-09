@@ -9,7 +9,8 @@ export default function FortinetSection() {
         {/* HERO FORTINET: LOGO + TEXTO */}
         <div className="rounded-3xl bg-card/80 p-8 md:p-10 ring-1 ring-white/10 shadow-xl shadow-black/40">
           <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-between">
-            {/* 1. COLUMNA LOGO (Modificada para máximo tamaño) */}
+            
+            {/* 1. COLUMNA LOGO */}
             <div className="flex flex-1 items-center justify-center w-full">
               <div className="inline-flex items-center justify-center px-0 md:pr-10 border-r border-white/25 w-full">
                 <Image
@@ -33,56 +34,29 @@ export default function FortinetSection() {
                 <span className="text-secondary">Fortinet</span>
               </h1>
 
-              {/* Frase + sticker de especialistas */}
-              <div className="mt-2 inline-flex items-center justify-center gap-2 md:justify-start">
-                <p className="mt-2 text-lg font-bold tracking-wide text-secondary">
-                  Especialistas de Seguridad IT Certificados
-                </p>
-                {/* Sticker / logo al lado de la frase */}
-                <span
-                  className="
-                    inline-flex h-6 w-6 items-center justify-center
-                    rounded-full border border-[var(--color-secondary)]/60
-                    bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)]
-                    text-[var(--color-secondary)]
-                    shadow-sm shadow-black/40
-                  "
+              {/* OPCIÓN 2 APLICADA: Icono de verificación + Texto enfatizado */}
+              <div className="mt-4 flex items-center justify-center gap-2 md:justify-start">
+                {/* Icono Check (Badge) */}
+                <svg 
+                  className="h-7 w-7 text-secondary flex-shrink-0" 
+                  fill="currentColor" 
+                  viewBox="0 0 20 20"
                   aria-hidden="true"
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-3.5 w-3.5"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M12 3 5 6v6c0 4.243 2.686 6.878 7 9 4.314-2.122 7-4.757 7-9V6l-7-3Z"
-                      fill="currentColor"
-                      opacity="0.18"
-                    />
-                    <path
-                      d="M12 3 5 6v6c0 4.243 2.686 6.878 7 9 4.314-2.122 7-4.757 7-9V6l-7-3Z"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                    />
-                    <path
-                      d="m9.5 11.8 1.9 1.9 3.6-3.6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <p className="text-lg font-bold tracking-wide text-secondary">
+                  Especialistas de Seguridad IT Certificados
+                </p>
               </div>
 
-              <p className="mt-3 text-slate-300">
+              <p className="mt-4 text-slate-300">
                 CONXIMA integra soluciones de Fortinet para proteger la
                 red, los usuarios y la información crítica de tu organización.
                 Como partner, te acompañamos en el diseño, implementación y
                 soporte de tu infraestructura de ciberseguridad.
               </p>
+              
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
                 <Link href="/#contacto" className="btn-tech">
                   ¡Quiero proteger mi empresa!
