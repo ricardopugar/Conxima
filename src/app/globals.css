@@ -1,9 +1,43 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "ConximaBankGothic";
+  src:
+    local("BankGothicBT-Medium"),
+    local("Bank Gothic BT Medium"),
+    local("BankGothic BT"),
+    url("/fonts/BankGothicBT-Medium.woff2") format("woff2"),
+    url("/fonts/BankGothicBT-Light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-synthesis: none;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ConximaBankGothic";
+  src:
+    local("BankGothicBT-Light"),
+    local("Bank Gothic BT Light"),
+    url("/fonts/BankGothicBT-Light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-synthesis: none;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ConximaSwis721";
+  src: url("/fonts/Swis721-Ex-BT-Roman.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* ===== Paleta/tema global (oscuro por defecto) ===== */
 :root {
-  --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
-  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+  --font-heading: "ConximaBankGothic", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --font-body: "ConximaSwis721", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 
   --brand-primary: #007CC6;
   --brand-primary-600: #0A6CA9;
@@ -25,7 +59,40 @@
 html, body { background: var(--app-bg); color: var(--app-fg); }
 body { font-family: var(--font-body), system-ui, sans-serif; }
 
-.font-heading { font-family: var(--font-heading), system-ui, sans-serif; }
+.type-title {
+  font-family: var(--font-heading), system-ui, sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  font-feature-settings: "liga" 0;
+  font-variant-ligatures: none;
+  font-synthesis: none;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: geometricPrecision;
+}
+.font-heading {
+  font-family: var(--font-heading), system-ui, sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-feature-settings: "liga" 0;
+  font-variant-ligatures: none;
+  font-synthesis: none;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: geometricPrecision;
+}
+.type-subtitle {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.type-body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
 .bg-card { background-color: var(--color-card); }
 .text-secondary { color: var(--color-secondary); }
 .text-muted { color: var(--color-muted); }
@@ -61,18 +128,42 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-secondary
 
 /* ===== Botones/inputs compartidos ===== */
 .btn-tech {
-  position: relative; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
-  padding:.9rem 1.2rem; border-radius:1rem; font-weight:600; color:#0b1220;
-  background: linear-gradient(180deg, var(--color-secondary), var(--color-primary));
-  box-shadow: 0 8px 30px -12px rgba(0,0,0,.6);
-  transition: transform .2s ease, box-shadow .2s ease; overflow:hidden;
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-primary);
+  border-radius: .75rem;
+  padding: .9rem 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background: transparent;
+  box-shadow: 0 8px 30px -14px rgba(0, 0, 0, .6);
+  transition: transform .25s ease, color .35s ease, box-shadow .35s ease;
 }
 .btn-tech::before {
-  content:""; position:absolute; inset:-2px; border-radius:inherit;
-  background: conic-gradient(from 0deg, var(--color-secondary), var(--color-primary), var(--color-secondary));
-  filter: blur(10px); opacity:.35; z-index:-1; animation: spin 6s linear infinite;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: translateX(150%) translateY(150%) scale(2.5);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  transition: transform .9s ease;
 }
-.btn-tech:hover { transform: translateY(-1px); box-shadow: 0 12px 34px -14px var(--color-secondary); }
+.btn-tech:hover {
+  transform: scale(1.05);
+  color: #071423;
+  box-shadow: 0 14px 30px -16px var(--color-secondary);
+}
+.btn-tech:hover::before {
+  transform: translateX(0%) translateY(0%) scale(2.5);
+}
+.btn-tech:active { transform: scale(.95); }
 
 .btn-outline-tech {
   position: relative; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;

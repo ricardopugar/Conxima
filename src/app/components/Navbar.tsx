@@ -1,104 +1,192 @@
 // src/app/components/Navbar.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+
+type FlyoutItem = {
+  href: string;
+  title: string;
+  description?: string;
+};
+
+type ServiceGroup = {
+  title: string;
+  items: FlyoutItem[];
+};
+
+const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
+  {
+    href: "/servicios/control-de-acceso",
+    title: "Control de Acceso Biometrico",
+    description: "Gestion de ingreso por huella, tarjeta o rostro."
+  },
+  {
+    href: "/servicios/sistemas-de-alarma",
+    title: "Sistemas de Alarma",
+    description: "Alertas de intrusion con monitoreo en tiempo real."
+  },
+  {
+    href: "/servicios/cuarto-de-monitoreo",
+    title: "Cuarto de Monitoreo",
+    description: "Centro operativo para vigilancia y respuesta."
+  },
+  {
+    href: "/servicios/cableado-estructurado",
+    title: "Cableado Estructurado",
+    description: "Infraestructura ordenada para datos y voz."
+  },
+  {
+    href: "/servicios/racks-y-gabinetes",
+    title: "Racks y Gabinetes",
+    description: "Orden, proteccion y crecimiento de equipos."
+  },
+  {
+    href: "/servicios/servicios-en-la-nube",
+    title: "Servicios en la Nube",
+    description: "Implementacion segura de cargas cloud."
+  },
+  {
+    href: "/servicios/cableado-fibra-optica",
+    title: "Cableado de Fibra Optica",
+    description: "Backbone de alta capacidad para tu red."
+  },
+  {
+    href: "/servicios/cctv",
+    title: "CCTV",
+    description: "Videovigilancia con grabacion y acceso remoto."
+  }
+];
+
+const SERVICE_GROUPS: ServiceGroup[] = [
+  {
+    title: "Seguridad",
+    items: [
+      { href: "/servicios/control-de-acceso", title: "Control de Acceso" },
+      { href: "/servicios/sistemas-de-alarma", title: "Sistemas de Alarma" },
+      { href: "/servicios/cctv", title: "CCTV" }
+    ]
+  },
+  {
+    title: "Infraestructura",
+    items: [
+      { href: "/servicios/cuarto-de-monitoreo", title: "Cuarto de Monitoreo" },
+      {
+        href: "/servicios/cableado-estructurado",
+        title: "Cableado Estructurado"
+      },
+      { href: "/servicios/racks-y-gabinetes", title: "Racks y Gabinetes" }
+    ]
+  },
+  {
+    title: "Conectividad",
+    items: [
+      {
+        href: "/servicios/cableado-fibra-optica",
+        title: "Fibra Optica"
+      },
+      { href: "/servicios/servicios-en-la-nube", title: "Servicios en la Nube" }
+    ]
+  }
+];
+
+const CYBER_FLYOUT_ITEMS: FlyoutItem[] = [
+  {
+    href: "/ciberseguridad/fortinet",
+    title: "Fortinet",
+    description: "Firewalls, SD-WAN y seguridad perimetral."
+  }
+];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [isCyberOpen, setIsCyberOpen] = useState(false); // dropdown desktop
-  const [isMobileOpen, setIsMobileOpen] = useState(false); // menú móvil
-  const [isMobileCyberOpen, setIsMobileCyberOpen] = useState(false); // submenú móvil
-  const cyberRef = useRef<HTMLDivElement | null>(null);
+  const { scrollY } = useScroll();
 
-  // Cambia estilos de navbar al hacer scroll
+  const navBg = useTransform(scrollY, [0, 200], [
+    "linear-gradient(180deg, rgba(6,9,16,0) 0%, rgba(6,9,16,0) 100%)",
+    "linear-gradient(180deg, rgba(6,9,16,0.85) 0%, rgba(6,9,16,0.35) 60%, rgba(6,9,16,0) 100%)"
+  ]);
+  const navBlur = useTransform(scrollY, [0, 200], [
+    "blur(0px) saturate(1)",
+    "blur(14px) saturate(1.25)"
+  ]);
+  const navBorder = useTransform(scrollY, [0, 200], [
+    "rgba(255,255,255,0)",
+    "rgba(255,255,255,0.12)"
+  ]);
+  const navShadow = useTransform(scrollY, [0, 200], [
+    "0 0 0 rgba(0,0,0,0)",
+    "0 2px 20px rgba(0,0,0,0.25)"
+  ]);
+
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+  const [isMobileCyberOpen, setIsMobileCyberOpen] = useState(false);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 12);
-        ticking = false;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
-  // Barra de progreso superior (usa --scroll)
-  useEffect(() => {
-    if (typeof window === "undefined") return;
     const el = document.documentElement;
     const setProgressVar = () => {
       const h = el.scrollHeight - el.clientHeight;
       const pct = Math.max(0, Math.min(1, window.scrollY / (h || 1)));
       el.style.setProperty("--scroll", `${pct * 100}%`);
     };
+
     setProgressVar();
     window.addEventListener("scroll", setProgressVar, { passive: true });
     window.addEventListener("resize", setProgressVar);
+
     return () => {
       window.removeEventListener("scroll", setProgressVar);
       window.removeEventListener("resize", setProgressVar);
     };
   }, []);
 
-  // Cerrar dropdown desktop al hacer click fuera
-  useEffect(() => {
-    const handler = (event: MouseEvent) => {
-      if (!cyberRef.current) return;
-      if (!cyberRef.current.contains(event.target as Node)) {
-        setIsCyberOpen(false);
-      }
-    };
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, []);
-
-  // Cerrar menú móvil cuando se pasa a desktop
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     const onResize = () => {
       if (window.innerWidth >= 768) {
         setIsMobileOpen(false);
+        setIsMobileServicesOpen(false);
         setIsMobileCyberOpen(false);
       }
     };
+
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const handleMobileLinkClick = () => {
     setIsMobileOpen(false);
+    setIsMobileServicesOpen(false);
     setIsMobileCyberOpen(false);
   };
 
   return (
-    <header
-      className={[
-        "sticky top-0 z-40 transition-all duration-300",
-        scrolled
-          ? "backdrop-blur supports-[backdrop-filter]:bg-[color:rgba(6,9,16,0.55)] bg-[color:rgba(6,9,16,0.85)] border-b border-white/10 shadow-[0_2px_20px_rgba(0,0,0,0.25)]"
-          : "bg-transparent",
-      ].join(" ")}
+    <motion.header
+      className="sticky top-0 z-40 border-b transition-[background-color,box-shadow] duration-300"
+      style={{
+        backgroundColor: navBg,
+        backdropFilter: navBlur,
+        WebkitBackdropFilter: navBlur,
+        borderBottomColor: navBorder,
+        boxShadow: navShadow
+      }}
     >
-      {/* barra de progreso superior */}
       <span
         aria-hidden
         className="block h-[2px] w-full bg-transparent"
         style={{
           background:
-            "linear-gradient(90deg, var(--color-secondary) var(--scroll), transparent 0)",
+            "linear-gradient(90deg, var(--color-secondary) var(--scroll), transparent 0)"
         }}
       />
 
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        {/* Logo → lleva al inicio de la home */}
         <Link href="/#inicio" className="group inline-flex items-center gap-3">
           <span className="inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
             <Image
@@ -111,73 +199,33 @@ export default function Navbar() {
               style={{ width: "auto", height: "auto" }}
             />
           </span>
-          <span className="font-heading text-lg tracking-wide text-white">
-            CONXIMA
-          </span>
+          <span className="font-heading text-lg tracking-wide text-white">CONXIMA</span>
         </Link>
 
-        {/* NAV DESKTOP */}
         <nav className="hidden items-center gap-6 text-sm text-slate-200 transition-colors md:flex">
-          <Link href="/#quienes" className="hover:text-white">
-            Quiénes somos
-          </Link>
+          <DesktopFlyoutLink
+            label="Quienes somos"
+            href="/#quienes"
+            widthClass="w-[42rem]"
+            flyout={<AboutFlyoutContent />}
+          />
 
-          <Link href="/#servicios" className="hover:text-white">
-            Servicios
-          </Link>
+          <DesktopFlyoutLink
+            label="Servicios"
+            href="/servicios"
+            widthClass="w-[52rem]"
+            flyout={<ServicesFlyoutContent />}
+          />
 
-          {/* Ciberseguridad con dropdown controlado por estado (click) */}
-          <div ref={cyberRef} className="relative">
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 hover:text-white focus:outline-none"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsCyberOpen((open) => !open);
-              }}
-            >
-              <span>Ciberseguridad</span>
-              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
-                <path
-                  d="M6 9l6 6 6-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+          <DesktopFlyoutLink
+            label="Ciberseguridad"
+            href="/ciberseguridad/fortinet"
+            widthClass="w-[22rem]"
+            flyout={<CyberFlyoutContent />}
+          />
 
-            {isCyberOpen && (
-              <div
-                className="
-                  absolute left-1/2 top-full z-[9999] mt-2 w-56
-                  -translate-x-1/2 rounded-xl bg-[color:rgba(6,9,16,0.97)]
-                  px-3 py-2 text-sm shadow-xl ring-1 ring-white/10
-                "
-              >
-                <Link
-                  href="/ciberseguridad/fortinet"
-                  className="block rounded-lg px-2 py-1.5 text-left text-slate-200 hover:bg-white/5 hover:text-white"
-                  onClick={() => setIsCyberOpen(false)}
-                >
-                  <div className="font-medium">Fortinet</div>
-                  <p className="mt-0.5 text-[11px] text-slate-400">
-                    Firewalls, SD-WAN y seguridad perimetral
-                  </p>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          <Link href="/#porque" className="hover:text-white">
-            Por qué nosotros
-          </Link>
-
-          <Link href="/#contacto" className="hover:text-white">
-            Contacto
-          </Link>
+          <PlainNavLink href="/#porque">Por que nosotros</PlainNavLink>
+          <PlainNavLink href="/#contacto">Contacto</PlainNavLink>
 
           <motion.a
             whileHover={{ y: -1, scale: 1.01 }}
@@ -189,12 +237,11 @@ export default function Navbar() {
           </motion.a>
         </nav>
 
-        {/* BOTÓN HAMBURGUESA (MÓVIL) */}
         <button
           type="button"
           className="inline-flex items-center justify-center rounded-lg p-2 text-slate-200 hover:bg-white/10 md:hidden"
           onClick={() => setIsMobileOpen((open) => !open)}
-          aria-label="Abrir menú"
+          aria-label="Abrir menu"
         >
           <span className="relative flex h-5 w-6 items-center justify-center">
             <span
@@ -216,7 +263,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* MENÚ MÓVIL */}
       {isMobileOpen && (
         <div className="border-t border-white/10 bg-[color:rgba(6,9,16,0.96)] md:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm text-slate-200">
@@ -225,52 +271,59 @@ export default function Navbar() {
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
-              Quiénes somos
+              Quienes somos
             </Link>
 
-            <Link
-              href="/#servicios"
-              className="rounded-lg px-2 py-2 hover:bg-white/5"
-              onClick={handleMobileLinkClick}
-            >
-              Servicios
-            </Link>
-
-            {/* Grupo Ciberseguridad en móvil */}
             <button
               type="button"
               className="flex items-center justify-between rounded-lg px-2 py-2 hover:bg-white/5"
-              onClick={() =>
-                setIsMobileCyberOpen((open) => !open)
-              }
+              onClick={() => setIsMobileServicesOpen((open) => !open)}
             >
-              <span>Ciberseguridad</span>
-              <svg
-                viewBox="0 0 24 24"
-                className={`h-4 w-4 transition-transform ${
-                  isMobileCyberOpen ? "rotate-180" : ""
-                }`}
-                aria-hidden
-              >
-                <path
-                  d="M6 9l6 6 6-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <span>Servicios</span>
+              <ChevronIcon open={isMobileServicesOpen} />
             </button>
-            {isMobileCyberOpen && (
+            {isMobileServicesOpen && (
               <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
                 <Link
-                  href="/ciberseguridad/fortinet"
+                  href="/servicios"
                   className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
                   onClick={handleMobileLinkClick}
                 >
-                  Fortinet · Firewalls, SD-WAN y seguridad perimetral
+                  Ver todos los servicios
                 </Link>
+                {SERVICE_FLYOUT_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
+                    onClick={handleMobileLinkClick}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              className="flex items-center justify-between rounded-lg px-2 py-2 hover:bg-white/5"
+              onClick={() => setIsMobileCyberOpen((open) => !open)}
+            >
+              <span>Ciberseguridad</span>
+              <ChevronIcon open={isMobileCyberOpen} />
+            </button>
+            {isMobileCyberOpen && (
+              <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
+                {CYBER_FLYOUT_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
+                    onClick={handleMobileLinkClick}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
               </div>
             )}
 
@@ -279,7 +332,7 @@ export default function Navbar() {
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
-              Por qué nosotros
+              Por que nosotros
             </Link>
 
             <Link
@@ -297,10 +350,204 @@ export default function Navbar() {
             >
               Cotiza ahora
             </Link>
-
           </nav>
         </div>
       )}
-    </header>
+    </motion.header>
+  );
+}
+
+function PlainNavLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link href={href} className="relative py-1 hover:text-white">
+      {children}
+    </Link>
+  );
+}
+
+function DesktopFlyoutLink({
+  label,
+  href,
+  widthClass,
+  flyout
+}: {
+  label: string;
+  href: string;
+  widthClass: string;
+  flyout: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className="relative h-fit w-fit"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <Link href={href} className="group inline-flex items-center gap-1 py-1 hover:text-white">
+        <span>{label}</span>
+        <svg
+          viewBox="0 0 24 24"
+          className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        >
+          <path
+            d="M6 9l6 6 6-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span
+          className="absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-[var(--color-secondary)] transition-transform duration-200"
+          style={{ transform: open ? "scaleX(1)" : "scaleX(0)" }}
+        />
+      </Link>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={`absolute left-1/2 top-full mt-4 -translate-x-1/2 ${widthClass}`}
+          >
+            <div className="absolute inset-x-0 -top-4 h-4 bg-transparent" />
+            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white shadow-xl" />
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10">
+              {flyout}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function AboutFlyoutContent() {
+  return (
+    <div className="grid grid-cols-12 bg-white text-black">
+      <div className="col-span-12 bg-[#070b17] px-6 py-6 text-white lg:col-span-4">
+        <h3 className="text-2xl font-semibold">Quienes somos</h3>
+        <p className="mt-3 text-sm text-slate-300">
+          CONXIMA es una empresa comprometida con ofrecer tecnologia de vanguardia y servicio de excelencia.
+        </p>
+        <Link href="/#quienes" className="mt-6 inline-flex text-xs text-[var(--color-secondary)] hover:underline">
+          Ver seccion completa
+        </Link>
+      </div>
+
+      <div className="col-span-12 grid grid-cols-2 gap-3 p-5 lg:col-span-8">
+        <FlyoutCard
+          href="/#quienes"
+          title="Nuestra experiencia"
+          description="Conoce nuestro enfoque en proyectos de seguridad y telecomunicaciones."
+        />
+        <FlyoutCard
+          href="/#quienes"
+          title="Mision"
+          description="Proporcionar soluciones tecnologicas innovadoras para tus operaciones."
+        />
+        <FlyoutCard
+          href="/#quienes"
+          title="Vision"
+          description="Ser referente en soluciones integrales de seguridad electronica."
+        />
+        <FlyoutCard
+          href="/#contacto"
+          title="Contactar equipo"
+          description="Solicita asesoria para tu siguiente implementacion."
+        />
+      </div>
+    </div>
+  );
+}
+
+function ServicesFlyoutContent() {
+  return (
+    <div className="grid grid-cols-12 bg-white text-black">
+      <div className="col-span-12 bg-[var(--color-primary)] px-6 py-6 text-white lg:col-span-4">
+        <h3 className="text-2xl font-semibold">Servicios</h3>
+        <p className="mt-3 text-sm text-cyan-100">
+          Soluciones de seguridad electronica y telecomunicaciones para empresas.
+        </p>
+        <Link href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
+          Ver catalogo completo
+        </Link>
+      </div>
+
+      <div className="col-span-12 grid grid-cols-3 gap-6 p-6 lg:col-span-8">
+        {SERVICE_GROUPS.map((group) => (
+          <div key={group.title} className="space-y-2">
+            <h4 className="text-sm font-semibold text-neutral-900">{group.title}</h4>
+            {group.items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block text-sm text-neutral-700 transition hover:text-black hover:underline"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CyberFlyoutContent() {
+  return (
+    <div className="bg-white p-3 text-black">
+      {CYBER_FLYOUT_ITEMS.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="block rounded-lg px-3 py-2 transition hover:bg-neutral-100"
+        >
+          <div className="text-sm font-medium">{item.title}</div>
+          <p className="mt-0.5 text-[11px] text-neutral-600">{item.description}</p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function FlyoutCard({
+  href,
+  title,
+  description
+}: {
+  href: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link href={href} className="rounded-lg border border-neutral-200 p-3 transition hover:bg-neutral-100">
+      <h4 className="text-sm font-semibold">{title}</h4>
+      <p className="mt-1 text-xs text-neutral-700">{description}</p>
+    </Link>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+      aria-hidden
+    >
+      <path
+        d="M6 9l6 6 6-6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

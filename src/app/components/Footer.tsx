@@ -16,7 +16,7 @@ export default function Footer() {
           <Link href="/#quienes" className="hover:text-white">
             Quiénes somos
           </Link>
-          <Link href="/#servicios" className="hover:text-white">
+          <Link href="/servicios" className="hover:text-white">
             Servicios
           </Link>
           <Link href="/#porque" className="hover:text-white">

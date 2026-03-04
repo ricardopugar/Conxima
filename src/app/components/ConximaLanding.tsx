@@ -1,14 +1,32 @@
-"use client";
+﻿"use client";
 
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiMail,
+  FiMapPin,
+  FiPhoneCall,
+} from "react-icons/fi";
+import useMeasure from "react-use-measure";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
+
+const CARD_WIDTH = 350;
+const CARD_HEIGHT = 350;
+const MARGIN = 20;
+const CARD_SIZE = CARD_WIDTH + MARGIN;
+
+const BREAKPOINTS = {
+  sm: 640,
+  lg: 1024,
+};
 
 export default function ConximaLanding() {
   /* =========================
@@ -157,120 +175,6 @@ export default function ConximaLanding() {
   }, []);
 
   /* =========================
-   *  ICONOS (servicios)
-   * ========================= */
-  const Icons = {
-    acceso: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path
-          d="M12 3a6 6 0 0 0-6 6v2a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M9 12a3 3 0 1 0 6 0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M8 20a8 8 0 0 0 8 0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
-    ),
-    alarma: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path
-          d="M4 12h16l-8 8-8-8Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <circle cx="12" cy="10" r="3" fill="currentColor" />
-        <path
-          d="M5 5 3 7M21 7l-2-2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
-    ),
-    monitoreo: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <rect
-          x="3"
-          y="4"
-          width="18"
-          height="12"
-          rx="2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path d="M8 20h8" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path
-          d="M6 10h5l2 2 5-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
-    ),
-    cableado: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path
-          d="M4 7h16M4 12h10M4 17h7"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <circle cx="18" cy="12" r="2" fill="currentColor" />
-        <circle cx="15" cy="17" r="2" fill="currentColor" />
-      </svg>
-    ),
-    racks: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <rect
-          x="5"
-          y="3"
-          width="14"
-          height="18"
-          rx="2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M8 7h8M8 12h8M8 17h8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
-    ),
-    nube: (
-      <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-        <path
-          d="M7 16a4 4 0 1 1 0-8 5 5 0 0 1 9.7 1.5A4.5 4.5 0 1 1 17 16H7Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M10 13h6M8 15h8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </svg>
-    ),
-  } as const;
-
-  /* =========================
    *  WhatsApp helpers
    * ========================= */
   const WA_NUMBER = "593939011017"; // Conxima
@@ -393,11 +297,6 @@ export default function ConximaLanding() {
 
       {/* Estilos locales */}
       <style>{`
-        :root {
-          --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
-          --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
-        }
-        .font-heading { font-family: var(--font-heading); }
         .bg-card { background-color: var(--color-card); }
         .text-secondary { color: var(--color-secondary); }
         .text-muted { color: var(--color-muted); }
@@ -445,7 +344,7 @@ export default function ConximaLanding() {
         <div className="hero-overlay absolute inset-0" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 md:py-32">
           <div className="max-w-3xl reveal" ref={setRevealRef(0)}>
-            <h1 className="font-heading text-4xl font-bold leading-tight md:text-6xl">
+            <h1 className="type-title text-4xl leading-tight md:text-6xl">
               Tecnología al servicio de tu{" "}
               <span className="block text-secondary">Seguridad y Conectividad</span>
             </h1>
@@ -455,14 +354,16 @@ export default function ConximaLanding() {
               certificados.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <motion.a
+              <motion.button
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                href="#contacto"
+                type="button"
+                onClick={openWhatsApp}
                 className="btn-tech"
+                aria-label="Abrir WhatsApp para solicitar asesoría"
               >
                 Solicita una asesoría
-              </motion.a>
+              </motion.button>
               <motion.a
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
@@ -488,23 +389,44 @@ export default function ConximaLanding() {
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Quiénes somos
               </span>
-              <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">
-                Líderes en telecomunicaciones y seguridad electrónica
+              <h2 className="type-title mt-4 text-3xl md:text-4xl">
+                Ingeniería aplicada a la seguridad y conectividad de tu operación
               </h2>
               <p className="mt-4 text-slate-300">
-                CONXIMA S.A.S es una empresa comprometida con ofrecer tecnología de vanguardia y servicio de excelencia. Nuestro equipo cuenta con amplia experiencia en el diseño, instalación y mantenimiento de sistemas integrales adaptados a cada cliente.
+                En CONXIMA diseñamos, implementamos y mantenemos soluciones
+                tecnológicas que protegen activos, optimizan procesos y mejoran
+                la continuidad operativa de cada cliente.
               </p>
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {[
+                  { value: "360°", label: "Cobertura del proyecto" },
+                  { value: "A medida", label: "Soluciones personalizadas" },
+                  { value: "Continuo", label: "Acompañamiento técnico" },
+                ].map((stat) => (
+                  <article
+                    key={stat.label}
+                    className="rounded-2xl bg-card/80 px-4 py-3 ring-1 ring-white/10"
+                  >
+                    <p className="type-subtitle text-2xl text-secondary">
+                      {stat.value}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-300">{stat.label}</p>
+                  </article>
+                ))}
+              </div>
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <article className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10">
-                  <h3 className="font-heading font-semibold">Misión</h3>
+                  <h3 className="type-subtitle">Misión</h3>
                   <p className="mt-2 text-sm text-slate-300">
-                    Proporcionar soluciones tecnológicas innovadoras que garanticen la seguridad y eficiencia en las operaciones de nuestros clientes.
+                    Entregar soluciones robustas, escalables y seguras que
+                    respondan a los retos reales de cada entorno empresarial.
                   </p>
                 </article>
                 <article className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10">
-                  <h3 className="font-heading font-semibold">Visión</h3>
+                  <h3 className="type-subtitle">Visión</h3>
                   <p className="mt-2 text-sm text-slate-300">
-                    Ser referente en soluciones integrales de telecomunicaciones y seguridad electrónica.
+                    Consolidarnos como aliado estratégico en infraestructura
+                    tecnológica para seguridad y conectividad en la región.
                   </p>
                 </article>
               </div>
@@ -528,7 +450,7 @@ export default function ConximaLanding() {
 
                 {/* Pie de foto opcional */}
                 <div className="px-4 py-3 text-xs text-slate-300 bg-black/40 backdrop-blur-sm flex justify-between">
-                  <span>Instalaciones profesional con equipo altamente calificado y certificado</span>
+                  <span>Instalaciones profesionales con equipo altamente calificado y certificado</span>
                 </div>
               </div>
             </div>
@@ -546,44 +468,70 @@ export default function ConximaLanding() {
             <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
               Servicios
             </span>
-            <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">Seguridad electrónica &amp; Telecomunicaciones</h2>
+            <h2 className="type-title mt-4 text-3xl md:text-4xl">Seguridad electrónica &amp; Telecomunicaciones</h2>
             <p className="mt-3 max-w-3xl text-slate-300">Implementamos sistemas de última generación, integrados a tus operaciones.</p>
           </header>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { slug: "control-de-acceso", title: "Control de Acceso Biométrico", desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.", icon: Icons.acceso },
-              { slug: "sistemas-de-alarma", title: "Sistemas de Alarma", desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.", icon: Icons.alarma },
-              { slug: "cuarto-de-monitoreo", title: "Cuarto de Monitoreo", desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.", icon: Icons.monitoreo },
-              { slug: "cableado-estructurado", title: "Cableado Estructurado", desc: "Planos, canalización, racks, certificación y documentación.", icon: Icons.cableado },
-              { slug: "racks-y-gabinetes", title: "Racks y Gabinetes", desc: "Montaje seguro, ventilación, orden y crecimiento.", icon: Icons.racks },
-              { slug: "servicios-en-la-nube", title: "Servicios en la Nube", desc: "Instancias seguras, almacenamiento, backups y acceso remoto.", icon: Icons.nube },
-
-              // 🆕 Nuevos servicios:
-              { slug: "cableado-fibra-optica", title: "Cableado de Fibra Óptica", desc: "Tendido, fusión y certificación de enlaces de fibra para redes empresariales y backbone.", icon: Icons.cableado },
-              { slug: "cctv", title: "Circuito Cerrado de Televisión (CCTV)", desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.", icon: Icons.monitoreo },
-            ].map((s, i) => (
-              <Link key={s.slug} href={`/servicios/${s.slug}`} className="group block" aria-label={`Abrir servicio: ${s.title}`}>
-                <article
-                  ref={setRevealRef(4 + i)}
-                  className="reveal rounded-2xl bg-card/80 p-6 ring-1 ring-white/10 hover:ring-white/20 hover:translate-y-[-2px] transition"
-                  style={{ transitionDelay: `${i * 80}ms` }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="icon-badge inline-flex h-10 w-10 items-center justify-center rounded-xl">{s.icon}</span>
-                    <h3 className="font-heading text-xl font-semibold">{s.title}</h3>
-                  </div>
-                  <p className="mt-3 text-slate-300">{s.desc}</p>
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm text-secondary">
-                    Ver detalle
-                    <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
-                      <path d="M7 12h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" />
-                    </svg>
-                  </span>
-                </article>
-              </Link>
-            ))}
-          </div>
+          <ServicesCarousel
+            items={[
+              {
+                slug: "control-de-acceso",
+                title: "Control de Acceso Biométrico",
+                desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
+                category: "Control de acceso",
+                src: "/images/team-install.jpeg",
+              },
+              {
+                slug: "sistemas-de-alarma",
+                title: "Sistemas de Alarma",
+                desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
+                category: "Seguridad",
+                src: "/images/hero-poster.jpg",
+              },
+              {
+                slug: "cuarto-de-monitoreo",
+                title: "Cuarto de Monitoreo",
+                desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
+                category: "Monitoreo",
+                src: "/images/monitoring-room.jpeg",
+              },
+              {
+                slug: "cableado-estructurado",
+                title: "Cableado Estructurado",
+                desc: "Planos, canalización, racks, certificación y documentación.",
+                category: "Infraestructura",
+                src: "/images/team-install.jpeg",
+              },
+              {
+                slug: "racks-y-gabinetes",
+                title: "Racks y Gabinetes",
+                desc: "Montaje seguro, ventilación, orden y crecimiento.",
+                category: "Infraestructura",
+                src: "/images/team-install.jpeg",
+              },
+              {
+                slug: "servicios-en-la-nube",
+                title: "Servicios en la Nube",
+                desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",
+                category: "Nube",
+                src: "/images/hero-poster.jpg",
+              },
+              {
+                slug: "cableado-fibra-optica",
+                title: "Cableado de Fibra Óptica",
+                desc: "Tendido, fusión y certificación de enlaces de fibra para redes empresariales y backbone.",
+                category: "Conectividad",
+                src: "/images/team-install.jpeg",
+              },
+              {
+                slug: "cctv",
+                title: "Circuito Cerrado de Televisión (CCTV)",
+                desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.",
+                category: "Videovigilancia",
+                src: "/images/monitoring-room.jpeg",
+              },
+            ]}
+          />
         </div>
       </section>
 
@@ -593,10 +541,10 @@ export default function ConximaLanding() {
       <section id="porque" className="section relative" data-tone="t1">
         <div className="mx-auto max-w-7xl px-4 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            {/* IMAGEN — izquierda en lg */}
+            {/* IMAGEN - izquierda en lg */}
             <div className="reveal lg:order-1" ref={setRevealRef(11)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <div className="relative h-72 w-full">
+                <div className="relative h-80 w-full">
                   <Image
                     src="/images/monitoring-room.jpeg"
                     alt="Cámaras"
@@ -606,33 +554,77 @@ export default function ConximaLanding() {
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                  <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Implementaciones profesionales</span>
-                  <span className="rounded-xl bg-black/60 px-3 py-1 text-xs">Integración de plataformas</span>
+                <div className="absolute bottom-4 left-4 right-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    "Implementaciones profesionales",
+                    "Integración de plataformas",
+                    "Puesta en marcha asistida",
+                    "Soporte postventa especializado",
+                  ].map((label) => (
+                    <span
+                      key={label}
+                      className="rounded-xl bg-black/60 px-3 py-1.5 text-xs text-center"
+                    >
+                      {label}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* TEXTO — derecha en lg */}
+            {/* TEXTO - derecha en lg */}
             <div className="reveal lg:order-2" ref={setRevealRef(10)}>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold">¿Por qué nosotros?</h2>
+              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
+                Ventajas CONXIMA
+              </span>
+              <h2 className="type-title mt-4 text-3xl md:text-4xl">
+                ¿Por qué elegirnos para tu proyecto?
+              </h2>
               <p className="mt-3 text-slate-300 max-w-xl">
-                Soluciones a medida, tecnología certificada y acompañamiento experto de principio a fin.
+                Combinamos ingeniería, experiencia en campo y seguimiento
+                continuo para garantizar resultados medibles en seguridad y
+                conectividad.
               </p>
-              <ul className="mt-6 space-y-4">
+
+              <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  "Soluciones personalizadas según tus necesidades",
-                  "Tecnología de punta y equipos certificados",
-                  "Servicio técnico permanente",
-                  "Garantía total en todos nuestros trabajos",
-                  "Asesoría profesional continua",
+                  {
+                    title: "Diagnóstico técnico real",
+                    desc: "Evaluamos riesgos, cobertura y crecimiento para definir una solución viable desde el inicio.",
+                  },
+                  {
+                    title: "Implementación certificada",
+                    desc: "Trabajamos con estándares de instalación, pruebas de rendimiento y protocolos de calidad.",
+                  },
+                  {
+                    title: "Tecnología interoperable",
+                    desc: "Integramos hardware y software para una operación centralizada, estable y escalable.",
+                  },
+                  {
+                    title: "Acompañamiento continuo",
+                    desc: "No cerramos al entregar: damos soporte, ajustes y mejora continua sobre la solución instalada.",
+                  },
                 ].map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-black text-sm font-bold">{idx + 1}</span>
-                    <span className="text-slate-200">{item}</span>
+                  <li key={item.title} className="rounded-2xl bg-card/80 p-4 ring-1 ring-white/10">
+                    <p className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-secondary px-2 text-xs font-bold text-black">
+                      0{idx + 1}
+                    </p>
+                    <h3 className="type-subtitle mt-3 text-base text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-slate-300">{item.desc}</p>
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <a href="#contacto" className="btn-tech">
+                  Hablar con un especialista
+                </a>
+                <p className="text-xs text-slate-400">
+                  Te acompañamos desde el diagnóstico hasta la puesta en marcha.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -648,7 +640,7 @@ export default function ConximaLanding() {
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Contacto
               </span>
-              <h2 className="mt-4 font-heading text-3xl md:text-4xl font-bold">Hablemos de tu proyecto</h2>
+              <h2 className="type-title mt-4 text-3xl md:text-4xl">Hablemos de tu proyecto</h2>
               <p className="mt-3 text-slate-300 max-w-2xl">
                 Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
               </p>
@@ -793,11 +785,24 @@ export default function ConximaLanding() {
 
             <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
               <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
-                <h3 className="font-heading text-xl font-semibold">Contacto</h3>
+                <h3 className="type-subtitle text-xl">Contacto</h3>
                 <ul className="mt-4 space-y-3 text-slate-200">
-                  <li className="flex items-center gap-3"><span className="text-secondary">📞</span> <a href="tel:+593939011017" className="hover:underline">+593 93 901 1017</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">✉️</span> <a href="mailto:info@conxima.com" className="hover:underline">info@conxima.com</a></li>
-                  <li className="flex items-center gap-3"><span className="text-secondary">📍</span> Cdla. Simón Bolivar Mz.5 V.18</li>
+                  <li className="flex items-center gap-3">
+                    <FiPhoneCall className="text-secondary" aria-hidden />
+                    <a href="tel:+593939011017" className="hover:underline">
+                      +593 93 901 1017
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <FiMail className="text-secondary" aria-hidden />
+                    <a href="mailto:info@conxima.com" className="hover:underline">
+                      info@conxima.com
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <FiMapPin className="text-secondary" aria-hidden />
+                    Cdla. Simón Bolívar Mz.5 V.18
+                  </li>
                 </ul>
 
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
@@ -849,3 +854,103 @@ export default function ConximaLanding() {
     </div>
   );
 }
+
+type ServiceCarouselItem = {
+  slug: string;
+  title: string;
+  desc: string;
+  category: string;
+  src: string;
+};
+
+function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
+  const [ref, { width }] = useMeasure();
+  const [offset, setOffset] = useState(0);
+
+  const cardBuffer =
+    width > BREAKPOINTS.lg ? 3 : width > BREAKPOINTS.sm ? 2 : 1;
+
+  const maxOffset = Math.max(0, CARD_SIZE * (items.length - cardBuffer));
+  const canShiftLeft = offset < 0;
+  const canShiftRight = Math.abs(offset) < maxOffset;
+
+  useEffect(() => {
+    setOffset((prev) => Math.max(-maxOffset, Math.min(0, prev)));
+  }, [maxOffset]);
+
+  const shiftLeft = () => {
+    if (!canShiftLeft) return;
+    setOffset((prev) => Math.min(prev + CARD_SIZE, 0));
+  };
+
+  const shiftRight = () => {
+    if (!canShiftRight) return;
+    setOffset((prev) => Math.max(prev - CARD_SIZE, -maxOffset));
+  };
+
+  return (
+    <section className="reveal mt-12" ref={ref}>
+      <div className="relative overflow-hidden rounded-2xl">
+        <motion.div
+          animate={{ x: offset }}
+          transition={{ type: "spring", stiffness: 220, damping: 28 }}
+          className="flex"
+        >
+          {items.map((item) => (
+            <ServiceCarouselCard key={item.slug} item={item} />
+          ))}
+        </motion.div>
+
+        <motion.button
+          type="button"
+          initial={false}
+          animate={{ x: canShiftLeft ? "0%" : "-120%", opacity: canShiftLeft ? 1 : 0 }}
+          className="absolute left-0 top-1/2 z-30 -translate-y-1/2 rounded-r-xl bg-black/45 p-3 pl-2 text-3xl text-white backdrop-blur-sm transition-[padding] hover:pl-3"
+          onClick={shiftLeft}
+          aria-label="Mover carrusel a la izquierda"
+        >
+          <FiChevronLeft />
+        </motion.button>
+
+        <motion.button
+          type="button"
+          initial={false}
+          animate={{ x: canShiftRight ? "0%" : "120%", opacity: canShiftRight ? 1 : 0 }}
+          className="absolute right-0 top-1/2 z-30 -translate-y-1/2 rounded-l-xl bg-black/45 p-3 pr-2 text-3xl text-white backdrop-blur-sm transition-[padding] hover:pr-3"
+          onClick={shiftRight}
+          aria-label="Mover carrusel a la derecha"
+        >
+          <FiChevronRight />
+        </motion.button>
+      </div>
+    </section>
+  );
+}
+
+function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
+  return (
+    <Link
+      href={`/servicios/${item.slug}`}
+      className="group relative shrink-0 overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-[1.015] hover:shadow-xl"
+      style={{
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
+        marginRight: MARGIN,
+        backgroundImage: `url(${item.src})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
+      aria-label={`Abrir servicio: ${item.title}`}
+    >
+      <div className="absolute inset-0 z-20 rounded-2xl bg-gradient-to-b from-black/90 via-black/60 to-black/10 p-6 text-white transition-[backdrop-filter] group-hover:backdrop-blur-[2px]">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-secondary)]">
+          {item.category}
+        </span>
+        <p className="type-subtitle mt-2 text-2xl leading-tight">{item.title}</p>
+        <p className="mt-2 text-sm text-slate-200">{item.desc}</p>
+      </div>
+    </Link>
+  );
+}
+
+

@@ -29,7 +29,7 @@ export default function FortinetSection() {
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Ciberseguridad • Partner Fortinet
               </span>
-              <h1 className="mt-4 font-heading text-3xl font-bold md:text-4xl">
+              <h1 className="type-title mt-4 text-3xl md:text-4xl">
                 Protección de clase mundial con{" "}
                 <span className="text-secondary">Fortinet</span>
               </h1>
@@ -76,7 +76,7 @@ export default function FortinetSection() {
                 </span>
 
                 {/* Texto con énfasis (Opción 2) */}
-                <p className="text-lg font-bold tracking-wide text-secondary">
+                <p className="type-subtitle text-lg tracking-wide text-secondary">
                   Especialistas de Seguridad IT Certificados
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default function FortinetSection() {
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Soluciones */}
           <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
-            <h2 className="font-heading text-xl font-semibold">
+            <h2 className="type-subtitle text-xl">
               Soluciones que podemos ofrecerte
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-slate-200">
@@ -119,7 +119,7 @@ export default function FortinetSection() {
 
           {/* Beneficios */}
           <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
-            <h2 className="font-heading text-xl font-semibold">
+            <h2 className="type-subtitle text-xl">
               Beneficios para tu empresa
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-slate-200">
