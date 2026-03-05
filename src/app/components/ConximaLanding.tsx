@@ -4,29 +4,12 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import {
-  FiChevronLeft,
-  FiChevronRight,
-  FiMail,
-  FiMapPin,
-  FiPhoneCall,
-} from "react-icons/fi";
-import useMeasure from "react-use-measure";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
-
-const CARD_WIDTH = 350;
-const CARD_HEIGHT = 350;
-const MARGIN = 20;
-const CARD_SIZE = CARD_WIDTH + MARGIN;
-
-const BREAKPOINTS = {
-  sm: 640,
-  lg: 1024,
-};
 
 export default function ConximaLanding() {
   /* =========================
@@ -864,64 +847,40 @@ type ServiceCarouselItem = {
 };
 
 function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
-  const [ref, { width }] = useMeasure();
-  const [offset, setOffset] = useState(0);
+  const targetRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [maxTranslate, setMaxTranslate] = useState(0);
 
-  const cardBuffer =
-    width > BREAKPOINTS.lg ? 3 : width > BREAKPOINTS.sm ? 2 : 1;
-
-  const maxOffset = Math.max(0, CARD_SIZE * (items.length - cardBuffer));
-  const canShiftLeft = offset < 0;
-  const canShiftRight = Math.abs(offset) < maxOffset;
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start start", "end end"],
+  });
 
   useEffect(() => {
-    setOffset((prev) => Math.max(-maxOffset, Math.min(0, prev)));
-  }, [maxOffset]);
+    const updateMetrics = () => {
+      if (!targetRef.current || !trackRef.current) return;
+      const viewportWidth = targetRef.current.clientWidth;
+      const trackWidth = trackRef.current.scrollWidth;
+      setMaxTranslate(Math.max(0, trackWidth - viewportWidth));
+    };
 
-  const shiftLeft = () => {
-    if (!canShiftLeft) return;
-    setOffset((prev) => Math.min(prev + CARD_SIZE, 0));
-  };
+    updateMetrics();
+    window.addEventListener("resize", updateMetrics);
+    return () => window.removeEventListener("resize", updateMetrics);
+  }, [items.length]);
 
-  const shiftRight = () => {
-    if (!canShiftRight) return;
-    setOffset((prev) => Math.max(prev - CARD_SIZE, -maxOffset));
-  };
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
 
   return (
-    <section className="reveal mt-12" ref={ref}>
-      <div className="relative overflow-hidden rounded-2xl">
-        <motion.div
-          animate={{ x: offset }}
-          transition={{ type: "spring", stiffness: 220, damping: 28 }}
-          className="flex"
-        >
+    <section ref={targetRef} className="reveal relative mt-12 h-[280vh]">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden rounded-2xl">
+        <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-20 bg-gradient-to-r from-[var(--color-bg)] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[var(--color-bg)] to-transparent" />
+        <motion.div ref={trackRef} style={{ x }} className="flex gap-5 px-4 md:px-8 lg:px-12">
           {items.map((item) => (
             <ServiceCarouselCard key={item.slug} item={item} />
           ))}
         </motion.div>
-
-        <motion.button
-          type="button"
-          initial={false}
-          animate={{ x: canShiftLeft ? "0%" : "-120%", opacity: canShiftLeft ? 1 : 0 }}
-          className="absolute left-0 top-1/2 z-30 -translate-y-1/2 rounded-r-xl bg-black/45 p-3 pl-2 text-3xl text-white backdrop-blur-sm transition-[padding] hover:pl-3"
-          onClick={shiftLeft}
-          aria-label="Mover carrusel a la izquierda"
-        >
-          <FiChevronLeft />
-        </motion.button>
-
-        <motion.button
-          type="button"
-          initial={false}
-          animate={{ x: canShiftRight ? "0%" : "120%", opacity: canShiftRight ? 1 : 0 }}
-          className="absolute right-0 top-1/2 z-30 -translate-y-1/2 rounded-l-xl bg-black/45 p-3 pr-2 text-3xl text-white backdrop-blur-sm transition-[padding] hover:pr-3"
-          onClick={shiftRight}
-          aria-label="Mover carrusel a la derecha"
-        >
-          <FiChevronRight />
-        </motion.button>
       </div>
     </section>
   );
@@ -931,23 +890,24 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
   return (
     <Link
       href={`/servicios/${item.slug}`}
-      className="group relative shrink-0 overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-[1.015] hover:shadow-xl"
+      className="group relative h-[430px] w-[84vw] max-w-[360px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1"
       style={{
-        width: CARD_WIDTH,
-        height: CARD_HEIGHT,
-        marginRight: MARGIN,
         backgroundImage: `url(${item.src})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}
       aria-label={`Abrir servicio: ${item.title}`}
     >
-      <div className="absolute inset-0 z-20 rounded-2xl bg-gradient-to-b from-black/90 via-black/60 to-black/10 p-6 text-white transition-[backdrop-filter] group-hover:backdrop-blur-[2px]">
-        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-secondary)]">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
+      <div className="absolute inset-0 z-10 flex flex-col p-6 text-white">
+        <span className="w-fit rounded-full border border-[color-mix(in_srgb,var(--color-secondary)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-secondary)]">
           {item.category}
         </span>
-        <p className="type-subtitle mt-2 text-2xl leading-tight">{item.title}</p>
-        <p className="mt-2 text-sm text-slate-200">{item.desc}</p>
+        <p className="type-subtitle mt-4 text-2xl leading-tight">{item.title}</p>
+        <p className="mt-3 text-sm text-slate-200">{item.desc}</p>
+        <span className="mt-auto text-xs uppercase tracking-[0.14em] text-slate-200/80">
+          Ver servicio
+        </span>
       </div>
     </Link>
   );
