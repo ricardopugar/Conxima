@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "export": "next export",
+    "export": "npm run build",
     "start": "next start",
     "lint": "eslint .",
-    "deploy": "npm run build && npm run export && npx wrangler pages deploy ./out --project-name conxima"
+    "deploy": "npm run export && npx wrangler pages deploy ./out --project-name conxima"
   },
   "dependencies": {
     "framer-motion": "^12.23.12",

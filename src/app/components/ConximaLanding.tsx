@@ -161,6 +161,12 @@ export default function ConximaLanding() {
    *  WhatsApp helpers
    * ========================= */
   const WA_NUMBER = "593939011017"; // Conxima
+  const GENERIC_WA_URL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
+    "Hola CONXIMA, vengo desde la web y quiero solicitar asesoría."
+  )}`;
+  const FORTIGATE_WA_URL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
+    "Hola CONXIMA, quiero conocer como FortiGate puede proteger la red de mi empresa."
+  )}`;
 
   const buildWhatsAppURL = () => {
     const name =
@@ -221,8 +227,11 @@ export default function ConximaLanding() {
       setSending(true);
       setSendStatus("idle");
 
-      const res = await fetch("contact.php", {
-        method: "POST",
+      const endpoint = form.getAttribute("action") || "/contact.php";
+      const method = (form.getAttribute("method") || "POST").toUpperCase();
+
+      const res = await fetch(endpoint, {
+        method,
         body: formData,
       });
 
@@ -294,6 +303,24 @@ export default function ConximaLanding() {
           border: 1px solid color-mix(in srgb, var(--color-secondary) 36%, transparent);
         }
         .group:hover .icon-badge { background: color-mix(in srgb, var(--color-secondary) 24%, transparent); }
+        .fortigate-shell {
+          background:
+            radial-gradient(880px 420px at 10% 20%, rgba(238, 87, 47, 0.22), transparent 50%),
+            radial-gradient(720px 360px at 85% 80%, rgba(17, 124, 184, 0.16), transparent 48%),
+            linear-gradient(135deg, rgba(8, 14, 29, 0.98), rgba(12, 20, 37, 0.92));
+        }
+        .fortigate-grid {
+          background-image:
+            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+          background-size: 28px 28px;
+          mask-image: linear-gradient(180deg, rgba(0,0,0,0.72), transparent 85%);
+        }
+        .fortigate-chip {
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
+        }
 
         :root { --scroll: 0%; }
         @supports(selector(:root)) { html { scroll-behavior: smooth; } }
@@ -337,16 +364,17 @@ export default function ConximaLanding() {
               certificados.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <motion.button
+              <motion.a
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                type="button"
-                onClick={openWhatsApp}
+                href={GENERIC_WA_URL}
                 className="btn-tech"
                 aria-label="Abrir WhatsApp para solicitar asesoría"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Solicita una asesoría
-              </motion.button>
+              </motion.a>
               <motion.a
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
@@ -443,6 +471,129 @@ export default function ConximaLanding() {
       </section>
 
       {/* =========================
+          FORTIGATE
+      ========================== */}
+      <section id="fortigate" className="section relative overflow-hidden" data-tone="1">
+        <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
+          <div className="fortigate-shell relative overflow-hidden rounded-[2rem] ring-1 ring-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+            <div className="fortigate-grid pointer-events-none absolute inset-0 opacity-60" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
+            <div className="relative grid grid-cols-1 items-center gap-10 px-6 py-8 md:px-10 md:py-10 lg:grid-cols-[1.05fr,0.95fr] lg:px-12 lg:py-12">
+              <div className="reveal" ref={setRevealRef(4)}>
+                <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.16em] text-white/75">
+                  <span className="h-2 w-2 rounded-full bg-[var(--color-secondary)]" />
+                  Ciberseguridad de nueva generación
+                </div>
+
+                <h2 className="type-title mt-5 max-w-2xl text-3xl md:text-4xl lg:text-5xl">
+                  FortiGate con <span className="text-secondary">Conxima</span> para proteger tu red, tus usuarios y tu operación.
+                </h2>
+
+                <p className="mt-4 max-w-2xl text-base text-slate-300 md:text-lg">
+                  Integramos soluciones FortiGate para empresas que necesitan
+                  visibilidad, control del tráfico y defensa activa frente a
+                  amenazas. Desde el diseño hasta la puesta en marcha, te
+                  acompañamos con criterio técnico y soporte local.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {[
+                    "NGFW + IPS",
+                    "VPN segura",
+                    "Filtrado web",
+                    "Control de aplicaciones",
+                    "Reportes y monitoreo",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="fortigate-chip rounded-full px-4 py-2 text-sm text-slate-100"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Link href="/ciberseguridad/fortinet" className="btn-tech">
+                    Explorar FortiGate con Conxima
+                  </Link>
+                  <a
+                    href={FORTIGATE_WA_URL}
+                    className="btn-outline-tech"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Solicitar asesoría FortiGate
+                  </a>
+                </div>
+
+                <p className="mt-4 text-xs text-slate-400">
+                  Ideal para sedes corporativas, crecimiento multi-sucursal,
+                  acceso remoto seguro y protección perimetral.
+                </p>
+              </div>
+
+              <div className="reveal" ref={setRevealRef(5)}>
+                <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/30 p-3 shadow-[0_20px_48px_rgba(0,0,0,0.38)]">
+                  <div className="relative min-h-[320px] overflow-hidden rounded-[1.25rem]">
+                    <Image
+                      src="/images/fortigate.jpg"
+                      alt="Solución FortiGate implementada por Conxima"
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 42vw, 100vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-black/65 via-black/15 to-transparent" />
+
+                    <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-3">
+                      <div className="rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/65">
+                          Solución destacada
+                        </p>
+                        <p className="mt-1 text-lg font-semibold text-white">
+                          FortiGate NGFW
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="absolute inset-x-4 bottom-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                      {[
+                        {
+                          title: "Protección perimetral",
+                          desc: "Inspección y respuesta ante amenazas.",
+                        },
+                        {
+                          title: "Acceso remoto seguro",
+                          desc: "VPN para equipos y usuarios distribuidos.",
+                        },
+                        {
+                          title: "Operación visible",
+                          desc: "Control, reportes y políticas centralizadas.",
+                        },
+                      ].map((card) => (
+                        <article
+                          key={card.title}
+                          className="rounded-2xl border border-white/10 bg-black/55 p-4 backdrop-blur-md"
+                        >
+                          <p className="text-sm font-semibold text-white">
+                            {card.title}
+                          </p>
+                          <p className="mt-1 text-xs text-slate-200">
+                            {card.desc}
+                          </p>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================
           SERVICIOS
       ========================== */}
       <section id="servicios" className="section relative" data-tone="2">
@@ -462,56 +613,56 @@ export default function ConximaLanding() {
                 title: "Control de Acceso Biométrico",
                 desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
                 category: "Control de acceso",
-                src: "/images/team-install.jpeg",
+                src: "/images/servicios-landing/control de acceso.png",
               },
               {
                 slug: "sistemas-de-alarma",
                 title: "Sistemas de Alarma",
                 desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
                 category: "Seguridad",
-                src: "/images/hero-poster.jpg",
+                src: "/images/servicios/alarma.jpeg",
               },
               {
                 slug: "cuarto-de-monitoreo",
                 title: "Cuarto de Monitoreo",
                 desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
                 category: "Monitoreo",
-                src: "/images/monitoring-room.jpeg",
+                src: "/images/servicios-landing/cuarto monitoreo.png",
               },
               {
                 slug: "cableado-estructurado",
                 title: "Cableado Estructurado",
                 desc: "Planos, canalización, racks, certificación y documentación.",
                 category: "Infraestructura",
-                src: "/images/team-install.jpeg",
+                src: "/images/servicios-landing/infraestructura de red y gabinetes .png",
               },
               {
                 slug: "racks-y-gabinetes",
                 title: "Racks y Gabinetes",
                 desc: "Montaje seguro, ventilación, orden y crecimiento.",
                 category: "Infraestructura",
-                src: "/images/team-install.jpeg",
+                src: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
               },
               {
                 slug: "servicios-en-la-nube",
                 title: "Servicios en la Nube",
                 desc: "Instancias seguras, almacenamiento, backups y acceso remoto.",
                 category: "Nube",
-                src: "/images/hero-poster.jpg",
+                src: "/images/servicios/nube.jfif",
               },
               {
                 slug: "cableado-fibra-optica",
                 title: "Cableado de Fibra Óptica",
                 desc: "Tendido, fusión y certificación de enlaces de fibra para redes empresariales y backbone.",
                 category: "Conectividad",
-                src: "/images/team-install.jpeg",
+                src: "/images/servicios-landing/cableado de fibra optica.jpg",
               },
               {
                 slug: "cctv",
                 title: "Circuito Cerrado de Televisión (CCTV)",
                 desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.",
                 category: "Videovigilancia",
-                src: "/images/monitoring-room.jpeg",
+                src: "/images/servicios/cctv.jpg",
               },
             ]}
           />
@@ -630,6 +781,8 @@ export default function ConximaLanding() {
 
         <form
           className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
+          action="/contact.php"
+          method="post"
           onSubmit={handleContactSubmit}
         >
           {/* NOMBRE */}
@@ -791,6 +944,7 @@ export default function ConximaLanding() {
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
                 <div className="mt-4">
                   <button
+                    type="button"
                     onClick={openWhatsApp}
                     className="btn-tech w-full"
                     aria-label="Abrir WhatsApp con mensaje prellenado"
@@ -892,7 +1046,7 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
       href={`/servicios/${item.slug}`}
       className="group relative h-[430px] w-[84vw] max-w-[360px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1"
       style={{
-        backgroundImage: `url(${item.src})`,
+        backgroundImage: `url("${encodeURI(item.src)}")`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}

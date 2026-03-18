@@ -8,7 +8,7 @@ import { servicios } from "@/data/servicios";
 export const metadata: Metadata = {
   title: "Servicios | CONXIMA",
   description:
-    "Catalogo de servicios de CONXIMA en seguridad electronica, conectividad y telecomunicaciones."
+    "Catálogo de servicios de CONXIMA en seguridad electrónica, conectividad y telecomunicaciones."
 };
 
 export default function ServiciosPage() {
@@ -27,9 +27,6 @@ export default function ServiciosPage() {
 
         <header className="mt-5">
           <h1 className="type-title text-3xl md:text-5xl">Nuestros servicios</h1>
-          <p className="mt-3 max-w-3xl text-slate-300">
-            Explora cada solucion en una pagina dedicada. Puedes navegar entre servicios y volver al listado cuando lo necesites.
-          </p>
         </header>
 
         <section className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -41,7 +38,7 @@ export default function ServiciosPage() {
               {servicio.imagen ? (
                 <div className="relative h-44 w-full">
                   <Image
-                    src={servicio.imagen}
+                    src={encodeURI(servicio.imagen)}
                     alt={servicio.title}
                     fill
                     className="object-cover"

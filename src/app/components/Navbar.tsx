@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
@@ -51,13 +51,13 @@ const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   },
   {
     href: "/servicios/cableado-fibra-optica",
-    title: "Cableado de Fibra Optica",
+    title: "Cableado de Fibra Óptica",
     description: "Backbone de alta capacidad para tu red."
   },
   {
     href: "/servicios/cctv",
     title: "CCTV",
-    description: "Videovigilancia con grabacion y acceso remoto."
+    description: "Videovigilancia con grabación y acceso remoto."
   }
 ];
 
@@ -100,6 +100,34 @@ const CYBER_FLYOUT_ITEMS: FlyoutItem[] = [
     description: "Firewalls, SD-WAN y seguridad perimetral."
   }
 ];
+
+const isHomeSectionHref = (href: string) => href.startsWith("/#");
+
+function NavHrefLink({
+  href,
+  className,
+  children,
+  onClick
+}: {
+  href: string;
+  className: string;
+  children: ReactNode;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+}) {
+  if (isHomeSectionHref(href)) {
+    return (
+      <a href={href} className={className} onClick={onClick}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {children}
+    </Link>
+  );
+}
 
 export default function Navbar() {
   const { scrollY } = useScroll();
@@ -187,7 +215,7 @@ export default function Navbar() {
       />
 
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/#inicio" className="group inline-flex items-center gap-3">
+        <NavHrefLink href="/#inicio" className="group inline-flex items-center gap-3">
           <span className="inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
             <Image
               src="/images/isotipo_blanco.png"
@@ -200,11 +228,11 @@ export default function Navbar() {
             />
           </span>
           <span className="font-heading text-lg tracking-wide text-white">CONXIMA</span>
-        </Link>
+        </NavHrefLink>
 
         <nav className="hidden items-center gap-6 text-sm text-slate-200 transition-colors md:flex">
           <DesktopFlyoutLink
-            label="Quienes somos"
+            label="Quiénes somos"
             href="/#quienes"
             widthClass="w-[42rem]"
             flyout={<AboutFlyoutContent />}
@@ -224,7 +252,7 @@ export default function Navbar() {
             flyout={<CyberFlyoutContent />}
           />
 
-          <PlainNavLink href="/#porque">Por que nosotros</PlainNavLink>
+          <PlainNavLink href="/#porque">Por qué nosotros</PlainNavLink>
           <PlainNavLink href="/#contacto">Contacto</PlainNavLink>
 
           <motion.a
@@ -266,13 +294,13 @@ export default function Navbar() {
       {isMobileOpen && (
         <div className="border-t border-white/10 bg-[color:rgba(6,9,16,0.96)] md:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm text-slate-200">
-            <Link
+            <NavHrefLink
               href="/#quienes"
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
               Quienes somos
-            </Link>
+            </NavHrefLink>
 
             <button
               type="button"
@@ -284,22 +312,22 @@ export default function Navbar() {
             </button>
             {isMobileServicesOpen && (
               <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
-                <Link
+                <NavHrefLink
                   href="/servicios"
                   className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
                   onClick={handleMobileLinkClick}
                 >
                   Ver todos los servicios
-                </Link>
+                </NavHrefLink>
                 {SERVICE_FLYOUT_ITEMS.map((item) => (
-                  <Link
+                  <NavHrefLink
                     key={item.href}
                     href={item.href}
                     className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
                     onClick={handleMobileLinkClick}
                   >
                     {item.title}
-                  </Link>
+                  </NavHrefLink>
                 ))}
               </div>
             )}
@@ -315,41 +343,41 @@ export default function Navbar() {
             {isMobileCyberOpen && (
               <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
                 {CYBER_FLYOUT_ITEMS.map((item) => (
-                  <Link
+                  <NavHrefLink
                     key={item.href}
                     href={item.href}
                     className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
                     onClick={handleMobileLinkClick}
                   >
                     {item.title}
-                  </Link>
+                  </NavHrefLink>
                 ))}
               </div>
             )}
 
-            <Link
+            <NavHrefLink
               href="/#porque"
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
               Por que nosotros
-            </Link>
+            </NavHrefLink>
 
-            <Link
+            <NavHrefLink
               href="/#contacto"
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
               Contacto
-            </Link>
+            </NavHrefLink>
 
-            <Link
+            <NavHrefLink
               href="/#contacto"
               className="mt-2 inline-flex items-center justify-center rounded-full px-3 py-2 text-xs btn-tech"
               onClick={handleMobileLinkClick}
             >
               Cotiza ahora
-            </Link>
+            </NavHrefLink>
           </nav>
         </div>
       )}
@@ -359,9 +387,9 @@ export default function Navbar() {
 
 function PlainNavLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="relative py-1 hover:text-white">
+    <NavHrefLink href={href} className="relative py-1 hover:text-white">
       {children}
-    </Link>
+    </NavHrefLink>
   );
 }
 
@@ -384,7 +412,7 @@ function DesktopFlyoutLink({
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <Link href={href} className="group inline-flex items-center gap-1 py-1 hover:text-white">
+      <NavHrefLink href={href} className="group inline-flex items-center gap-1 py-1 hover:text-white">
         <span>{label}</span>
         <svg
           viewBox="0 0 24 24"
@@ -404,7 +432,7 @@ function DesktopFlyoutLink({
           className="absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-[var(--color-secondary)] transition-transform duration-200"
           style={{ transform: open ? "scaleX(1)" : "scaleX(0)" }}
         />
-      </Link>
+      </NavHrefLink>
 
       <AnimatePresence>
         {open && (
@@ -431,13 +459,13 @@ function AboutFlyoutContent() {
   return (
     <div className="grid grid-cols-12 bg-white text-black">
       <div className="col-span-12 bg-[#070b17] px-6 py-6 text-white lg:col-span-4">
-        <h3 className="text-2xl font-semibold">Quienes somos</h3>
+        <h3 className="text-2xl font-semibold">Quiénes somos</h3>
         <p className="mt-3 text-sm text-slate-300">
-          CONXIMA es una empresa comprometida con ofrecer tecnologia de vanguardia y servicio de excelencia.
+          CONXIMA es una empresa comprometida con ofrecer tecnología de vanguardia y servicio de excelencia.
         </p>
-        <Link href="/#quienes" className="mt-6 inline-flex text-xs text-[var(--color-secondary)] hover:underline">
-          Ver seccion completa
-        </Link>
+        <NavHrefLink href="/#quienes" className="mt-6 inline-flex text-xs text-[var(--color-secondary)] hover:underline">
+          Ver sección completa
+        </NavHrefLink>
       </div>
 
       <div className="col-span-12 grid grid-cols-2 gap-3 p-5 lg:col-span-8">
@@ -448,18 +476,18 @@ function AboutFlyoutContent() {
         />
         <FlyoutCard
           href="/#quienes"
-          title="Mision"
-          description="Proporcionar soluciones tecnologicas innovadoras para tus operaciones."
+          title="Misión"
+          description="Proporcionar soluciones tecnológicas innovadoras para tus operaciones."
         />
         <FlyoutCard
           href="/#quienes"
-          title="Vision"
-          description="Ser referente en soluciones integrales de seguridad electronica."
+          title="Visión"
+          description="Ser referente en soluciones integrales de seguridad electrónica."
         />
         <FlyoutCard
           href="/#contacto"
           title="Contactar equipo"
-          description="Solicita asesoria para tu siguiente implementacion."
+          description="Solicita asesoria para tu siguiente implementación."
         />
       </div>
     </div>
@@ -474,9 +502,9 @@ function ServicesFlyoutContent() {
         <p className="mt-3 text-sm text-cyan-100">
           Soluciones de seguridad electronica y telecomunicaciones para empresas.
         </p>
-        <Link href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
-          Ver catalogo completo
-        </Link>
+        <NavHrefLink href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
+          Ver catálogo completo
+        </NavHrefLink>
       </div>
 
       <div className="col-span-12 grid grid-cols-3 gap-6 p-6 lg:col-span-8">
@@ -484,13 +512,13 @@ function ServicesFlyoutContent() {
           <div key={group.title} className="space-y-2">
             <h4 className="text-sm font-semibold text-neutral-900">{group.title}</h4>
             {group.items.map((item) => (
-              <Link
+              <NavHrefLink
                 key={item.href}
                 href={item.href}
                 className="block text-sm text-neutral-700 transition hover:text-black hover:underline"
               >
                 {item.title}
-              </Link>
+              </NavHrefLink>
             ))}
           </div>
         ))}
@@ -503,14 +531,14 @@ function CyberFlyoutContent() {
   return (
     <div className="bg-white p-3 text-black">
       {CYBER_FLYOUT_ITEMS.map((item) => (
-        <Link
+        <NavHrefLink
           key={item.href}
           href={item.href}
           className="block rounded-lg px-3 py-2 transition hover:bg-neutral-100"
         >
           <div className="text-sm font-medium">{item.title}</div>
           <p className="mt-0.5 text-[11px] text-neutral-600">{item.description}</p>
-        </Link>
+        </NavHrefLink>
       ))}
     </div>
   );
@@ -526,10 +554,10 @@ function FlyoutCard({
   description: string;
 }) {
   return (
-    <Link href={href} className="rounded-lg border border-neutral-200 p-3 transition hover:bg-neutral-100">
+    <NavHrefLink href={href} className="rounded-lg border border-neutral-200 p-3 transition hover:bg-neutral-100">
       <h4 className="text-sm font-semibold">{title}</h4>
       <p className="mt-1 text-xs text-neutral-700">{description}</p>
-    </Link>
+    </NavHrefLink>
   );
 }
 
