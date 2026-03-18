@@ -1,5 +1,7 @@
 ﻿import Image from "next/image";
 
+import InteractiveCTA from "./InteractiveCTA";
+
 const FORTIGATE_WA_URL =
   "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20conocer%20como%20FortiGate%20puede%20proteger%20la%20red%20de%20mi%20empresa.";
 
@@ -112,17 +114,21 @@ export default function FortinetSection() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href="/#contacto" className="btn-tech">
-                  Quiero proteger mi empresa
-                </a>
-                <a
-                  href={FORTIGATE_WA_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-outline-tech"
-                >
-                  Solicitar asesoría FortiGate
-                </a>
+                <InteractiveCTA>
+                  <a href="/#contacto" className="btn-tech">
+                    Quiero proteger mi empresa
+                  </a>
+                </InteractiveCTA>
+                <InteractiveCTA>
+                  <a
+                    href={FORTIGATE_WA_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-outline-tech"
+                  >
+                    Solicitar asesoría FortiGate
+                  </a>
+                </InteractiveCTA>
               </div>
 
               <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -270,17 +276,21 @@ export default function FortinetSection() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <a href="/#contacto" className="btn-tech">
-                Hablar con un especialista
-              </a>
-              <a
-                href={FORTIGATE_WA_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-outline-tech"
-              >
-                Escribir por WhatsApp
-              </a>
+              <InteractiveCTA>
+                <a href="/#contacto" className="btn-tech">
+                  Hablar con un especialista
+                </a>
+              </InteractiveCTA>
+              <InteractiveCTA>
+                <a
+                  href={FORTIGATE_WA_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-outline-tech"
+                >
+                  Escribir por WhatsApp
+                </a>
+              </InteractiveCTA>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import InteractiveCTA from "./InteractiveCTA";
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
 
@@ -515,17 +516,21 @@ export default function ConximaLanding() {
                 </div>
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <Link href="/ciberseguridad/fortinet" className="btn-tech">
-                    Explorar FortiGate con Conxima
-                  </Link>
-                  <a
-                    href={FORTIGATE_WA_URL}
-                    className="btn-outline-tech"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Solicitar asesoría FortiGate
-                  </a>
+                  <InteractiveCTA>
+                    <Link href="/ciberseguridad/fortinet" className="btn-tech">
+                      Explorar FortiGate con Conxima
+                    </Link>
+                  </InteractiveCTA>
+                  <InteractiveCTA>
+                    <a
+                      href={FORTIGATE_WA_URL}
+                      className="btn-outline-tech"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Solicitar asesoría FortiGate
+                    </a>
+                  </InteractiveCTA>
                 </div>
 
                 <p className="mt-4 text-xs text-slate-400">
@@ -752,9 +757,11 @@ export default function ConximaLanding() {
               </ul>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href="#contacto" className="btn-tech">
-                  Hablar con un especialista
-                </a>
+                <InteractiveCTA>
+                  <a href="#contacto" className="btn-tech">
+                    Hablar con un especialista
+                  </a>
+                </InteractiveCTA>
                 <p className="text-xs text-slate-400">
                   Te acompañamos desde el diagnóstico hasta la puesta en marcha.
                 </p>
@@ -943,14 +950,16 @@ export default function ConximaLanding() {
 
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
                 <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={openWhatsApp}
-                    className="btn-tech w-full"
-                    aria-label="Abrir WhatsApp con mensaje prellenado"
-                  >
-                    Escribir por WhatsApp 
-                  </button>
+                  <InteractiveCTA className="w-full">
+                    <button
+                      type="button"
+                      onClick={openWhatsApp}
+                      className="btn-tech w-full"
+                      aria-label="Abrir WhatsApp con mensaje prellenado"
+                    >
+                      Escribir por WhatsApp 
+                    </button>
+                  </InteractiveCTA>
                 </div>
 
                 {/* Mapa de Google - ubicación exacta CONXIMA */}

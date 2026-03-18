@@ -6,6 +6,7 @@ import type { MouseEventHandler, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import InteractiveCTA from "./InteractiveCTA";
 
 type FlyoutItem = {
   href: string;
@@ -371,13 +372,15 @@ export default function Navbar() {
               Contacto
             </NavHrefLink>
 
-            <NavHrefLink
-              href="/#contacto"
-              className="mt-2 inline-flex items-center justify-center rounded-full px-3 py-2 text-xs btn-tech"
-              onClick={handleMobileLinkClick}
-            >
-              Cotiza ahora
-            </NavHrefLink>
+            <InteractiveCTA>
+              <NavHrefLink
+                href="/#contacto"
+                className="mt-2 inline-flex items-center justify-center rounded-full px-3 py-2 text-xs btn-tech"
+                onClick={handleMobileLinkClick}
+              >
+                Cotiza ahora
+              </NavHrefLink>
+            </InteractiveCTA>
           </nav>
         </div>
       )}

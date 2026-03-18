@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Footer from "@/app/components/Footer";
+import InteractiveCTA from "@/app/components/InteractiveCTA";
 import Navbar from "@/app/components/Navbar";
 import { getServicioBySlug, getServicioNavigation } from "@/data/servicios";
 
@@ -81,15 +82,19 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
               ) : null}
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href="/#contacto" className="btn-tech rounded-xl px-5 py-3">
-                  Solicitar cotización
-                </a>
-                <a
-                  className="btn-outline-tech rounded-xl px-5 py-3"
-                  href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotizacion%20-%20Conxima"
-                >
-                  Solicitar por email
-                </a>
+                <InteractiveCTA>
+                  <a href="/#contacto" className="btn-tech rounded-xl px-5 py-3">
+                    Solicitar cotización
+                  </a>
+                </InteractiveCTA>
+                <InteractiveCTA>
+                  <a
+                    className="btn-outline-tech rounded-xl px-5 py-3"
+                    href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotizacion%20-%20Conxima"
+                  >
+                    Solicitar por email
+                  </a>
+                </InteractiveCTA>
               </div>
             </div>
 
@@ -200,17 +205,21 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
               </p>
 
               <div className="mt-5 flex flex-col gap-3">
-                <a href="/#contacto" className="btn-tech rounded-xl px-4 py-3 text-center">
-                  Ir al formulario
-                </a>
-                <a
-                  className="btn-outline-tech rounded-xl px-4 py-3 text-center"
-                  href="https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20mas%20informacion%20sobre%20este%20servicio."
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Escribir por WhatsApp
-                </a>
+                <InteractiveCTA>
+                  <a href="/#contacto" className="btn-tech rounded-xl px-4 py-3 text-center">
+                    Ir al formulario
+                  </a>
+                </InteractiveCTA>
+                <InteractiveCTA>
+                  <a
+                    className="btn-outline-tech rounded-xl px-4 py-3 text-center"
+                    href="https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20mas%20informacion%20sobre%20este%20servicio."
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Escribir por WhatsApp
+                  </a>
+                </InteractiveCTA>
               </div>
             </div>
           </aside>

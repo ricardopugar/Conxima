@@ -4,53 +4,81 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 
-export default function RouteTransition({ children }: { children: React.ReactNode }) {
+export default function RouteTransition({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
   const pageRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<number[]>([]);
 
   const clearTimers = () => {
-    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current.forEach((timerId) => window.clearTimeout(timerId));
     timers.current = [];
   };
 
   useEffect(() => {
-    // Scroll al tope en cada navegación
-    try { window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); } catch {}
-
-    if (!pageRef.current) return;
     clearTimers();
 
-    const nodes = Array.from(
-      pageRef.current.querySelectorAll<HTMLElement>(".reveal")
-    );
+    const behavior = reduceMotion ? "auto" : "smooth";
+    const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
 
-    if (nodes.length === 0) return;
+    if (hash) {
+      const hashTimer = window.setTimeout(() => {
+        const target = document.getElementById(hash);
 
-    // Resetea para re-revelar
-    nodes.forEach((el) => el.classList.remove("reveal-in"));
+        if (target) {
+          target.scrollIntoView({ block: "start", behavior });
+          return;
+        }
 
-    if (reduceMotion) {
-      requestAnimationFrame(() => nodes.forEach((el) => el.classList.add("reveal-in")));
-      return;
+        try {
+          window.scrollTo({ top: 0, behavior });
+        } catch {}
+      }, 80);
+
+      timers.current.push(hashTimer);
+    } else {
+      try {
+        window.scrollTo({ top: 0, behavior });
+      } catch {}
     }
 
-    // Stagger suave
-    const baseDelay = 120; // ms
-    const step = 90;       // ms
-    nodes.forEach((el, i) => {
-      const id = window.setTimeout(() => {
-        void el.offsetHeight; // fuerza reflow
-        el.classList.add("reveal-in");
-      }, baseDelay + i * step);
-      timers.current.push(id);
+    if (!pageRef.current) return;
+
+    const nodes = Array.from(
+      pageRef.current.querySelectorAll<HTMLElement>(".reveal"),
+    );
+
+    if (nodes.length === 0) return () => clearTimers();
+
+    nodes.forEach((element) => element.classList.remove("reveal-in"));
+
+    if (reduceMotion) {
+      requestAnimationFrame(() => {
+        nodes.forEach((element) => element.classList.add("reveal-in"));
+      });
+      return () => clearTimers();
+    }
+
+    const baseDelay = 120;
+    const step = 90;
+
+    nodes.forEach((element, index) => {
+      const timerId = window.setTimeout(() => {
+        void element.offsetHeight;
+        element.classList.add("reveal-in");
+      }, baseDelay + index * step);
+
+      timers.current.push(timerId);
     });
 
     return () => clearTimers();
   }, [pathname, reduceMotion]);
 
-  const durationIn  = reduceMotion ? 0 : 0.22;
+  const durationIn = reduceMotion ? 0 : 0.22;
   const durationOut = reduceMotion ? 0 : 0.16;
 
   return (
@@ -59,8 +87,16 @@ export default function RouteTransition({ children }: { children: React.ReactNod
         key={pathname}
         ref={pageRef}
         initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: durationIn, ease: [0.22, 1, 0.36, 1] } }}
-        exit={{ opacity: 0, y: -8, transition: { duration: durationOut, ease: [0.65, 0, 0.35, 1] } }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          transition: { duration: durationIn, ease: [0.22, 1, 0.36, 1] },
+        }}
+        exit={{
+          opacity: 0,
+          y: -8,
+          transition: { duration: durationOut, ease: [0.65, 0, 0.35, 1] },
+        }}
         style={{ willChange: "opacity, transform" }}
       >
         {children}
