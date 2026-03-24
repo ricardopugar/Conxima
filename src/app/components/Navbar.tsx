@@ -6,8 +6,11 @@ import type { MouseEventHandler, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
-import { FaFacebookF, FaInstagram } from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa6";
 import InteractiveCTA from "./InteractiveCTA";
+
+const CONXIMA_WHATSAPP_URL =
+  "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20solicitar%20asesor%C3%ADa.";
 
 type FlyoutItem = {
   href: string;
@@ -264,6 +267,15 @@ export default function Navbar() {
               className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
             >
               <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <a
+              href={CONXIMA_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp de CONXIMA"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+            >
+              <FaWhatsapp className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
               href="https://www.instagram.com/conximaec/"

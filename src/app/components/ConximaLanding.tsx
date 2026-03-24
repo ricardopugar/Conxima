@@ -6,12 +6,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowRight, FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
-import { FaFacebookF, FaInstagram } from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import InteractiveCTA from "./InteractiveCTA";
 
 const HERO_VIDEO_SRC = "/videos/CONXIMA%201.mp4";
+const CONXIMA_WHATSAPP_URL =
+  "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20solicitar%20asesor%C3%ADa.";
 
 function getBubbleLevel(
   hoveredIndex: number | null,
@@ -1038,6 +1040,15 @@ export default function ConximaLanding() {
                       className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
                     >
                       <FaFacebookF className="h-4 w-4" aria-hidden />
+                    </a>
+                    <a
+                      href={CONXIMA_WHATSAPP_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="WhatsApp de CONXIMA"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+                    >
+                      <FaWhatsapp className="h-4 w-4" aria-hidden />
                     </a>
                     <a
                       href="https://www.instagram.com/conximaec/"
