@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -25,6 +26,27 @@ export default function Footer() {
             Contacto
           </a>
         </nav>
+
+        <div className="flex items-center gap-3">
+          <a
+            href="https://www.facebook.com/conxima.ec"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook de CONXIMA"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+          >
+            <FaFacebookF className="h-4 w-4" aria-hidden />
+          </a>
+          <a
+            href="https://www.instagram.com/conximaec/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de CONXIMA"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+          >
+            <FaInstagram className="h-4 w-4" aria-hidden />
+          </a>
+        </div>
       </div>
     </footer>
   );

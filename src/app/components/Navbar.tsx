@@ -6,6 +6,7 @@ import type { MouseEventHandler, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 import InteractiveCTA from "./InteractiveCTA";
 
 type FlyoutItem = {
@@ -37,13 +38,8 @@ const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   },
   {
     href: "/servicios/cableado-estructurado",
-    title: "Cableado Estructurado",
-    description: "Infraestructura ordenada para datos y voz."
-  },
-  {
-    href: "/servicios/racks-y-gabinetes",
-    title: "Racks y Gabinetes",
-    description: "Orden, proteccion y crecimiento de equipos."
+    title: "Infraestructura de Red",
+    description: "Cableado, gabinetes y organizacion central de la red."
   },
   {
     href: "/servicios/servicios-en-la-nube",
@@ -52,13 +48,13 @@ const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   },
   {
     href: "/servicios/cableado-fibra-optica",
-    title: "Cableado de Fibra Óptica",
+    title: "Cableado de Fibra Optica",
     description: "Backbone de alta capacidad para tu red."
   },
   {
     href: "/servicios/cctv",
     title: "CCTV",
-    description: "Videovigilancia con grabación y acceso remoto."
+    description: "Videovigilancia con grabacion y acceso remoto."
   }
 ];
 
@@ -77,9 +73,8 @@ const SERVICE_GROUPS: ServiceGroup[] = [
       { href: "/servicios/cuarto-de-monitoreo", title: "Cuarto de Monitoreo" },
       {
         href: "/servicios/cableado-estructurado",
-        title: "Cableado Estructurado"
-      },
-      { href: "/servicios/racks-y-gabinetes", title: "Racks y Gabinetes" }
+        title: "Infraestructura de Red"
+      }
     ]
   },
   {
@@ -95,6 +90,11 @@ const SERVICE_GROUPS: ServiceGroup[] = [
 ];
 
 const CYBER_FLYOUT_ITEMS: FlyoutItem[] = [
+  {
+    href: "/ciberseguridad",
+    title: "Ciberseguridad",
+    description: "Vision general, enfoque CONXIMA y partners tecnologicos."
+  },
   {
     href: "/ciberseguridad/fortinet",
     title: "Fortinet",
@@ -233,7 +233,7 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-6 text-sm text-slate-200 transition-colors md:flex">
           <DesktopFlyoutLink
-            label="Quiénes somos"
+            label="Quienes somos"
             href="/#quienes"
             widthClass="w-[42rem]"
             flyout={<AboutFlyoutContent />}
@@ -248,13 +248,33 @@ export default function Navbar() {
 
           <DesktopFlyoutLink
             label="Ciberseguridad"
-            href="/ciberseguridad/fortinet"
+            href="/ciberseguridad"
             widthClass="w-[22rem]"
             flyout={<CyberFlyoutContent />}
           />
 
-          <PlainNavLink href="/#porque">Por qué nosotros</PlainNavLink>
           <PlainNavLink href="/#contacto">Contacto</PlainNavLink>
+
+          <div className="ml-2 flex items-center gap-2">
+            <a
+              href="https://www.facebook.com/conxima.ec"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook de CONXIMA"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+            >
+              <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <a
+              href="https://www.instagram.com/conximaec/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de CONXIMA"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+            >
+              <FaInstagram className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          </div>
 
           <motion.a
             whileHover={{ y: -1, scale: 1.01 }}
@@ -357,14 +377,6 @@ export default function Navbar() {
             )}
 
             <NavHrefLink
-              href="/#porque"
-              className="rounded-lg px-2 py-2 hover:bg-white/5"
-              onClick={handleMobileLinkClick}
-            >
-              Por que nosotros
-            </NavHrefLink>
-
-            <NavHrefLink
               href="/#contacto"
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
@@ -462,12 +474,12 @@ function AboutFlyoutContent() {
   return (
     <div className="grid grid-cols-12 bg-white text-black">
       <div className="col-span-12 bg-[#070b17] px-6 py-6 text-white lg:col-span-4">
-        <h3 className="text-2xl font-semibold">Quiénes somos</h3>
+        <h3 className="text-2xl font-semibold">Quienes somos</h3>
         <p className="mt-3 text-sm text-slate-300">
-          CONXIMA es una empresa comprometida con ofrecer tecnología de vanguardia y servicio de excelencia.
+          CONXIMA es una empresa comprometida con ofrecer tecnologia de vanguardia y servicio de excelencia.
         </p>
         <NavHrefLink href="/#quienes" className="mt-6 inline-flex text-xs text-[var(--color-secondary)] hover:underline">
-          Ver sección completa
+          Ver seccion completa
         </NavHrefLink>
       </div>
 
@@ -479,18 +491,18 @@ function AboutFlyoutContent() {
         />
         <FlyoutCard
           href="/#quienes"
-          title="Misión"
-          description="Proporcionar soluciones tecnológicas innovadoras para tus operaciones."
+          title="Mision"
+          description="Proporcionar soluciones tecnologicas innovadoras para tus operaciones."
         />
         <FlyoutCard
           href="/#quienes"
-          title="Visión"
-          description="Ser referente en soluciones integrales de seguridad electrónica."
+          title="Vision"
+          description="Ser referente en soluciones integrales de seguridad electronica."
         />
         <FlyoutCard
           href="/#contacto"
           title="Contactar equipo"
-          description="Solicita asesoria para tu siguiente implementación."
+          description="Solicita asesoria para tu siguiente implementacion."
         />
       </div>
     </div>
@@ -506,7 +518,7 @@ function ServicesFlyoutContent() {
           Soluciones de seguridad electronica y telecomunicaciones para empresas.
         </p>
         <NavHrefLink href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
-          Ver catálogo completo
+          Ver catalogo completo
         </NavHrefLink>
       </div>
 

@@ -6,11 +6,51 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
+import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import InteractiveCTA from "./InteractiveCTA";
 /** Vídeos del hero */
 const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
+
+function getBubbleLevel(
+  hoveredIndex: number | null,
+  currentIndex: number,
+  char: string
+): "base" | "near" | "active" {
+  if (char === " " || hoveredIndex === null) return "base";
+
+  const distance = Math.abs(hoveredIndex - currentIndex);
+  if (distance === 0) return "active";
+  if (distance === 1) return "near";
+  return "base";
+}
+
+function BubbleHeroText({ text }: { text: string }) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  return (
+    <span
+      className="bubble-hero mt-2 block"
+      onMouseLeave={() => setHoveredIndex(null)}
+      aria-label={text}
+    >
+      {Array.from(text).map((char, idx) => {
+        const level = getBubbleLevel(hoveredIndex, idx, char);
+
+        return (
+          <span
+            key={`${char}-${idx}`}
+            className={`bubble-hero__char bubble-hero__char--${level}`}
+            onMouseEnter={() => setHoveredIndex(idx)}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 export default function ConximaLanding() {
   /* =========================
@@ -165,9 +205,6 @@ export default function ConximaLanding() {
   const GENERIC_WA_URL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
     "Hola CONXIMA, vengo desde la web y quiero solicitar asesoría."
   )}`;
-  const FORTIGATE_WA_URL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
-    "Hola CONXIMA, quiero conocer como FortiGate puede proteger la red de mi empresa."
-  )}`;
 
   const buildWhatsAppURL = () => {
     const name =
@@ -304,23 +341,44 @@ export default function ConximaLanding() {
           border: 1px solid color-mix(in srgb, var(--color-secondary) 36%, transparent);
         }
         .group:hover .icon-badge { background: color-mix(in srgb, var(--color-secondary) 24%, transparent); }
-        .fortigate-shell {
-          background:
-            radial-gradient(880px 420px at 10% 20%, rgba(238, 87, 47, 0.22), transparent 50%),
-            radial-gradient(720px 360px at 85% 80%, rgba(17, 124, 184, 0.16), transparent 48%),
-            linear-gradient(135deg, rgba(8, 14, 29, 0.98), rgba(12, 20, 37, 0.92));
+        .bubble-hero {
+          text-wrap: balance;
+          color: var(--color-secondary);
+          text-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
         }
-        .fortigate-grid {
-          background-image:
-            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
-          background-size: 28px 28px;
-          mask-image: linear-gradient(180deg, rgba(0,0,0,0.72), transparent 85%);
+        .bubble-hero__char {
+          display: inline-block;
+          padding-inline: 0.015em;
+          font-weight: 320;
+          color: var(--color-secondary);
+          text-shadow: 0 0 0 rgba(34, 211, 238, 0);
+          transform: translateY(0) scale(1);
+          transition:
+            color 220ms ease,
+            font-weight 220ms ease,
+            text-shadow 220ms ease,
+            transform 220ms ease;
+          will-change: color, transform;
         }
-        .fortigate-chip {
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.05);
-          backdrop-filter: blur(10px);
+        .bubble-hero__char--near {
+          font-weight: 500;
+          color: color-mix(in srgb, var(--color-secondary) 86%, white);
+          text-shadow: 0 0 16px rgba(34, 211, 238, 0.16);
+          transform: translateY(-1px) scale(1.02);
+        }
+        .bubble-hero__char--active {
+          font-weight: 700;
+          color: color-mix(in srgb, var(--color-secondary) 72%, white);
+          text-shadow:
+            0 0 18px rgba(34, 211, 238, 0.3),
+            0 0 34px rgba(0, 124, 198, 0.18);
+          transform: translateY(-2px) scale(1.04);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bubble-hero__char {
+            transition: color 140ms ease;
+            transform: none;
+          }
         }
 
         :root { --scroll: 0%; }
@@ -356,8 +414,8 @@ export default function ConximaLanding() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 md:py-32">
           <div className="max-w-3xl reveal" ref={setRevealRef(0)}>
             <h1 className="type-title text-4xl leading-tight md:text-6xl">
-              Tecnología al servicio de tu{" "}
-              <span className="block text-secondary">Seguridad y Conectividad</span>
+              Tecnología al servicio de tu
+              <BubbleHeroText text="Seguridad y Conectividad" />
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-slate-300">
               Soluciones integrales en telecomunicaciones y seguridad
@@ -472,133 +530,6 @@ export default function ConximaLanding() {
       </section>
 
       {/* =========================
-          FORTIGATE
-      ========================== */}
-      <section id="fortigate" className="section relative overflow-hidden" data-tone="1">
-        <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-          <div className="fortigate-shell relative overflow-hidden rounded-[2rem] ring-1 ring-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-            <div className="fortigate-grid pointer-events-none absolute inset-0 opacity-60" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-            <div className="relative grid grid-cols-1 items-center gap-10 px-6 py-8 md:px-10 md:py-10 lg:grid-cols-[1.05fr,0.95fr] lg:px-12 lg:py-12">
-              <div className="reveal" ref={setRevealRef(4)}>
-                <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.16em] text-white/75">
-                  <span className="h-2 w-2 rounded-full bg-[var(--color-secondary)]" />
-                  Ciberseguridad de nueva generación
-                </div>
-
-                <h2 className="type-title mt-5 max-w-2xl text-3xl md:text-4xl lg:text-5xl">
-                  FortiGate con <span className="text-secondary">Conxima</span> para proteger tu red, tus usuarios y tu operación.
-                </h2>
-
-                <p className="mt-4 max-w-2xl text-base text-slate-300 md:text-lg">
-                  Integramos soluciones FortiGate para empresas que necesitan
-                  visibilidad, control del tráfico y defensa activa frente a
-                  amenazas. Desde el diseño hasta la puesta en marcha, te
-                  acompañamos con criterio técnico y soporte local.
-                </p>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {[
-                    "NGFW + IPS",
-                    "VPN segura",
-                    "Filtrado web",
-                    "Control de aplicaciones",
-                    "Reportes y monitoreo",
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="fortigate-chip rounded-full px-4 py-2 text-sm text-slate-100"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <InteractiveCTA>
-                    <Link href="/ciberseguridad/fortinet" className="btn-tech">
-                      Explorar FortiGate con Conxima
-                    </Link>
-                  </InteractiveCTA>
-                  <InteractiveCTA>
-                    <a
-                      href={FORTIGATE_WA_URL}
-                      className="btn-outline-tech"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Solicitar asesoría FortiGate
-                    </a>
-                  </InteractiveCTA>
-                </div>
-
-                <p className="mt-4 text-xs text-slate-400">
-                  Ideal para sedes corporativas, crecimiento multi-sucursal,
-                  acceso remoto seguro y protección perimetral.
-                </p>
-              </div>
-
-              <div className="reveal" ref={setRevealRef(5)}>
-                <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/30 p-3 shadow-[0_20px_48px_rgba(0,0,0,0.38)]">
-                  <div className="relative min-h-[320px] overflow-hidden rounded-[1.25rem]">
-                    <Image
-                      src="/images/fortigate.jpg"
-                      alt="Solución FortiGate implementada por Conxima"
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1024px) 42vw, 100vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-black/65 via-black/15 to-transparent" />
-
-                    <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-3">
-                      <div className="rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md">
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/65">
-                          Solución destacada
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-white">
-                          FortiGate NGFW
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="absolute inset-x-4 bottom-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                      {[
-                        {
-                          title: "Protección perimetral",
-                          desc: "Inspección y respuesta ante amenazas.",
-                        },
-                        {
-                          title: "Acceso remoto seguro",
-                          desc: "VPN para equipos y usuarios distribuidos.",
-                        },
-                        {
-                          title: "Operación visible",
-                          desc: "Control, reportes y políticas centralizadas.",
-                        },
-                      ].map((card) => (
-                        <article
-                          key={card.title}
-                          className="rounded-2xl border border-white/10 bg-black/55 p-4 backdrop-blur-md"
-                        >
-                          <p className="text-sm font-semibold text-white">
-                            {card.title}
-                          </p>
-                          <p className="mt-1 text-xs text-slate-200">
-                            {card.desc}
-                          </p>
-                        </article>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================
           SERVICIOS
       ========================== */}
       <section id="servicios" className="section relative" data-tone="2">
@@ -614,39 +545,29 @@ export default function ConximaLanding() {
           <ServicesCarousel
             items={[
               {
-                slug: "control-de-acceso",
-                title: "Control de Acceso Biométrico",
-                desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
-                category: "Control de acceso",
-                src: "/images/servicios-landing/control de acceso.png",
-              },
-              {
-                slug: "sistemas-de-alarma",
-                title: "Sistemas de Alarma",
-                desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
-                category: "Seguridad",
-                src: "/images/servicios/alarma.jpeg",
-              },
-              {
-                slug: "cuarto-de-monitoreo",
-                title: "Cuarto de Monitoreo",
-                desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
-                category: "Monitoreo",
-                src: "/images/servicios-landing/cuarto monitoreo.png",
-              },
-              {
                 slug: "cableado-estructurado",
-                title: "Cableado Estructurado",
-                desc: "Planos, canalización, racks, certificación y documentación.",
-                category: "Infraestructura",
-                src: "/images/servicios-landing/infraestructura de red y gabinetes .png",
-              },
-              {
-                slug: "racks-y-gabinetes",
-                title: "Racks y Gabinetes",
-                desc: "Montaje seguro, ventilación, orden y crecimiento.",
+                title: "Infraestructura de Red",
+                desc: "Cableado, puntos de red, switches, racks y crecimiento ordenado de tu infraestructura.",
                 category: "Infraestructura",
                 src: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
+              },
+              {
+                slug: "puntos-de-datos",
+                title: "Puntos de Datos",
+                legend: "Salidas de red para puestos, cámaras, telefonía y equipos conectados.",
+                desc: "Implementación ordenada de puntos de red y datos para conectar tu operación con estándar profesional.",
+                category: "Infraestructura",
+                src: "/images/servicios-landing/infraestructura de red y gabinetes .png",
+                href: "/servicios/cableado-estructurado",
+              },
+              {
+                slug: "ciberseguridad",
+                title: "Ciberseguridad",
+                legend: "Protección de redes, usuarios y datos frente a amenazas digitales.",
+                desc: "Estrategias, soluciones y partners para blindar la operación tecnológica de tu empresa.",
+                category: "Protección digital",
+                src: "/images/fortigate.jpg",
+                href: "/ciberseguridad",
               },
               {
                 slug: "servicios-en-la-nube",
@@ -668,6 +589,27 @@ export default function ConximaLanding() {
                 desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.",
                 category: "Videovigilancia",
                 src: "/images/servicios/cctv.jpg",
+              },
+              {
+                slug: "control-de-acceso",
+                title: "Control de Acceso Biométrico",
+                desc: "Lectores de huella, reconocimiento facial, tarjetas e integración con software de gestión.",
+                category: "Control de acceso",
+                src: "/images/servicios-landing/control de acceso.png",
+              },
+              {
+                slug: "sistemas-de-alarma",
+                title: "Sistemas de Alarma",
+                desc: "Perímetro, intrusión, armado/desarmado remoto y monitoreo móvil.",
+                category: "Seguridad",
+                src: "/images/servicios/alarma.jpeg",
+              },
+              {
+                slug: "cuarto-de-monitoreo",
+                title: "Cuarto de Monitoreo",
+                desc: "Diseño técnico, NVR/VMS, switches y cableado; capacitación de operadores.",
+                category: "Monitoreo",
+                src: "/images/servicios-landing/cuarto monitoreo.png",
               },
             ]}
           />
@@ -948,6 +890,32 @@ export default function ConximaLanding() {
                   </li>
                 </ul>
 
+                <div className="mt-5">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-400">
+                    Redes sociales
+                  </p>
+                  <div className="mt-3 flex items-center gap-3">
+                    <a
+                      href="https://www.facebook.com/conxima.ec"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Facebook de CONXIMA"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+                    >
+                      <FaFacebookF className="h-4 w-4" aria-hidden />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/conximaec/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Instagram de CONXIMA"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
+                    >
+                      <FaInstagram className="h-4 w-4" aria-hidden />
+                    </a>
+                  </div>
+                </div>
+
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
                 <div className="mt-4">
                   <InteractiveCTA className="w-full">
@@ -1004,9 +972,11 @@ export default function ConximaLanding() {
 type ServiceCarouselItem = {
   slug: string;
   title: string;
+  legend?: string;
   desc: string;
   category: string;
   src: string;
+  href?: string;
 };
 
 function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
@@ -1050,16 +1020,18 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 }
 
 function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
+  const href = item.href ?? `/servicios/${item.slug}`;
+
   return (
     <Link
-      href={`/servicios/${item.slug}`}
+      href={href}
       className="group relative h-[430px] w-[84vw] max-w-[360px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1"
       style={{
         backgroundImage: `url("${encodeURI(item.src)}")`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}
-      aria-label={`Abrir servicio: ${item.title}`}
+      aria-label={`Abrir: ${item.title}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
       <div className="absolute inset-0 z-10 flex flex-col p-6 text-white">
@@ -1067,9 +1039,14 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
           {item.category}
         </span>
         <p className="type-subtitle mt-4 text-2xl leading-tight">{item.title}</p>
+        {item.legend ? (
+          <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-white/65">
+            {item.legend}
+          </p>
+        ) : null}
         <p className="mt-3 text-sm text-slate-200">{item.desc}</p>
         <span className="mt-auto text-xs uppercase tracking-[0.14em] text-slate-200/80">
-          Ver servicio
+          {item.href ? "Ver sección" : "Ver servicio"}
         </span>
       </div>
     </Link>

@@ -89,7 +89,7 @@ export default function FortinetSection() {
                 </div>
 
                 <div className="justify-self-center lg:justify-self-end">
-                  <div className="rounded-[1.5rem] border border-white/10 bg-white/95 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.2)]">
+                  <div className="rounded-[1.5rem] border border-white/10 bg-black p-4 shadow-[0_18px_40px_rgba(0,0,0,0.2)]">
                     <Image
                       src="/images/fortinetlogo.png"
                       alt="Logo de Fortinet"
@@ -115,7 +115,7 @@ export default function FortinetSection() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <InteractiveCTA>
-                  <a href="/#contacto" className="btn-tech">
+                  <a href="/#navbcontacto" className="btn-tech">
                     Quiero proteger mi empresa
                   </a>
                 </InteractiveCTA>

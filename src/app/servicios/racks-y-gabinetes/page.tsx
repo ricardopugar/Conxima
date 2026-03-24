@@ -1,7 +1,7 @@
 import { buildServicioMetadata, ServicioPageTemplate } from "../components/ServicioPageTemplate";
 
-export const metadata = buildServicioMetadata("racks-y-gabinetes");
+export const metadata = buildServicioMetadata("cableado-estructurado");
 
 export default function Page() {
-  return <ServicioPageTemplate slug="racks-y-gabinetes" />;
+  return <ServicioPageTemplate slug="cableado-estructurado" />;
 }

@@ -128,18 +128,19 @@ export const servicios: Servicio[] = [
   },
   {
     slug: "cableado-estructurado",
-    title: "Cableado Estructurado",
-    pageTitle: "Infraestructura de Red y Cableado Estructurado",
+    title: "Infraestructura de Red y Cableado Estructurado",
+    pageTitle:
+      "Infraestructura de Red, Cableado Estructurado y Gabinetes de Comunicaciones",
     resumen:
-      "Base física de la red para datos, internet, cámaras, telefonía y crecimiento ordenado de tu operación.",
-    imagen: "/images/servicios-landing/infraestructura de red y gabinetes .png",
-    badges: ["UTP / FTP", "Patch panel", "Certificación"],
+      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios tecnológicos.",
+    imagen: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
+    badges: ["UTP / FTP", "Racks y gabinetes", "Crecimiento ordenado"],
     detalle: {
       queHace:
-        "Constituye el sistema físico que permite conectar y administrar redes de datos, internet, cámaras de seguridad, telefonía y otros sistemas tecnológicos.",
+        "La infraestructura de red y el cableado estructurado constituyen el sistema físico que permite conectar y administrar redes de datos, internet, cámaras de seguridad, telefonía y otros sistemas tecnológicos dentro de una casa, oficina o empresa.",
       descripcion: [
-        "El cableado estructurado es la base de la red porque transmite información entre equipos mediante una instalación organizada, identificada y estandarizada.",
-        "Cada punto se conecta a una infraestructura central de telecomunicaciones para facilitar mantenimiento, orden, crecimiento y mejor desempeño general de la red."
+        "El cableado estructurado es la base de la red, ya que permite transmitir información entre los diferentes equipos mediante una instalación organizada y estandarizada. Este cableado se conecta a un punto central donde se encuentran los racks o gabinetes de telecomunicaciones, los cuales permiten instalar, proteger y organizar equipos de red como switches, patch paneles, servidores o grabadores de videovigilancia.",
+        "El uso de racks y gabinetes facilita la gestión del cableado, la ventilación de los equipos, la seguridad física y el mantenimiento, además de permitir futuras ampliaciones de la infraestructura tecnológica."
       ],
       incluye: [
         "Instalación de cableado estructurado de red (UTP / FTP según requerimiento)",
@@ -147,61 +148,27 @@ export const servicios: Servicio[] = [
         "Patch panel",
         "Patch cords",
         "Switch de red",
+        "Rack o gabinete de telecomunicaciones",
+        "Bandejas o repisas para equipos",
+        "Organizadores de cable",
         "Canalización del cableado (tubería, canaletas o ductos)",
+        "Sistema de ventilación para el rack",
+        "Regletas o PDU de energía",
+        "Sistema de seguridad para el gabinete",
         "Etiquetado y organización del cableado",
         "Espacio para crecimiento de la red",
         "Certificación de red (si es requerido)",
         "Documentación de la red (si es requerido)"
       ],
       beneficios: [
-        "Reduce fallas por instalaciones improvisadas.",
-        "Facilita ampliaciones futuras sin rehacer la red.",
-        "Mejora la estabilidad de datos, voz y videovigilancia."
+        "Reduce fallas por instalaciones improvisadas y puntos críticos mal organizados.",
+        "Facilita la gestión del cableado, el mantenimiento y el crecimiento ordenado de la red.",
+        "Mejora la estabilidad operativa de datos, voz, internet y videovigilancia."
       ],
       idealPara: [
-        "Oficinas y edificios corporativos",
-        "Comercios, hoteles y centros educativos",
-        "Proyectos nuevos o ampliaciones tecnológicas"
-      ]
-    }
-  },
-  {
-    slug: "racks-y-gabinetes",
-    title: "Racks y Gabinetes",
-    pageTitle: "Racks y Gabinetes de Comunicaciones",
-    resumen:
-      "Protege, organiza y prepara el punto central de telecomunicaciones para crecimiento, ventilación y mantenimiento seguro.",
-    imagen: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
-    badges: ["Organización", "Ventilación", "Seguridad física"],
-    detalle: {
-      queHace:
-        "Centraliza y protege equipos de red, energía y comunicaciones dentro de un gabinete técnico ordenado, seguro y escalable.",
-      descripcion: [
-        "Los racks o gabinetes de telecomunicaciones permiten instalar, proteger y organizar switches, patch panels, servidores y grabadores de videovigilancia en un solo punto de control.",
-        "Su uso facilita la gestión del cableado, la ventilación de los equipos, la seguridad física y el mantenimiento, además de permitir futuras ampliaciones de la infraestructura tecnológica."
-      ],
-      incluye: [
-        "Rack o gabinete de telecomunicaciones",
-        "Bandejas o repisas para equipos",
-        "Organizadores de cable",
-        "Sistema de ventilación para el rack",
-        "Regletas o PDU de energía",
-        "Sistema de seguridad para el gabinete",
-        "Patch panel",
-        "Patch cords",
-        "Switch de red",
-        "Etiquetado y organización del cableado",
-        "Espacio para crecimiento de la red"
-      ],
-      beneficios: [
-        "Extiende la vida útil de los equipos con mejor gestión térmica.",
-        "Reduce tiempos de mantenimiento por orden y trazabilidad.",
-        "Disminuye riesgos eléctricos y desconexiones accidentales."
-      ],
-      idealPara: [
-        "Cuartos técnicos y centros de cableado",
-        "Instalaciones con crecimiento de red planificado",
-        "Operaciones que requieren orden físico y seguridad"
+        "Oficinas, edificios corporativos y locales comerciales",
+        "Empresas con cuartos de telecomunicaciones o crecimiento planificado",
+        "Proyectos nuevos, ampliaciones o modernización de infraestructura"
       ]
     }
   },
@@ -318,15 +285,27 @@ export const servicios: Servicio[] = [
   }
 ];
 
+function normalizeServicioSlug(slug: string): string {
+  if (slug === "racks-y-gabinetes") {
+    return "cableado-estructurado";
+  }
+
+  return slug;
+}
+
 export function getServicioBySlug(slug: string): Servicio | undefined {
-  return servicios.find((servicio) => servicio.slug === slug);
+  const normalizedSlug = normalizeServicioSlug(slug);
+  return servicios.find((servicio) => servicio.slug === normalizedSlug);
 }
 
 export function getServicioNavigation(slug: string): {
   previous?: Servicio;
   next?: Servicio;
 } {
-  const index = servicios.findIndex((servicio) => servicio.slug === slug);
+  const normalizedSlug = normalizeServicioSlug(slug);
+  const index = servicios.findIndex(
+    (servicio) => servicio.slug === normalizedSlug
+  );
 
   if (index === -1) {
     return {};
