@@ -356,7 +356,7 @@ export default function ConximaLanding() {
         }
         @media (max-width: 767px) {
           .hero-video-shell {
-            width: min(72vw, 22rem);
+            width: min(84vw, 22rem);
             margin-inline: auto;
           }
         }
@@ -419,7 +419,7 @@ export default function ConximaLanding() {
       {/* HERO */}
       <section
         id="inicio"
-        className="relative isolate min-h-[85vh] w-full overflow-hidden"
+        className="relative isolate min-h-[100svh] w-full overflow-hidden md:min-h-[85vh]"
       >
         <video
           className="hero-video hero-video-backdrop absolute inset-0 h-full w-full"
@@ -435,23 +435,26 @@ export default function ConximaLanding() {
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-4 py-20 md:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center">
-          <div className="max-w-3xl reveal" ref={setRevealRef(0)}>
-            <h1 className="type-title text-4xl leading-tight md:text-6xl">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-28 sm:pb-20 sm:pt-32 md:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center">
+          <div
+            className="reveal max-w-3xl text-center lg:text-left"
+            ref={setRevealRef(0)}
+          >
+            <h1 className="type-title text-[2rem] leading-[1.05] sm:text-4xl md:text-6xl">
               Tecnología al servicio de tu
               <BubbleHeroText text="Seguridad y Conectividad" />
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-slate-300">
+            <p className="mt-5 max-w-2xl text-base text-slate-300 sm:text-lg lg:max-w-2xl">
               Soluciones integrales en telecomunicaciones y seguridad
               electrónica. Diseño, instalación y mantenimiento con profesionales
               certificados.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
               <motion.a
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 href={GENERIC_WA_URL}
-                className="btn-tech"
+                className="btn-tech w-full sm:w-auto"
                 aria-label="Abrir WhatsApp para solicitar asesoría"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -462,13 +465,13 @@ export default function ConximaLanding() {
                 whileHover={{ y: -1, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 href="#servicios"
-                className="btn-outline-tech"
+                className="btn-outline-tech w-full sm:w-auto"
               >
                 Explorar servicios
               </motion.a>
             </div>
           </div>
-          <div className="reveal" ref={setRevealRef(14)}>
+          <div className="reveal mx-auto w-full max-w-[22rem] lg:mx-0 lg:max-w-none" ref={setRevealRef(14)}>
             <div className="hero-video-shell">
               <video
                 className="hero-video"
@@ -493,14 +496,14 @@ export default function ConximaLanding() {
           QUIÉNES SOMOS
       ========================== */}
       <section id="quienes" className="section relative" data-tone="1">
-        <div className="mx-auto max-w-7xl px-4 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
             {/* TEXTO */}
             <div className="reveal" ref={setRevealRef(1)}>
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Quiénes somos
               </span>
-              <h2 className="type-title mt-4 text-3xl md:text-4xl">
+              <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">
                 Ingeniería aplicada a la seguridad y conectividad de tu operación
               </h2>
               <p className="mt-4 text-slate-300">
@@ -508,7 +511,7 @@ export default function ConximaLanding() {
                 tecnológicas que protegen activos, optimizan procesos y mejoran
                 la continuidad operativa de cada cliente.
               </p>
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="mt-6 grid grid-cols-1 gap-3 min-[430px]:grid-cols-2 sm:grid-cols-3">
                 {[
                   { value: "360°", label: "Cobertura del proyecto" },
                   { value: "A medida", label: "Soluciones personalizadas" },
@@ -547,7 +550,7 @@ export default function ConximaLanding() {
             <div className="reveal lg:justify-self-end" ref={setRevealRef(2)}>
               <div className="relative w-full max-w-[560px] rounded-2xl ring-1 ring-white/10 bg-card/80 overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                 {/* Altura garantizada para evitar colapso con Image fill */}
-                <div className="relative min-h-[22rem] md:min-h-[26rem] lg:min-h-[30rem] bg-black/20">
+                <div className="relative min-h-[18rem] sm:min-h-[22rem] md:min-h-[26rem] lg:min-h-[30rem] bg-black/20">
                   <Image
                     src="/images/team-install.jpeg"
                     alt="Equipo técnico instalando cableado estructurado"
@@ -560,7 +563,7 @@ export default function ConximaLanding() {
                 </div>
 
                 {/* Pie de foto opcional */}
-                <div className="px-4 py-3 text-xs text-slate-300 bg-black/40 backdrop-blur-sm flex justify-between">
+                <div className="bg-black/40 px-4 py-3 text-xs text-slate-300 backdrop-blur-sm">
                   <span>Instalaciones profesionales con equipo altamente calificado y certificado</span>
                 </div>
               </div>
@@ -574,12 +577,12 @@ export default function ConximaLanding() {
           SERVICIOS
       ========================== */}
       <section id="servicios" className="section relative" data-tone="2">
-        <div className="mx-auto max-w-7xl px-4 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
           <header className="reveal" ref={setRevealRef(3)}>
             <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
               Servicios
             </span>
-            <h2 className="type-title mt-4 text-3xl md:text-4xl">Seguridad electrónica &amp; Telecomunicaciones</h2>
+            <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">Seguridad electrónica &amp; Telecomunicaciones</h2>
             <p className="mt-3 max-w-3xl text-slate-300">Implementamos sistemas de última generación, integrados a tus operaciones.</p>
           </header>
 
@@ -661,12 +664,12 @@ export default function ConximaLanding() {
           POR QUÉ NOSOTROS
       ========================== */}
       <section id="porque" className="section relative" data-tone="t1">
-        <div className="mx-auto max-w-7xl px-4 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
             {/* IMAGEN - izquierda en lg */}
             <div className="reveal lg:order-1" ref={setRevealRef(11)}>
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <div className="relative h-80 w-full">
+                <div className="relative h-72 w-full sm:h-80">
                   <Image
                     src="/images/monitoring-room.jpeg"
                     alt="Cámaras"
@@ -676,7 +679,7 @@ export default function ConximaLanding() {
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="absolute bottom-3 left-3 right-3 grid grid-cols-1 gap-2 sm:bottom-4 sm:left-4 sm:right-4 sm:grid-cols-2">
                   {[
                     "Implementaciones profesionales",
                     "Integración de plataformas",
@@ -699,7 +702,7 @@ export default function ConximaLanding() {
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Ventajas CONXIMA
               </span>
-              <h2 className="type-title mt-4 text-3xl md:text-4xl">
+              <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">
                 ¿Por qué elegirnos para tu proyecto?
               </h2>
               <p className="mt-3 text-slate-300 max-w-xl">
@@ -739,9 +742,9 @@ export default function ConximaLanding() {
                 ))}
               </ul>
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <InteractiveCTA>
-                  <a href="#contacto" className="btn-tech">
+                  <a href="#contacto" className="btn-tech w-full sm:w-auto">
                     Hablar con un especialista
                   </a>
                 </InteractiveCTA>
@@ -758,25 +761,25 @@ export default function ConximaLanding() {
           CONTACTO
       ========================== */}
       <section id="contacto" className="section relative" data-tone="3">
-        <div className="mx-auto max-w-7xl px-4 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
             <div className="lg:col-span-3 reveal" ref={setRevealRef(12)}>
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Contacto
               </span>
-              <h2 className="type-title mt-4 text-3xl md:text-4xl">Hablemos de tu proyecto</h2>
+              <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">Hablemos de tu proyecto</h2>
               <p className="mt-3 text-slate-300 max-w-2xl">
                 Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
               </p>
 
         <form
-          className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
+          className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
           action="/contact.php"
           method="post"
           onSubmit={handleContactSubmit}
         >
           {/* NOMBRE */}
-          <div className="sm:col-span-2 sm:col-span-1 space-y-1">
+          <div className="space-y-1 sm:col-span-1">
             <label
               htmlFor="name"
               className="block text-xs font-medium text-slate-300"
@@ -801,7 +804,7 @@ export default function ConximaLanding() {
           </div>
 
           {/* EMAIL */}
-          <div className="sm:col-span-2 sm:col-span-1 space-y-1">
+          <div className="space-y-1 sm:col-span-1">
             <label
               htmlFor="email"
               className="block text-xs font-medium text-slate-300"
@@ -878,12 +881,12 @@ export default function ConximaLanding() {
           </div>
 
           {/* BOTÓN + MENSAJES DE ESTADO */}
-          <div className="sm:col-span-2 flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 sm:col-span-2">
             <motion.button
               whileHover={{ y: -1, scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="btn-tech"
+              className="btn-tech w-full sm:w-auto"
               disabled={sending}
             >
               {sending ? "Enviando..." : "Enviar consulta"}
@@ -910,24 +913,24 @@ export default function ConximaLanding() {
             </div>
 
             <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
-              <div className="rounded-2xl bg-card/80 p-6 ring-1 ring-white/10">
+              <div className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10 sm:p-6">
                 <h3 className="type-subtitle text-xl">Contacto</h3>
                 <ul className="mt-4 space-y-3 text-slate-200">
-                  <li className="flex items-center gap-3">
-                    <FiPhoneCall className="text-secondary" aria-hidden />
+                  <li className="flex items-start gap-3">
+                    <FiPhoneCall className="mt-0.5 shrink-0 text-secondary" aria-hidden />
                     <a href="tel:+593939011017" className="hover:underline">
                       +593 93 901 1017
                     </a>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <FiMail className="text-secondary" aria-hidden />
-                    <a href="mailto:info@conxima.com" className="hover:underline">
+                  <li className="flex items-start gap-3">
+                    <FiMail className="mt-0.5 shrink-0 text-secondary" aria-hidden />
+                    <a href="mailto:info@conxima.com" className="break-all hover:underline sm:break-normal">
                       info@conxima.com
                     </a>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <FiMapPin className="text-secondary" aria-hidden />
-                    Cdla. Simón Bolívar Mz.5 V.18
+                  <li className="flex items-start gap-3">
+                    <FiMapPin className="mt-0.5 shrink-0 text-secondary" aria-hidden />
+                    <span>Cdla. Simón Bolívar Mz.5 V.18</span>
                   </li>
                 </ul>
 
@@ -975,7 +978,7 @@ export default function ConximaLanding() {
                 <div className="mt-6 overflow-hidden rounded-xl ring-1 ring-white/10">
                   <iframe
                     title="Ubicación CONXIMA"
-                    className="w-full h-[300px] border-0"
+                    className="h-[260px] w-full border-0 sm:h-[300px]"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     src="https://www.google.com/maps?q=-2.15133452415466,-79.8876800537109&z=16&output=embed"
@@ -1046,17 +1049,36 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
 
   return (
-    <section ref={targetRef} className="reveal relative mt-12 h-[280vh]">
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden rounded-2xl">
-        <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-20 bg-gradient-to-r from-[var(--color-bg)] to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[var(--color-bg)] to-transparent" />
-        <motion.div ref={trackRef} style={{ x }} className="flex gap-5 px-4 md:px-8 lg:px-12">
+    <>
+      <section className="reveal relative mt-10 md:hidden">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {items.map((item) => (
-            <ServiceCarouselCard key={item.slug} item={item} />
+            <div key={item.slug} className="snap-center">
+              <ServiceCarouselCard item={item} />
+            </div>
           ))}
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <section
+        ref={targetRef}
+        className="reveal relative mt-12 hidden h-[280vh] md:block"
+      >
+        <div className="sticky top-20 flex h-[calc(100svh-5rem)] items-center overflow-hidden rounded-2xl">
+          <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-20 bg-gradient-to-r from-[var(--color-bg)] to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[var(--color-bg)] to-transparent" />
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="flex gap-5 px-4 md:px-8 lg:px-12"
+          >
+            {items.map((item) => (
+              <ServiceCarouselCard key={item.slug} item={item} />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -1066,7 +1088,7 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
   return (
     <Link
       href={href}
-      className="group relative h-[430px] w-[84vw] max-w-[360px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1"
+      className="group relative h-[410px] w-[85vw] max-w-[22rem] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 sm:h-[430px] sm:w-[72vw] sm:max-w-[24rem] md:w-[84vw] md:max-w-[360px]"
       style={{
         backgroundImage: `url("${encodeURI(item.src)}")`,
         backgroundPosition: "center",
@@ -1075,11 +1097,11 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
       aria-label={`Abrir: ${item.title}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
-      <div className="absolute inset-0 z-10 flex flex-col p-6 text-white">
+      <div className="absolute inset-0 z-10 flex flex-col p-5 text-white sm:p-6">
         <span className="w-fit rounded-full border border-[color-mix(in_srgb,var(--color-secondary)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-secondary)]">
           {item.category}
         </span>
-        <p className="type-subtitle mt-4 text-2xl leading-tight">{item.title}</p>
+        <p className="type-subtitle mt-4 text-xl leading-tight sm:text-2xl">{item.title}</p>
         {item.legend ? (
           <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-white/65">
             {item.legend}
