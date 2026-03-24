@@ -10,8 +10,8 @@ import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import InteractiveCTA from "./InteractiveCTA";
-/** Vídeos del hero */
-const HERO_VIDEOS = ["hero-1", "hero-2", "hero-3", "hero-4"] as const;
+
+const HERO_VIDEO_SRC = "/videos/CONXIMA%201.mp4";
 
 function getBubbleLevel(
   hoveredIndex: number | null,
@@ -178,27 +178,6 @@ export default function ConximaLanding() {
   }, []);
 
   /* =========================
-   *  HERO VIDEO ROTATIVO
-   * ========================= */
-  const [selectedVideo, setSelectedVideo] = useState<string>(HERO_VIDEOS[0]);
-
-  useEffect(() => {
-    try {
-      const key = "conxima_hero_idx";
-      const last = Number(window.localStorage.getItem(key));
-      const next = Number.isInteger(last)
-        ? (last + 1) % HERO_VIDEOS.length
-        : 0;
-      setSelectedVideo(HERO_VIDEOS[next]);
-      window.localStorage.setItem(key, String(next));
-    } catch {
-      setSelectedVideo(
-        HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]
-      );
-    }
-  }, []);
-
-  /* =========================
    *  WhatsApp helpers
    * ========================= */
   const WA_NUMBER = "593939011017"; // Conxima
@@ -332,8 +311,54 @@ export default function ConximaLanding() {
         .text-muted { color: var(--color-muted); }
         .hero-overlay {
           background:
-            radial-gradient(1200px 600px at 70% 30%, rgba(0, 4, 48, 0.06), transparent 40%),
-            linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.6));
+            radial-gradient(1200px 600px at 70% 30%, rgba(0, 4, 48, 0.12), transparent 42%),
+            linear-gradient(180deg, rgba(1, 7, 20, 0.48), rgba(0, 0, 0, 0.72));
+        }
+        .hero-video-shell {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: min(100%, 26rem);
+          margin-left: auto;
+          aspect-ratio: 9 / 16;
+          border-radius: 1.75rem;
+          overflow: hidden;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)),
+            rgba(4, 11, 24, 0.42);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          box-shadow:
+            0 28px 70px rgba(0, 0, 0, 0.42),
+            0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+          backdrop-filter: blur(16px);
+        }
+        .hero-video-shell::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.14), transparent 20%),
+            radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 38%);
+          pointer-events: none;
+          z-index: 1;
+        }
+        .hero-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+        .hero-video-backdrop {
+          filter: blur(14px) saturate(0.9);
+          transform: scale(1.08);
+          opacity: 0.38;
+        }
+        @media (max-width: 767px) {
+          .hero-video-shell {
+            width: min(72vw, 22rem);
+            margin-inline: auto;
+          }
         }
         .icon-badge {
           color: var(--color-secondary);
@@ -397,8 +422,7 @@ export default function ConximaLanding() {
         className="relative isolate min-h-[85vh] w-full overflow-hidden"
       >
         <video
-          key={selectedVideo}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="hero-video hero-video-backdrop absolute inset-0 h-full w-full"
           autoPlay
           muted
           loop
@@ -408,10 +432,10 @@ export default function ConximaLanding() {
           aria-label="Video de actividades y soluciones tecnológicas de seguridad y conectividad"
           data-preload="true"
         >
-          <source src={`/videos/${selectedVideo}.mp4`} type="video/mp4" />
+          <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 md:py-32">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-4 py-20 md:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center">
           <div className="max-w-3xl reveal" ref={setRevealRef(0)}>
             <h1 className="type-title text-4xl leading-tight md:text-6xl">
               Tecnología al servicio de tu
@@ -442,6 +466,23 @@ export default function ConximaLanding() {
               >
                 Explorar servicios
               </motion.a>
+            </div>
+          </div>
+          <div className="reveal" ref={setRevealRef(14)}>
+            <div className="hero-video-shell">
+              <video
+                className="hero-video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                poster="/images/hero-poster.jpg"
+                aria-label="Video vertical hero de CONXIMA"
+                data-preload="true"
+              >
+                <source src={HERO_VIDEO_SRC} type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
