@@ -23,13 +23,13 @@ type ServiceGroup = {
 const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   {
     href: "/servicios/control-de-acceso",
-    title: "Control de Acceso Biometrico",
-    description: "Gestion de ingreso por huella, tarjeta o rostro."
+    title: "Control de Acceso Biométrico",
+    description: "Gestión de ingreso por huella, tarjeta o rostro."
   },
   {
     href: "/servicios/sistemas-de-alarma",
     title: "Sistemas de Alarma",
-    description: "Alertas de intrusion con monitoreo en tiempo real."
+    description: "Alertas de intrusión con monitoreo en tiempo real."
   },
   {
     href: "/servicios/cuarto-de-monitoreo",
@@ -39,22 +39,22 @@ const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   {
     href: "/servicios/cableado-estructurado",
     title: "Infraestructura de Red",
-    description: "Cableado, gabinetes y organizacion central de la red."
+    description: "Cableado, gabinetes y organización central de la red."
   },
   {
     href: "/servicios/servicios-en-la-nube",
     title: "Servicios en la Nube",
-    description: "Implementacion segura de cargas cloud."
+    description: "Implementación segura de cargas cloud."
   },
   {
     href: "/servicios/cableado-fibra-optica",
-    title: "Cableado de Fibra Optica",
+    title: "Cableado de Fibra Óptica",
     description: "Backbone de alta capacidad para tu red."
   },
   {
     href: "/servicios/cctv",
     title: "CCTV",
-    description: "Videovigilancia con grabacion y acceso remoto."
+    description: "Videovigilancia con grabación y acceso remoto."
   }
 ];
 
@@ -82,7 +82,7 @@ const SERVICE_GROUPS: ServiceGroup[] = [
     items: [
       {
         href: "/servicios/cableado-fibra-optica",
-        title: "Fibra Optica"
+        title: "Fibra Óptica"
       },
       { href: "/servicios/servicios-en-la-nube", title: "Servicios en la Nube" }
     ]
@@ -93,7 +93,7 @@ const CYBER_FLYOUT_ITEMS: FlyoutItem[] = [
   {
     href: "/ciberseguridad",
     title: "Ciberseguridad",
-    description: "Vision general, enfoque CONXIMA y partners tecnologicos."
+    description: "Visión general, enfoque CONXIMA y partners tecnológicos."
   },
   {
     href: "/ciberseguridad/fortinet",
@@ -233,7 +233,7 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-6 text-sm text-slate-200 transition-colors md:flex">
           <DesktopFlyoutLink
-            label="Quienes somos"
+            label="Quiénes somos"
             href="/#quienes"
             widthClass="w-[42rem]"
             flyout={<AboutFlyoutContent />}
@@ -290,7 +290,7 @@ export default function Navbar() {
           type="button"
           className="inline-flex items-center justify-center rounded-lg p-2 text-slate-200 hover:bg-white/10 md:hidden"
           onClick={() => setIsMobileOpen((open) => !open)}
-          aria-label="Abrir menu"
+          aria-label="Abrir menú"
         >
           <span className="relative flex h-5 w-6 items-center justify-center">
             <span
@@ -320,7 +320,7 @@ export default function Navbar() {
               className="rounded-lg px-2 py-2 hover:bg-white/5"
               onClick={handleMobileLinkClick}
             >
-              Quienes somos
+              Quiénes somos
             </NavHrefLink>
 
             <button
@@ -474,12 +474,12 @@ function AboutFlyoutContent() {
   return (
     <div className="grid grid-cols-12 bg-white text-black">
       <div className="col-span-12 bg-[#070b17] px-6 py-6 text-white lg:col-span-4">
-        <h3 className="text-2xl font-semibold">Quienes somos</h3>
+        <h3 className="text-2xl font-semibold">Quiénes somos</h3>
         <p className="mt-3 text-sm text-slate-300">
-          CONXIMA es una empresa comprometida con ofrecer tecnologia de vanguardia y servicio de excelencia.
+          CONXIMA es una empresa comprometida con ofrecer tecnología de vanguardia y servicio de excelencia.
         </p>
         <NavHrefLink href="/#quienes" className="mt-6 inline-flex text-xs text-[var(--color-secondary)] hover:underline">
-          Ver seccion completa
+          Ver sección completa
         </NavHrefLink>
       </div>
 
@@ -491,18 +491,18 @@ function AboutFlyoutContent() {
         />
         <FlyoutCard
           href="/#quienes"
-          title="Mision"
-          description="Proporcionar soluciones tecnologicas innovadoras para tus operaciones."
+          title="Misión"
+          description="Proporcionar soluciones tecnológicas innovadoras para tus operaciones."
         />
         <FlyoutCard
           href="/#quienes"
-          title="Vision"
-          description="Ser referente en soluciones integrales de seguridad electronica."
+          title="Visión"
+          description="Ser referente en soluciones integrales de seguridad electrónica."
         />
         <FlyoutCard
           href="/#contacto"
           title="Contactar equipo"
-          description="Solicita asesoria para tu siguiente implementacion."
+          description="Solicita asesoría para tu siguiente implementación."
         />
       </div>
     </div>
@@ -515,10 +515,10 @@ function ServicesFlyoutContent() {
       <div className="col-span-12 bg-[var(--color-primary)] px-6 py-6 text-white lg:col-span-4">
         <h3 className="text-2xl font-semibold">Servicios</h3>
         <p className="mt-3 text-sm text-cyan-100">
-          Soluciones de seguridad electronica y telecomunicaciones para empresas.
+          Soluciones de seguridad electrónica y telecomunicaciones para empresas.
         </p>
         <NavHrefLink href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
-          Ver catalogo completo
+          Ver catálogo completo
         </NavHrefLink>
       </div>
 
