@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
+import { FiArrowRight, FiMail, FiMapPin, FiPhoneCall } from "react-icons/fi";
 import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -53,6 +53,8 @@ function BubbleHeroText({ text }: { text: string }) {
 }
 
 export default function ConximaLanding() {
+  const heroRef = useRef<HTMLElement | null>(null);
+
   /* =========================
    *  PRELOADER (pantalla de carga)
    * ========================= */
@@ -134,6 +136,33 @@ export default function ConximaLanding() {
       clearTimeout(timeout);
     };
   }, []);
+
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroForegroundOpacity = useTransform(
+    heroScrollProgress,
+    [0, 0.45, 0.9],
+    [1, 0.92, 0.3]
+  );
+  const heroForegroundScale = useTransform(
+    heroScrollProgress,
+    [0, 0.6, 1],
+    [1, 0.985, 0.94]
+  );
+  const heroForegroundBlur = useTransform(
+    heroScrollProgress,
+    [0, 0.45, 1],
+    ["blur(0px)", "blur(4px)", "blur(14px)"]
+  );
+  const heroVeilOpacity = useTransform(heroScrollProgress, [0, 1], [0, 0.28]);
+  const whoSectionY = useTransform(heroScrollProgress, [0, 0.65, 1], [56, 20, 0]);
+  const whoSectionOpacity = useTransform(
+    heroScrollProgress,
+    [0, 0.55, 1],
+    [0.68, 0.84, 1]
+  );
 
   /* =========================
    *  REVEAL ON SCROLL
@@ -365,6 +394,51 @@ export default function ConximaLanding() {
           background: color-mix(in srgb, var(--color-secondary) 16%, transparent);
           border: 1px solid color-mix(in srgb, var(--color-secondary) 36%, transparent);
         }
+        .service-badge-featured {
+          color: #f7d774;
+          border-color: rgba(247, 215, 116, 0.42);
+          background:
+            linear-gradient(135deg, rgba(247, 215, 116, 0.22), rgba(191, 138, 32, 0.18)),
+            rgba(255, 215, 0, 0.08);
+          box-shadow:
+            0 0 0 1px rgba(247, 215, 116, 0.08) inset,
+            0 10px 30px rgba(191, 138, 32, 0.14);
+        }
+        .service-badge-featured::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(115deg, transparent 22%, rgba(255,255,255,0.28) 50%, transparent 78%);
+          transform: translateX(-140%);
+          transition: transform 700ms ease;
+          pointer-events: none;
+        }
+        .group:hover .service-badge-featured::after {
+          transform: translateX(140%);
+        }
+        .service-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          color: rgba(226, 232, 240, 0.8);
+          transition: color 220ms ease, transform 220ms ease;
+        }
+        .group:hover .service-cta {
+          color: #f8fafc;
+        }
+        .service-cta__icon {
+          transition: transform 220ms ease;
+        }
+        .group:hover .service-cta__icon {
+          transform: translateX(4px);
+        }
+        .service-cta--featured {
+          color: #f7d774;
+          text-shadow: 0 0 16px rgba(247, 215, 116, 0.18);
+        }
+        .group:hover .service-cta--featured {
+          color: #fde68a;
+        }
         .group:hover .icon-badge { background: color-mix(in srgb, var(--color-secondary) 24%, transparent); }
         .bubble-hero {
           text-wrap: balance;
@@ -419,6 +493,7 @@ export default function ConximaLanding() {
       {/* HERO */}
       <section
         id="inicio"
+        ref={heroRef}
         className="relative isolate min-h-[100svh] w-full overflow-hidden md:min-h-[85vh]"
       >
         <video
@@ -435,7 +510,18 @@ export default function ConximaLanding() {
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-28 sm:pb-20 sm:pt-32 md:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center">
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10 bg-[var(--color-bg)]"
+          style={{ opacity: heroVeilOpacity }}
+        />
+        <motion.div
+          className="relative z-20 mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-28 sm:pb-20 sm:pt-32 md:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center"
+          style={{
+            opacity: heroForegroundOpacity,
+            scale: heroForegroundScale,
+            filter: heroForegroundBlur,
+          }}
+        >
           <div
             className="reveal max-w-3xl text-center lg:text-left"
             ref={setRevealRef(0)}
@@ -488,14 +574,19 @@ export default function ConximaLanding() {
               </video>
             </div>
           </div>
-        </div>
+        </motion.div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-bg)]" />
       </section>
 
       {/* =========================
           QUIÉNES SOMOS
       ========================== */}
-      <section id="quienes" className="section relative" data-tone="1">
+      <motion.section
+        id="quienes"
+        className="section relative z-20"
+        data-tone="1"
+        style={{ y: whoSectionY, opacity: whoSectionOpacity }}
+      >
         <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
             {/* TEXTO */}
@@ -571,7 +662,7 @@ export default function ConximaLanding() {
             {/* FIN Imagen única */}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* =========================
           SERVICIOS
@@ -1084,6 +1175,14 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 
 function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
   const href = item.href ?? `/servicios/${item.slug}`;
+  const isFeaturedCyberCard = item.slug === "ciberseguridad";
+  const badgeClassName = isFeaturedCyberCard
+    ? "service-badge-featured"
+    : "border-[color-mix(in_srgb,var(--color-secondary)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)] text-[var(--color-secondary)]";
+  const ctaClassName = isFeaturedCyberCard
+    ? "service-cta service-cta--featured"
+    : "service-cta";
+  const ctaLabel = item.href ? "Ver sección" : "Ver servicio";
 
   return (
     <Link
@@ -1098,7 +1197,9 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
       <div className="absolute inset-0 z-10 flex flex-col p-5 text-white sm:p-6">
-        <span className="w-fit rounded-full border border-[color-mix(in_srgb,var(--color-secondary)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-secondary)]">
+        <span
+          className={`relative w-fit overflow-hidden rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${badgeClassName}`}
+        >
           {item.category}
         </span>
         <p className="type-subtitle mt-4 text-xl leading-tight sm:text-2xl">{item.title}</p>
@@ -1108,8 +1209,9 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
           </p>
         ) : null}
         <p className="mt-3 text-sm text-slate-200">{item.desc}</p>
-        <span className="mt-auto text-xs uppercase tracking-[0.14em] text-slate-200/80">
-          {item.href ? "Ver sección" : "Ver servicio"}
+        <span className={`mt-auto text-xs uppercase tracking-[0.14em] ${ctaClassName}`}>
+          <span>{ctaLabel}</span>
+          <FiArrowRight className="service-cta__icon h-3.5 w-3.5" aria-hidden />
         </span>
       </div>
     </Link>

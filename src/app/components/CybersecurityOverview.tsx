@@ -1,33 +1,36 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, type Transition } from "framer-motion";
+import { FiArrowRight } from "react-icons/fi";
 
 import InteractiveCTA from "./InteractiveCTA";
 
 const CYBERSECURITY_CAPABILITIES = [
-  "Protección perimetral",
+  "Proteccion perimetral",
   "Acceso remoto seguro",
-  "Visibilidad del tráfico",
-  "Control de políticas"
+  "Visibilidad del trafico",
+  "Control de politicas"
 ];
 
 const CYBERSECURITY_PILLARS = [
   {
-    title: "Prevención",
+    title: "Prevencion",
     description:
-      "Reducimos superficie de ataque con políticas, segmentación y tecnologías de control."
+      "Reducimos superficie de ataque con politicas, segmentacion y tecnologias de control."
   },
   {
-    title: "Detección",
+    title: "Deteccion",
     description:
-      "Monitoreamos comportamientos, tráfico y eventos para identificar riesgos con mayor rapidez."
+      "Monitoreamos comportamientos, trafico y eventos para identificar riesgos con mayor rapidez."
   },
   {
     title: "Continuidad",
     description:
-      "Diseñamos soluciones que ayudan a sostener la operación y responder mejor ante incidentes."
+      "Diseñamos soluciones que ayudan a sostener la operacion y responder mejor ante incidentes."
   }
 ];
 
@@ -40,7 +43,199 @@ const CYBERSECURITY_PARTNERS = [
   }
 ] as const;
 
+const GRID_BOX_SIZE = 32;
+const BEAM_WIDTH_OFFSET = 1;
+
 type CybersecurityPartner = (typeof CYBERSECURITY_PARTNERS)[number];
+
+type WindowSize = {
+  width: number | undefined;
+  height: number | undefined;
+};
+
+type BeamType = {
+  top: number;
+  left: number;
+  transition?: Transition;
+};
+
+type HeroActionProps = {
+  children: ReactNode;
+  href: string;
+  className: string;
+  external?: boolean;
+};
+
+function HeroAction({
+  children,
+  href,
+  className,
+  external = false
+}: HeroActionProps) {
+  if (external) {
+    return (
+      <a
+        href={href}
+        className={className}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
+function GlowingChip({ children }: { children: string }) {
+  return (
+    <span className="font-heading relative z-10 inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-white/85 backdrop-blur">
+      {children}
+      <span className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-white/0 via-cyan-300/70 to-white/0" />
+    </span>
+  );
+}
+
+function SplashButton({ children, href }: { children: ReactNode; href: string }) {
+  return (
+    <HeroAction
+      href={href}
+      className="font-heading inline-flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-br from-sky-400 to-blue-700 px-5 py-3 text-sm text-zinc-50 ring-2 ring-blue-500/40 ring-offset-2 ring-offset-zinc-950 transition-all hover:scale-[1.02] hover:ring-transparent active:scale-[0.98] sm:w-auto"
+    >
+      {children}
+    </HeroAction>
+  );
+}
+
+function GhostButton({ children, href }: { children: ReactNode; href: string }) {
+  return (
+    <HeroAction
+      href={href}
+      className="font-heading inline-flex w-full items-center justify-center rounded-md border border-white/10 bg-white/[0.03] px-5 py-3 text-sm text-zinc-100 transition-all hover:scale-[1.02] hover:bg-zinc-800 hover:text-zinc-50 active:scale-[0.98] sm:w-auto"
+    >
+      {children}
+    </HeroAction>
+  );
+}
+
+function useWindowSize() {
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: undefined,
+    height: undefined
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return windowSize;
+}
+
+function Beam({ top, left, transition = {} }: BeamType) {
+  return (
+    <motion.div
+      initial={{ y: 0, opacity: 0 }}
+      animate={{ opacity: [0, 1, 0], y: GRID_BOX_SIZE * 8 }}
+      transition={{
+        ease: "easeInOut",
+        duration: 3,
+        repeat: Infinity,
+        repeatDelay: 1.5,
+        ...transition
+      }}
+      style={{ top, left }}
+      className="absolute z-10 h-16 w-px bg-gradient-to-b from-blue-500/0 to-blue-400"
+    />
+  );
+}
+
+function Beams() {
+  const { width } = useWindowSize();
+  const numColumns = width ? Math.floor(width / GRID_BOX_SIZE) : 0;
+
+  const placements = [
+    {
+      top: GRID_BOX_SIZE * 0,
+      left: Math.floor(numColumns * 0.05) * GRID_BOX_SIZE,
+      transition: { duration: 3.5, repeatDelay: 5, delay: 2 }
+    },
+    {
+      top: GRID_BOX_SIZE * 12,
+      left: Math.floor(numColumns * 0.15) * GRID_BOX_SIZE,
+      transition: { duration: 3.5, repeatDelay: 10, delay: 4 }
+    },
+    {
+      top: GRID_BOX_SIZE * 3,
+      left: Math.floor(numColumns * 0.25) * GRID_BOX_SIZE
+    },
+    {
+      top: GRID_BOX_SIZE * 9,
+      left: Math.floor(numColumns * 0.75) * GRID_BOX_SIZE,
+      transition: { duration: 2, repeatDelay: 7.5, delay: 3.5 }
+    },
+    {
+      top: 0,
+      left: Math.floor(numColumns * 0.7) * GRID_BOX_SIZE,
+      transition: { duration: 3, repeatDelay: 2, delay: 1 }
+    },
+    {
+      top: GRID_BOX_SIZE * 2,
+      left: Math.floor(numColumns * 1) * GRID_BOX_SIZE - GRID_BOX_SIZE,
+      transition: { duration: 5, repeatDelay: 5, delay: 5 }
+    }
+  ];
+
+  return (
+    <>
+      {placements.map((placement, index) => (
+        <Beam
+          key={`${placement.top}-${placement.left}-${index}`}
+          top={placement.top}
+          left={placement.left - BEAM_WIDTH_OFFSET}
+          transition={placement.transition}
+        />
+      ))}
+    </>
+  );
+}
+
+function GradientGrid() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+      className="absolute inset-0 z-0"
+    >
+      <div
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke-width='1.5' stroke='rgb(30 58 138 / 0.34)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e\")"
+        }}
+        className="absolute inset-0"
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(0,124,198,0.18),transparent_30%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/10 via-zinc-950/40 to-zinc-950" />
+    </motion.div>
+  );
+}
 
 function PartnerMarqueeTile({ partner }: { partner: CybersecurityPartner }) {
   return (
@@ -105,126 +300,151 @@ function CybersecurityPartnersMarquee() {
   );
 }
 
+function CybersecurityHero() {
+  return (
+    <section className="relative overflow-hidden bg-zinc-950">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(0,124,198,0.18),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.14),transparent_28%)]" />
+      <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-24 text-center md:px-8 md:py-32">
+        <motion.div
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, ease: "easeInOut" }}
+          className="relative"
+        >
+          <GlowingChip>Ciberseguridad para operaciones reales</GlowingChip>
+        </motion.div>
+
+        <motion.h1
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.15, ease: "easeInOut" }}
+          className="type-title mt-6 max-w-5xl text-balance text-3xl leading-tight text-zinc-50 sm:text-4xl md:text-5xl lg:text-7xl"
+        >
+          Protegemos redes, usuarios y datos con una estrategia diseñada para
+          la continuidad de tu empresa.
+        </motion.h1>
+
+        <motion.p
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.3, ease: "easeInOut" }}
+          className="mt-6 max-w-3xl text-base leading-relaxed text-zinc-400 sm:text-lg"
+        >
+          En CONXIMA combinamos evaluacion, arquitectura, tecnologia y
+          acompañamiento local para fortalecer seguridad perimetral, acceso
+          remoto, visibilidad del trafico y control operativo.
+        </motion.p>
+
+        <motion.div
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.45, ease: "easeInOut" }}
+          className="mt-9 flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row"
+        >
+          <InteractiveCTA>
+            <SplashButton href="/ciberseguridad/fortinet">
+              Ver solucion Fortinet
+              <FiArrowRight />
+            </SplashButton>
+          </InteractiveCTA>
+          <InteractiveCTA>
+            <GhostButton href="/#contacto">Hablar con un especialista</GhostButton>
+          </InteractiveCTA>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.6, ease: "easeInOut" }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
+          {CYBERSECURITY_CAPABILITIES.map((item) => (
+            <span
+              key={item}
+              className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-zinc-100 backdrop-blur"
+            >
+              {item}
+            </span>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.75, ease: "easeInOut" }}
+          className="mt-12 w-full max-w-5xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 text-left shadow-[0_24px_64px_rgba(0,0,0,0.28)] backdrop-blur md:p-6"
+        >
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-white/60">
+                Partners tecnologicos
+              </p>
+              <h2 className="type-title mt-2 text-2xl text-white md:text-3xl">
+                Soluciones respaldadas por fabricantes lideres
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm text-slate-300">
+                Hoy trabajamos con Fortinet para fortalecer seguridad
+                perimetral, acceso remoto seguro y control del trafico en
+                entornos empresariales.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm text-slate-100">
+              Partner actual: <span className="font-heading text-white">Fortinet</span>
+            </div>
+          </div>
+
+          <CybersecurityPartnersMarquee />
+
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              "Evaluacion de riesgos y necesidades reales",
+              "Diseño de arquitectura y politicas de seguridad",
+              "Implementacion y acompañamiento local"
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      <Beams />
+      <GradientGrid />
+    </section>
+  );
+}
+
 export default function CybersecurityOverview() {
   return (
     <main>
-      <section className="section relative overflow-hidden" data-tone="1">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr,0.95fr] lg:items-start">
-            <div>
-              <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.16em] text-white/75">
-                <span className="h-2 w-2 rounded-full bg-[var(--color-secondary)]" />
-                Ciberseguridad CONXIMA
-              </span>
-
-              <h1 className="type-title mt-5 max-w-3xl text-3xl md:text-5xl">
-                Protegemos redes, usuarios y datos con una estrategia pensada para la operación real de tu empresa.
-              </h1>
-
-              <p className="mt-4 max-w-3xl text-base text-slate-300 md:text-lg">
-                La ciberseguridad es el conjunto de prácticas, políticas y
-                tecnologías que ayudan a proteger redes, dispositivos,
-                aplicaciones e información frente a accesos no autorizados,
-                malware, fuga de datos e interrupciones operativas.
-              </p>
-
-              <p className="mt-4 max-w-3xl text-slate-300">
-                En CONXIMA la abordamos como una capa crítica para empresas que
-                dependen de internet, múltiples sedes, acceso remoto o
-                infraestructura conectada. Evaluamos riesgos, ordenamos la
-                arquitectura y desplegamos soluciones que mejoran visibilidad,
-                control y continuidad.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                {CYBERSECURITY_CAPABILITIES.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm text-slate-100 backdrop-blur"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <InteractiveCTA>
-                  <Link href="/ciberseguridad/fortinet" className="btn-tech">
-                    Ver solución Fortinet
-                  </Link>
-                </InteractiveCTA>
-                <InteractiveCTA>
-                  <a href="/#contacto" className="btn-outline-tech">
-                    Hablar con un especialista
-                  </a>
-                </InteractiveCTA>
-              </div>
-            </div>
-
-            <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(135deg,rgba(8,14,29,0.96),rgba(13,24,43,0.92))] p-6 shadow-[0_24px_64px_rgba(0,0,0,0.28)]">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-white/60">
-                    Partners tecnológicos
-                  </p>
-                  <h2 className="type-subtitle mt-2 text-2xl text-white">
-                    Soluciones respaldadas por fabricantes líderes
-                  </h2>
-                  <p className="mt-3 max-w-2xl text-sm text-slate-300">
-                    Hoy trabajamos con Fortinet para fortalecer seguridad
-                    perimetral, acceso remoto seguro y control del tráfico en
-                    entornos empresariales.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-[color-mix(in_srgb,var(--color-secondary)_35%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_10%,transparent)] px-4 py-3 text-sm text-slate-100">
-                  Partner actual:{" "}
-                  <span className="font-semibold text-white">Fortinet</span>
-                </div>
-              </div>
-
-              <CybersecurityPartnersMarquee />
-
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {[
-                  "Evaluación de riesgos y necesidades reales",
-                  "Diseño de arquitectura y políticas de seguridad",
-                  "Implementación y acompañamiento local"
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CybersecurityHero />
 
       <section className="section relative" data-tone="2">
         <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr,0.9fr]">
             <article className="rounded-[1.75rem] border border-white/10 bg-[var(--color-card)]/80 p-6 shadow-[0_18px_40px_rgba(0,0,0,0.2)] md:p-8">
               <p className="text-xs uppercase tracking-[0.16em] text-white/60">
-                Qué es ciberseguridad
+                Que es ciberseguridad
               </p>
               <h2 className="type-subtitle mt-3 text-2xl text-white">
-                Una capa estratégica para continuidad, control y confianza digital
+                Una capa estrategica para continuidad, control y confianza digital
               </h2>
               <div className="mt-5 space-y-4 text-slate-300">
                 <p>
-                  No se trata solo de bloquear amenazas. También implica definir
+                  No se trata solo de bloquear amenazas. Tambien implica definir
                   accesos, segmentar redes, proteger usuarios remotos, mantener
-                  visibilidad del tráfico y reducir el impacto operativo ante un
+                  visibilidad del trafico y reducir el impacto operativo ante un
                   incidente.
                 </p>
                 <p>
                   Para muchas empresas, la ciberseguridad empieza en la
-                  protección perimetral y se extiende a la forma en que los
-                  equipos, sedes y servicios se conectan entre sí.
+                  proteccion perimetral y se extiende a la forma en que los
+                  equipos, sedes y servicios se conectan entre si.
                 </p>
               </div>
             </article>
