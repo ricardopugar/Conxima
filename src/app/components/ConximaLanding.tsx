@@ -529,13 +529,13 @@ export default function ConximaLanding() {
             ref={setRevealRef(0)}
           >
             <h1 className="type-title text-[2rem] leading-[1.05] sm:text-4xl md:text-6xl">
-              Tecnología al servicio de tu
-              <BubbleHeroText text="Seguridad y Conectividad" />
+              Tecnología al servicio de la
+              <BubbleHeroText text="Seguridad, red y conectividad" />
             </h1>
             <p className="mt-5 max-w-2xl text-base text-slate-300 sm:text-lg lg:max-w-2xl">
-              Soluciones integrales en telecomunicaciones y seguridad
-              electrónica. Diseño, instalación y mantenimiento con profesionales
-              certificados.
+              Soluciones integrales en telecomunicaciones, infraestructura de
+              red, ciberseguridad y seguridad electrónica para empresas en
+              Guayaquil y Ecuador.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
               <motion.a
@@ -597,12 +597,14 @@ export default function ConximaLanding() {
                 Quiénes somos
               </span>
               <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">
-                Ingeniería aplicada a la seguridad y conectividad de tu operación
+                Ingeniería aplicada a la seguridad y conectividad empresarial en
+                Ecuador
               </h2>
               <p className="mt-4 text-slate-300">
                 En CONXIMA diseñamos, implementamos y mantenemos soluciones
                 tecnológicas que protegen activos, optimizan procesos y mejoran
-                la continuidad operativa de cada cliente.
+                la continuidad operativa de empresas en Guayaquil y otras
+                ciudades del Ecuador.
               </p>
               <div className="mt-6 grid grid-cols-1 gap-3 min-[430px]:grid-cols-2 sm:grid-cols-3">
                 {[
@@ -675,8 +677,34 @@ export default function ConximaLanding() {
             <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
               Servicios
             </span>
-            <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">Seguridad electrónica &amp; Telecomunicaciones</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">Implementamos sistemas de última generación, integrados a tus operaciones.</p>
+            <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">
+              Seguridad electrónica, redes y telecomunicaciones
+            </h2>
+            <p className="mt-3 max-w-3xl text-slate-300">
+              Implementamos infraestructura de red, cableado estructurado,
+              ciberseguridad, fibra óptica y sistemas de seguridad integrados a
+              tus operaciones en Ecuador.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
+              <Link
+                href="/servicios/cableado-estructurado"
+                className="text-[var(--color-secondary)] hover:underline"
+              >
+                Ver infraestructura de red
+              </Link>
+              <Link
+                href="/ciberseguridad"
+                className="text-[var(--color-secondary)] hover:underline"
+              >
+                Ver ciberseguridad
+              </Link>
+              <Link
+                href="/servicios/cableado-fibra-optica"
+                className="text-[var(--color-secondary)] hover:underline"
+              >
+                Ver fibra óptica
+              </Link>
+            </div>
           </header>
 
           <ServicesCarousel
@@ -765,7 +793,7 @@ export default function ConximaLanding() {
                 <div className="relative h-72 w-full sm:h-80">
                   <Image
                     src="/images/monitoring-room.jpeg"
-                    alt="Cámaras"
+                    alt="Centro de monitoreo y seguridad integrada de CONXIMA"
                     fill
                     className="object-cover"
                     sizes="(min-width: 1024px) 50vw, 100vw"
@@ -862,7 +890,9 @@ export default function ConximaLanding() {
               </span>
               <h2 className="type-title mt-4 text-2xl sm:text-3xl md:text-4xl">Hablemos de tu proyecto</h2>
               <p className="mt-3 text-slate-300 max-w-2xl">
-                Cuéntanos tus necesidades y te proponemos una solución integral con tiempos y costos claros.
+                Cuéntanos tus necesidades y te proponemos una solución integral
+                para seguridad, redes y conectividad con tiempos y costos
+                claros en Guayaquil y Ecuador.
               </p>
 
         <form
@@ -1023,7 +1053,7 @@ export default function ConximaLanding() {
                   </li>
                   <li className="flex items-start gap-3">
                     <FiMapPin className="mt-0.5 shrink-0 text-secondary" aria-hidden />
-                    <span>Cdla. Simón Bolívar Mz.5 V.18</span>
+                    <span>Cdla. Simón Bolívar Mz.5 V.18, Guayaquil, Ecuador</span>
                   </li>
                 </ul>
 
@@ -1228,5 +1258,4 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
     </Link>
   );
 }
-
 

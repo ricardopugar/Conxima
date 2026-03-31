@@ -279,7 +279,7 @@ function FortinetHero() {
           className="type-title mt-6 max-w-5xl text-balance text-3xl leading-tight text-zinc-50 sm:text-4xl md:text-5xl lg:text-7xl"
         >
           FortiGate con CONXIMA para proteger la red, los usuarios y la
-          información crítica de tu organización.
+          información crítica de tu empresa en Ecuador.
         </motion.h1>
 
         <motion.p
@@ -290,9 +290,9 @@ function FortinetHero() {
         >
           FortiGate es un firewall de nueva generación desarrollado por
           Fortinet para proteger redes empresariales, controlar el tráfico de
-          internet y detectar amenazas cibernéticas. En CONXIMA te acompañamos
-          desde la evaluación inicial hasta la implementación y el soporte de la
-          plataforma.
+          internet y detectar amenazas cibernéticas. En CONXIMA acompañamos a
+          empresas de Guayaquil y Ecuador desde la evaluación inicial hasta la
+          implementación y el soporte de la plataforma.
         </motion.p>
 
         <motion.div
@@ -499,6 +499,23 @@ export default function FortinetSection() {
                   Podemos ayudarte a evaluar el estado actual de tu seguridad
                   perimetral, diseñar la arquitectura recomendada e implementar
                   la solución con criterios de operación reales.
+                </p>
+                <p className="mt-3 text-sm text-slate-300">
+                  También puedes revisar nuestra{" "}
+                  <Link
+                    href="/ciberseguridad"
+                    className="text-[var(--color-secondary)] hover:underline"
+                  >
+                    página de ciberseguridad
+                  </Link>{" "}
+                  o la{" "}
+                  <Link
+                    href="/servicios/cableado-estructurado"
+                    className="text-[var(--color-secondary)] hover:underline"
+                  >
+                    solución de infraestructura de red
+                  </Link>{" "}
+                  para complementar esta implementación.
                 </p>
               </div>
             </div>

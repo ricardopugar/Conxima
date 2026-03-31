@@ -24,6 +24,9 @@ export default function Footer() {
           <Link href="/servicios" className="hover:text-white">
             Servicios
           </Link>
+          <Link href="/ciberseguridad" className="hover:text-white">
+            Ciberseguridad
+          </Link>
           <a href="/#porque" className="hover:text-white">
             Por qué nosotros
           </a>

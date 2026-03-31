@@ -2,6 +2,9 @@ export type Servicio = {
   slug: string;
   title: string;
   pageTitle?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
   resumen: string;
   imagen?: string;
   badges?: string[];
@@ -131,8 +134,18 @@ export const servicios: Servicio[] = [
     title: "Infraestructura de Red y Cableado Estructurado",
     pageTitle:
       "Infraestructura de Red, Cableado Estructurado y Gabinetes de Comunicaciones",
+    seoTitle: "Cableado estructurado y redes en Ecuador | CONXIMA",
+    seoDescription:
+      "Infraestructura de red, cableado estructurado, racks y gabinetes de comunicaciones para empresas en Guayaquil y Ecuador.",
+    seoKeywords: [
+      "cableado estructurado en Ecuador",
+      "infraestructura de red en Guayaquil",
+      "gabinetes de comunicaciones",
+      "certificación de puntos de red",
+      "CONXIMA redes"
+    ],
     resumen:
-      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios tecnológicos.",
+      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios tecnológicos para empresas en Guayaquil y Ecuador.",
     imagen: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
     badges: ["UTP / FTP", "Racks y gabinetes", "Crecimiento ordenado"],
     detalle: {
@@ -140,7 +153,7 @@ export const servicios: Servicio[] = [
         "La infraestructura de red y el cableado estructurado constituyen el sistema físico que permite conectar y administrar redes de datos, internet, cámaras de seguridad, telefonía y otros sistemas tecnológicos dentro de una casa, oficina o empresa.",
       descripcion: [
         "El cableado estructurado es la base de la red, ya que permite transmitir información entre los diferentes equipos mediante una instalación organizada y estandarizada. Este cableado se conecta a un punto central donde se encuentran los racks o gabinetes de telecomunicaciones, los cuales permiten instalar, proteger y organizar equipos de red como switches, patch paneles, servidores o grabadores de videovigilancia.",
-        "El uso de racks y gabinetes facilita la gestión del cableado, la ventilación de los equipos, la seguridad física y el mantenimiento, además de permitir futuras ampliaciones de la infraestructura tecnológica."
+        "En CONXIMA diseñamos e implementamos infraestructura de red para empresas en Guayaquil y Ecuador, priorizando orden, escalabilidad, certificación y continuidad operativa según el tipo de operación."
       ],
       incluye: [
         "Instalación de cableado estructurado de red (UTP / FTP según requerimiento)",

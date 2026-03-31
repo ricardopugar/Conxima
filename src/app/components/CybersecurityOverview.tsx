@@ -10,22 +10,22 @@ import { FiArrowRight } from "react-icons/fi";
 import InteractiveCTA from "./InteractiveCTA";
 
 const CYBERSECURITY_CAPABILITIES = [
-  "Proteccion perimetral",
+  "Protección perimetral",
   "Acceso remoto seguro",
-  "Visibilidad del trafico",
-  "Control de politicas"
+  "Visibilidad del tráfico",
+  "Control de políticas"
 ];
 
 const CYBERSECURITY_PILLARS = [
   {
-    title: "Prevencion",
+    title: "Prevención",
     description:
-      "Reducimos superficie de ataque con politicas, segmentacion y tecnologias de control."
+      "Reducimos superficie de ataque con políticas, segmentación y tecnologías de control."
   },
   {
-    title: "Deteccion",
+    title: "Detección",
     description:
-      "Monitoreamos comportamientos, trafico y eventos para identificar riesgos con mayor rapidez."
+      "Monitoreamos comportamientos, tráfico y eventos para identificar riesgos con mayor rapidez."
   },
   {
     title: "Continuidad",
@@ -42,6 +42,30 @@ const CYBERSECURITY_PARTNERS = [
     description: "Firewall, VPN y seguridad perimetral para redes empresariales."
   }
 ] as const;
+
+const CYBERSECURITY_SOLUTIONS = [
+  {
+    title: "Seguridad de redes y perímetros",
+    description:
+      "Fortalecemos el borde de la red con políticas, filtrado, VPN, segmentación y control de tráfico para reducir exposición y mejorar visibilidad.",
+    href: "/ciberseguridad/fortinet",
+    cta: "Ver Fortinet"
+  },
+  {
+    title: "Protección de datos y usuarios",
+    description:
+      "Diseñamos controles para accesos, usuarios remotos, navegación, aplicaciones y segmentación interna según el riesgo real de cada operación.",
+    href: "/#contacto",
+    cta: "Solicitar asesoría"
+  },
+  {
+    title: "Detección y respuesta a incidentes",
+    description:
+      "Planteamos arquitecturas con monitoreo, alertamiento y acompañamiento técnico para actuar con mayor rapidez ante eventos y cambios operativos.",
+    href: "/servicios/cableado-estructurado",
+    cta: "Ver infraestructura"
+  }
+];
 
 const GRID_BOX_SIZE = 32;
 const BEAM_WIDTH_OFFSET = 1;
@@ -320,8 +344,8 @@ function CybersecurityHero() {
           transition={{ duration: 1.1, delay: 0.15, ease: "easeInOut" }}
           className="type-title mt-6 max-w-5xl text-balance text-3xl leading-tight text-zinc-50 sm:text-4xl md:text-5xl lg:text-7xl"
         >
-          Protegemos redes, usuarios y datos con una estrategia diseñada para
-          la continuidad de tu empresa.
+          Protegemos redes, usuarios y datos con una estrategia de
+          ciberseguridad para empresas en Ecuador.
         </motion.h1>
 
         <motion.p
@@ -330,9 +354,10 @@ function CybersecurityHero() {
           transition={{ duration: 1.1, delay: 0.3, ease: "easeInOut" }}
           className="mt-6 max-w-3xl text-base leading-relaxed text-zinc-400 sm:text-lg"
         >
-          En CONXIMA combinamos evaluacion, arquitectura, tecnologia y
+          En CONXIMA combinamos evaluación, arquitectura, tecnología y
           acompañamiento local para fortalecer seguridad perimetral, acceso
-          remoto, visibilidad del trafico y control operativo.
+          remoto, visibilidad del tráfico y control operativo en empresas de
+          Guayaquil y Ecuador.
         </motion.p>
 
         <motion.div
@@ -343,7 +368,7 @@ function CybersecurityHero() {
         >
           <InteractiveCTA>
             <SplashButton href="/ciberseguridad/fortinet">
-              Ver solucion Fortinet
+              Ver solución Fortinet
               <FiArrowRight />
             </SplashButton>
           </InteractiveCTA>
@@ -377,15 +402,15 @@ function CybersecurityHero() {
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.16em] text-white/60">
-                Partners tecnologicos
+                Partners tecnológicos
               </p>
               <h2 className="type-title mt-2 text-2xl text-white md:text-3xl">
-                Soluciones respaldadas por fabricantes lideres
+                Soluciones respaldadas por fabricantes líderes
               </h2>
               <p className="mt-3 max-w-2xl text-sm text-slate-300">
                 Hoy trabajamos con Fortinet para fortalecer seguridad
-                perimetral, acceso remoto seguro y control del trafico en
-                entornos empresariales.
+                perimetral, acceso remoto seguro y control del tráfico en
+                entornos empresariales en Ecuador.
               </p>
             </div>
 
@@ -398,9 +423,9 @@ function CybersecurityHero() {
 
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {[
-              "Evaluacion de riesgos y necesidades reales",
-              "Diseño de arquitectura y politicas de seguridad",
-              "Implementacion y acompañamiento local"
+                "Evaluación de riesgos y necesidades reales",
+                "Diseño de arquitectura y políticas de seguridad",
+                "Implementación y acompañamiento local"
             ].map((item) => (
               <div
                 key={item}
@@ -429,22 +454,33 @@ export default function CybersecurityOverview() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr,0.9fr]">
             <article className="rounded-[1.75rem] border border-white/10 bg-[var(--color-card)]/80 p-6 shadow-[0_18px_40px_rgba(0,0,0,0.2)] md:p-8">
               <p className="text-xs uppercase tracking-[0.16em] text-white/60">
-                Que es ciberseguridad
+                Qué es ciberseguridad
               </p>
               <h2 className="type-subtitle mt-3 text-2xl text-white">
-                Una capa estrategica para continuidad, control y confianza digital
+                Una capa estratégica para continuidad, control y confianza digital
               </h2>
               <div className="mt-5 space-y-4 text-slate-300">
                 <p>
-                  No se trata solo de bloquear amenazas. Tambien implica definir
+                  No se trata solo de bloquear amenazas. También implica definir
                   accesos, segmentar redes, proteger usuarios remotos, mantener
-                  visibilidad del trafico y reducir el impacto operativo ante un
+                  visibilidad del tráfico y reducir el impacto operativo ante un
                   incidente.
                 </p>
                 <p>
                   Para muchas empresas, la ciberseguridad empieza en la
-                  proteccion perimetral y se extiende a la forma en que los
-                  equipos, sedes y servicios se conectan entre si.
+                  protección perimetral y se extiende a la forma en que los
+                  equipos, sedes y servicios se conectan entre sí.
+                </p>
+                <p>
+                  Si tu operación depende de una base física sólida, también
+                  puedes revisar nuestra{" "}
+                  <Link
+                    href="/servicios/cableado-estructurado"
+                    className="text-[var(--color-secondary)] hover:underline"
+                  >
+                    solución de infraestructura de red y cableado estructurado
+                  </Link>
+                  .
                 </p>
               </div>
             </article>
@@ -469,6 +505,46 @@ export default function CybersecurityOverview() {
                 ))}
               </div>
             </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className="section relative" data-tone="1">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+          <div className="max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.16em] text-white/60">
+              Nuestras soluciones
+            </p>
+            <h2 className="type-title mt-3 text-2xl md:text-4xl">
+              Ciberseguridad aplicada a redes, usuarios y continuidad operativa
+            </h2>
+            <p className="mt-3 text-slate-300">
+              Traducimos la estrategia de ciberseguridad en capas concretas que
+              acompañan a la operación: perímetro, accesos, visibilidad y
+              capacidad de respuesta según el contexto real de cada empresa.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {CYBERSECURITY_SOLUTIONS.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-[1.5rem] border border-white/10 bg-[var(--color-card)]/80 p-5 shadow-[0_18px_40px_rgba(0,0,0,0.18)]"
+              >
+                <h3 className="type-subtitle text-xl text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm text-slate-300">
+                  {item.description}
+                </p>
+                <Link
+                  href={item.href}
+                  className="mt-5 inline-flex text-sm font-semibold text-[var(--color-secondary)] hover:underline"
+                >
+                  {item.cta}
+                </Link>
+              </article>
+            ))}
           </div>
         </div>
       </section>

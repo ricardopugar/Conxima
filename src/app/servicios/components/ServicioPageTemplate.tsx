@@ -6,21 +6,33 @@ import Footer from "@/app/components/Footer";
 import InteractiveCTA from "@/app/components/InteractiveCTA";
 import Navbar from "@/app/components/Navbar";
 import { getServicioBySlug, getServicioNavigation } from "@/data/servicios";
+import { buildMetadata } from "@/lib/seo";
+import {
+  buildBreadcrumbJsonLd,
+  buildServiceJsonLd,
+  serializeJsonLd
+} from "@/lib/structuredData";
 
 export function buildServicioMetadata(slug: string): Metadata {
   const servicio = getServicioBySlug(slug);
 
   if (!servicio) {
-    return {
+    return buildMetadata({
       title: "Servicio | CONXIMA",
-      description: "Detalle del servicio de CONXIMA"
-    };
+      description: "Detalle del servicio de CONXIMA",
+      path: "/servicios"
+    });
   }
 
-  return {
-    title: `${servicio.pageTitle ?? servicio.title} | CONXIMA`,
-    description: servicio.detalle.queHace
-  };
+  const canonicalSlug =
+    slug === "racks-y-gabinetes" ? "cableado-estructurado" : slug;
+
+  return buildMetadata({
+    title: servicio.seoTitle ?? `${servicio.pageTitle ?? servicio.title} | CONXIMA`,
+    description: servicio.seoDescription ?? servicio.detalle.queHace,
+    path: `/servicios/${canonicalSlug}`,
+    keywords: servicio.seoKeywords
+  });
 }
 
 export function ServicioPageTemplate({ slug }: { slug: string }) {
@@ -33,9 +45,48 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
   const nav = getServicioNavigation(slug);
   const heading = servicio.pageTitle ?? servicio.title;
   const imageSrc = servicio.imagen ? encodeURI(servicio.imagen) : null;
+  const canonicalSlug =
+    slug === "racks-y-gabinetes" ? "cableado-estructurado" : slug;
+  const isStructuredCablingPage = canonicalSlug === "cableado-estructurado";
+  const relatedLinks = [
+    {
+      href: "/servicios/cableado-estructurado",
+      label: "Infraestructura de red y cableado estructurado"
+    },
+    {
+      href: "/ciberseguridad",
+      label: "Ciberseguridad para empresas"
+    },
+    {
+      href: "/ciberseguridad/fortinet",
+      label: "FortiGate y seguridad perimetral"
+    }
+  ].filter((item) => item.href !== `/servicios/${slug}`);
+  const breadcrumbJsonLd = serializeJsonLd(
+    buildBreadcrumbJsonLd([
+      { name: "Inicio", path: "/" },
+      { name: "Servicios", path: "/servicios" },
+      { name: heading, path: `/servicios/${canonicalSlug}` }
+    ])
+  );
+  const serviceJsonLd = serializeJsonLd(
+    buildServiceJsonLd({
+      name: heading,
+      description: servicio.seoDescription ?? servicio.detalle.queHace,
+      path: `/servicios/${canonicalSlug}`
+    })
+  );
 
   return (
     <div className="app min-h-screen bg-[var(--app-bg)] text-[var(--app-fg)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serviceJsonLd }}
+      />
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 py-12 md:py-16">
@@ -225,7 +276,89 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
           </aside>
         </section>
 
+        {isStructuredCablingPage ? (
+          <section className="mt-10 rounded-[1.75rem] border border-white/10 bg-[var(--color-card)]/80 p-6 shadow-[0_20px_48px_rgba(0,0,0,0.2)] md:p-8">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.16em] text-white/60">
+                Componentes y entregables clave
+              </p>
+              <h2 className="type-subtitle mt-3 text-2xl">
+                Cómo aterrizamos una infraestructura de red lista para crecer
+              </h2>
+              <p className="mt-3 text-slate-300">
+                Una red empresarial bien diseñada no depende solo del cable. El
+                rendimiento, la trazabilidad y la capacidad de expansión también
+                dependen del tipo de medio, la organización del gabinete y la
+                calidad de la documentación final.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  title: "Instalación de cableado UTP, FTP y fibra óptica",
+                  text: "Definimos el medio adecuado según distancia, interferencia, capacidad y criticidad de la operación para evitar sobrecostos y cuellos de botella."
+                },
+                {
+                  title: "Racks, gabinetes, patch panels y ordenamiento",
+                  text: "Centralizamos equipos, bandejas, organizadores y puntos de terminación para facilitar mantenimiento, ventilación, seguridad física y futuras ampliaciones."
+                },
+                {
+                  title: "Certificación, etiquetado y documentación",
+                  text: "Dejamos la red identificada, probada y documentada para que el área técnica pueda crecer, auditar o intervenir con menos fricción."
+                }
+              ].map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                >
+                  <h3 className="type-subtitle text-lg text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm text-slate-300">{item.text}</p>
+                </article>
+              ))}
+            </div>
+
+            <p className="mt-6 text-sm text-slate-300">
+              Si además necesitas proteger el tráfico y segmentar accesos,
+              puedes complementar esta base con nuestra{" "}
+              <Link
+                href="/ciberseguridad"
+                className="text-[var(--color-secondary)] hover:underline"
+              >
+                solución de ciberseguridad para empresas
+              </Link>{" "}
+              o con enlaces de{" "}
+              <Link
+                href="/servicios/cableado-fibra-optica"
+                className="text-[var(--color-secondary)] hover:underline"
+              >
+                fibra óptica
+              </Link>
+              .
+            </p>
+          </section>
+        ) : null}
+
         <section className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-[var(--color-card)]/80 p-5 md:col-span-2">
+            <p className="text-xs uppercase tracking-wide text-slate-400">
+              Explora también
+            </p>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {relatedLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-white/20 hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {nav.previous ? (
             <Link
               href={`/servicios/${nav.previous.slug}`}
