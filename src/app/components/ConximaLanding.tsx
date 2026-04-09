@@ -1213,9 +1213,19 @@ type ServiceCarouselItem = {
 };
 
 function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
+  const mobileTargetRef = useRef<HTMLDivElement | null>(null);
+  const mobileViewportRef = useRef<HTMLDivElement | null>(null);
+  const mobileTrackRef = useRef<HTMLDivElement | null>(null);
+  const [mobileMaxTranslate, setMobileMaxTranslate] = useState(0);
   const targetRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [maxTranslate, setMaxTranslate] = useState(0);
+  const mobileScrollHeight = `${Math.max(260, items.length * 42)}vh`;
+
+  const { scrollYProgress: mobileScrollYProgress } = useScroll({
+    target: mobileTargetRef,
+    offset: ["start start", "end end"],
+  });
 
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -1224,10 +1234,19 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 
   useEffect(() => {
     const updateMetrics = () => {
-      if (!targetRef.current || !trackRef.current) return;
-      const viewportWidth = targetRef.current.clientWidth;
-      const trackWidth = trackRef.current.scrollWidth;
-      setMaxTranslate(Math.max(0, trackWidth - viewportWidth));
+      if (mobileViewportRef.current && mobileTrackRef.current) {
+        const mobileViewportWidth = mobileViewportRef.current.clientWidth;
+        const mobileTrackWidth = mobileTrackRef.current.scrollWidth;
+        setMobileMaxTranslate(
+          Math.max(0, mobileTrackWidth - mobileViewportWidth)
+        );
+      }
+
+      if (targetRef.current && trackRef.current) {
+        const viewportWidth = targetRef.current.clientWidth;
+        const trackWidth = trackRef.current.scrollWidth;
+        setMaxTranslate(Math.max(0, trackWidth - viewportWidth));
+      }
     };
 
     updateMetrics();
@@ -1235,26 +1254,49 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
     return () => window.removeEventListener("resize", updateMetrics);
   }, [items.length]);
 
+  const mobileX = useTransform(
+    mobileScrollYProgress,
+    [0, 1],
+    [0, -mobileMaxTranslate]
+  );
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
 
   return (
     <>
-      <section className="relative mt-10 block md:hidden">
-        <div className="mb-3 flex items-center justify-between px-1">
-          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-            Desliza para explorar
-          </p>
-          <span className="text-[11px] text-slate-500">Servicios clave</span>
-        </div>
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {items.map((item) => (
-            <div
-              key={item.slug}
-              className="w-[84vw] max-w-[22rem] shrink-0 snap-center"
+      <section
+        ref={mobileTargetRef}
+        className="relative mt-10 md:hidden"
+        style={{ height: mobileScrollHeight }}
+      >
+        <div className="sticky top-16 flex h-[calc(100svh-5rem)] flex-col overflow-hidden rounded-2xl">
+          <div className="mb-3 flex items-center justify-between px-1">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Baja para explorar
+            </p>
+            <span className="text-[11px] text-slate-500">Servicios clave</span>
+          </div>
+
+          <div
+            ref={mobileViewportRef}
+            className="relative flex-1 overflow-hidden rounded-2xl"
+          >
+            <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-10 bg-gradient-to-r from-[var(--color-bg)] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-10 bg-gradient-to-l from-[var(--color-bg)] to-transparent" />
+            <motion.div
+              ref={mobileTrackRef}
+              style={{ x: mobileX }}
+              className="flex h-full items-center gap-4 px-1"
             >
-              <ServiceCarouselCard item={item} />
-            </div>
-          ))}
+              {items.map((item) => (
+                <div
+                  key={item.slug}
+                  className="w-[84vw] max-w-[22rem] shrink-0"
+                >
+                  <ServiceCarouselCard item={item} />
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
