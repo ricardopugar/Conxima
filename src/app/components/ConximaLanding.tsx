@@ -1239,10 +1239,19 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 
   return (
     <>
-      <section className="relative mt-10 md:hidden">
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <section className="relative mt-10 block md:hidden">
+        <div className="mb-3 flex items-center justify-between px-1">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Desliza para explorar
+          </p>
+          <span className="text-[11px] text-slate-500">Servicios clave</span>
+        </div>
+        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {items.map((item) => (
-            <div key={item.slug} className="snap-center">
+            <div
+              key={item.slug}
+              className="w-[84vw] max-w-[22rem] shrink-0 snap-center"
+            >
               <ServiceCarouselCard item={item} />
             </div>
           ))}
@@ -1292,7 +1301,7 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
   return (
     <Link
       href={href}
-      className="group relative h-[410px] w-[85vw] max-w-[22rem] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 sm:h-[430px] sm:w-[72vw] sm:max-w-[24rem] md:w-[84vw] md:max-w-[360px]"
+      className="group relative block h-[410px] w-full overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 sm:h-[430px] md:w-[84vw] md:max-w-[360px]"
       style={{
         backgroundImage: `url("${encodeURI(item.src)}")`,
         backgroundPosition: "center",
