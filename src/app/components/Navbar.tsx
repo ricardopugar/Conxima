@@ -397,6 +397,29 @@ export default function Navbar() {
               Contacto
             </NavHrefLink>
 
+            <div className="mt-2 px-2">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
+                Redes
+              </p>
+              <div className="mt-3 flex items-center gap-3">
+                <NavbarSocialPingLink
+                  href="https://www.facebook.com/conxima.ec"
+                  label="Facebook de CONXIMA"
+                  Icon={FaFacebookF}
+                />
+                <NavbarSocialPingLink
+                  href={CONXIMA_WHATSAPP_URL}
+                  label="WhatsApp de CONXIMA"
+                  Icon={FaWhatsapp}
+                />
+                <NavbarSocialPingLink
+                  href="https://www.instagram.com/conximaec/"
+                  label="Instagram de CONXIMA"
+                  Icon={FaInstagram}
+                />
+              </div>
+            </div>
+
             <InteractiveCTA>
               <NavHrefLink
                 href="/#contacto"

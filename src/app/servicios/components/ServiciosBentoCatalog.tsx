@@ -48,6 +48,18 @@ export default function ServiciosBentoCatalog({
 
   return (
     <section className="mt-10 bg-neutral-900 p-3 text-neutral-50 sm:p-4 md:p-8">
+      <div className="mx-auto flex max-w-6xl snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:hidden">
+        {entries.map((entry, index) => (
+          <div
+            key={`mobile-entry-${index}`}
+            className="min-h-[20rem] w-[84vw] max-w-[22rem] shrink-0 snap-center"
+          >
+            {renderEntry(entry)}
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block">
       {rows.map((row, index) => (
         <div
           key={`row-${index}`}
@@ -67,6 +79,7 @@ export default function ServiciosBentoCatalog({
           ))}
         </div>
       ))}
+      </div>
     </section>
   );
 }

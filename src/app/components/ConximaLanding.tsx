@@ -81,6 +81,8 @@ function BubbleHeroText({ text }: { text: string }) {
 
 export default function ConximaLanding() {
   const heroRef = useRef<HTMLElement | null>(null);
+  const heroBackdropVideoRef = useRef<HTMLVideoElement | null>(null);
+  const heroForegroundVideoRef = useRef<HTMLVideoElement | null>(null);
 
   /* =========================
    *  PRELOADER (pantalla de carga)
@@ -163,6 +165,56 @@ export default function ConximaLanding() {
       clearTimeout(timeout);
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const videos = [heroBackdropVideoRef.current, heroForegroundVideoRef.current]
+      .filter((video): video is HTMLVideoElement => video !== null);
+
+    if (videos.length === 0) return;
+
+    const playVideos = () => {
+      videos.forEach((video) => {
+        video.muted = true;
+        video.defaultMuted = true;
+
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => {
+            // Some mobile browsers delay autoplay until the page is fully interactive.
+          });
+        }
+      });
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        playVideos();
+      }
+    };
+
+    playVideos();
+    window.addEventListener("pageshow", playVideos);
+    window.addEventListener("touchstart", playVideos, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    videos.forEach((video) => {
+      video.addEventListener("loadeddata", playVideos);
+      video.addEventListener("canplay", playVideos);
+    });
+
+    return () => {
+      window.removeEventListener("pageshow", playVideos);
+      window.removeEventListener("touchstart", playVideos);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+      videos.forEach((video) => {
+        video.removeEventListener("loadeddata", playVideos);
+        video.removeEventListener("canplay", playVideos);
+      });
+    };
+  }, [loading]);
 
   const { scrollYProgress: heroScrollProgress } = useScroll({
     target: heroRef,
@@ -524,7 +576,8 @@ export default function ConximaLanding() {
         className="relative isolate min-h-[100svh] w-full overflow-hidden md:min-h-[85vh]"
       >
         <video
-          className="hero-video hero-video-backdrop absolute inset-0 h-full w-full"
+          ref={heroBackdropVideoRef}
+          className="hero-video hero-video-backdrop absolute inset-0 hidden h-full w-full md:block"
           autoPlay
           muted
           loop
@@ -587,6 +640,7 @@ export default function ConximaLanding() {
           <div className="reveal mx-auto w-full max-w-[22rem] lg:mx-0 lg:max-w-none" ref={setRevealRef(14)}>
             <div className="hero-video-shell">
               <video
+                ref={heroForegroundVideoRef}
                 className="hero-video"
                 autoPlay
                 muted
@@ -1185,7 +1239,7 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 
   return (
     <>
-      <section className="reveal relative mt-10 md:hidden">
+      <section className="relative mt-10 md:hidden">
         <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {items.map((item) => (
             <div key={item.slug} className="snap-center">
