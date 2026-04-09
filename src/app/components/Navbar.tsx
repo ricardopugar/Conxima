@@ -8,6 +8,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa6";
 import InteractiveCTA from "./InteractiveCTA";
+import NavbarSocialPingLink from "./NavbarSocialPingLink";
 
 const CONXIMA_WHATSAPP_URL =
   "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20solicitar%20asesor%C3%ADa.";
@@ -25,14 +26,34 @@ type ServiceGroup = {
 
 const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
   {
+    href: "/servicios/cableado-estructurado",
+    title: "Infraestructura de Red",
+    description: "Cableado, gabinetes y organizacion central de la red."
+  },
+  {
+    href: "/servicios/cctv",
+    title: "CCTV",
+    description: "Videovigilancia con grabacion y acceso remoto."
+  },
+  {
+    href: "/ciberseguridad",
+    title: "Ciberseguridad",
+    description: "Proteccion de red, usuarios y datos para empresas."
+  },
+  {
+    href: "/servicios/cableado-estructurado",
+    title: "Puntos de Datos",
+    description: "Salidas de red para puestos, telefonia, camaras y equipos."
+  },
+  {
     href: "/servicios/control-de-acceso",
-    title: "Control de Acceso Biométrico",
-    description: "Gestión de ingreso por huella, tarjeta o rostro."
+    title: "Control de Acceso Biometrico",
+    description: "Gestion de ingreso por huella, tarjeta o rostro."
   },
   {
     href: "/servicios/sistemas-de-alarma",
     title: "Sistemas de Alarma",
-    description: "Alertas de intrusión con monitoreo en tiempo real."
+    description: "Alertas de intrusion con monitoreo en tiempo real."
   },
   {
     href: "/servicios/cuarto-de-monitoreo",
@@ -40,44 +61,36 @@ const SERVICE_FLYOUT_ITEMS: FlyoutItem[] = [
     description: "Centro operativo para vigilancia y respuesta."
   },
   {
-    href: "/servicios/cableado-estructurado",
-    title: "Infraestructura de Red",
-    description: "Cableado, gabinetes y organización central de la red."
+    href: "/servicios/cableado-fibra-optica",
+    title: "Cableado de Fibra Optica",
+    description: "Backbone de alta capacidad para tu red."
   },
   {
     href: "/servicios/servicios-en-la-nube",
     title: "Servicios en la Nube",
-    description: "Implementación segura de cargas cloud."
-  },
-  {
-    href: "/servicios/cableado-fibra-optica",
-    title: "Cableado de Fibra Óptica",
-    description: "Backbone de alta capacidad para tu red."
-  },
-  {
-    href: "/servicios/cctv",
-    title: "CCTV",
-    description: "Videovigilancia con grabación y acceso remoto."
+    description: "Implementacion segura de cargas cloud."
   }
 ];
 
 const SERVICE_GROUPS: ServiceGroup[] = [
   {
+    title: "Especialidades",
+    items: [
+      {
+        href: "/servicios/cableado-estructurado",
+        title: "Infraestructura de Red"
+      },
+      { href: "/servicios/cctv", title: "CCTV" },
+      { href: "/ciberseguridad", title: "Ciberseguridad" },
+      { href: "/servicios/cableado-estructurado", title: "Puntos de Datos" }
+    ]
+  },
+  {
     title: "Seguridad",
     items: [
       { href: "/servicios/control-de-acceso", title: "Control de Acceso" },
       { href: "/servicios/sistemas-de-alarma", title: "Sistemas de Alarma" },
-      { href: "/servicios/cctv", title: "CCTV" }
-    ]
-  },
-  {
-    title: "Infraestructura",
-    items: [
-      { href: "/servicios/cuarto-de-monitoreo", title: "Cuarto de Monitoreo" },
-      {
-        href: "/servicios/cableado-estructurado",
-        title: "Infraestructura de Red"
-      }
+      { href: "/servicios/cuarto-de-monitoreo", title: "Cuarto de Monitoreo" }
     ]
   },
   {
@@ -85,7 +98,7 @@ const SERVICE_GROUPS: ServiceGroup[] = [
     items: [
       {
         href: "/servicios/cableado-fibra-optica",
-        title: "Fibra Óptica"
+        title: "Fibra Optica"
       },
       { href: "/servicios/servicios-en-la-nube", title: "Servicios en la Nube" }
     ]
@@ -259,33 +272,21 @@ export default function Navbar() {
           <PlainNavLink href="/#contacto">Contacto</PlainNavLink>
 
           <div className="ml-2 flex items-center gap-2">
-            <a
+            <NavbarSocialPingLink
               href="https://www.facebook.com/conxima.ec"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook de CONXIMA"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-            >
-              <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
-            </a>
-            <a
+              label="Facebook de CONXIMA"
+              Icon={FaFacebookF}
+            />
+            <NavbarSocialPingLink
               href={CONXIMA_WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp de CONXIMA"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-            >
-              <FaWhatsapp className="h-3.5 w-3.5" aria-hidden />
-            </a>
-            <a
+              label="WhatsApp de CONXIMA"
+              Icon={FaWhatsapp}
+            />
+            <NavbarSocialPingLink
               href="https://www.instagram.com/conximaec/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram de CONXIMA"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-            >
-              <FaInstagram className="h-3.5 w-3.5" aria-hidden />
-            </a>
+              label="Instagram de CONXIMA"
+              Icon={FaInstagram}
+            />
           </div>
 
           <motion.a
@@ -354,7 +355,7 @@ export default function Navbar() {
                 </NavHrefLink>
                 {SERVICE_FLYOUT_ITEMS.map((item) => (
                   <NavHrefLink
-                    key={item.href}
+                    key={`${item.href}-${item.title}`}
                     href={item.href}
                     className="rounded-lg px-2 py-2 text-xs text-slate-200 hover:bg-white/5"
                     onClick={handleMobileLinkClick}
@@ -527,7 +528,7 @@ function ServicesFlyoutContent() {
       <div className="col-span-12 bg-[var(--color-primary)] px-6 py-6 text-white lg:col-span-4">
         <h3 className="text-2xl font-semibold">Servicios</h3>
         <p className="mt-3 text-sm text-cyan-100">
-          Soluciones de seguridad electrónica y telecomunicaciones para empresas.
+          Soluciones de infraestructura, ciberseguridad, seguridad electronica y telecomunicaciones para empresas.
         </p>
         <NavHrefLink href="/servicios" className="mt-6 inline-flex text-xs text-white/90 hover:underline">
           Ver catálogo completo
@@ -540,7 +541,7 @@ function ServicesFlyoutContent() {
             <h4 className="text-sm font-semibold text-neutral-900">{group.title}</h4>
             {group.items.map((item) => (
               <NavHrefLink
-                key={item.href}
+                key={`${group.title}-${item.title}`}
                 href={item.href}
                 className="block text-sm text-neutral-700 transition hover:text-black hover:underline"
               >

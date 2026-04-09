@@ -55,6 +55,45 @@ export const servicios: Servicio[] = [
     }
   },
   {
+    slug: "cctv",
+    title: "Circuito Cerrado de Televisión (CCTV)",
+    resumen:
+      "Vigilancia, grabación y monitoreo en tiempo real con cámaras IP, NVR y acceso remoto para operación continua.",
+    imagen: "/images/servicios/cctv.jpg",
+    badges: ["Videovigilancia", "NVR", "Monitoreo remoto"],
+    detalle: {
+      queHace:
+        "Permite vigilar, grabar y monitorear áreas en tiempo real mediante cámaras conectadas a un sistema de grabación y visualización.",
+      descripcion: [
+        "Es una solución utilizada en casas, empresas, urbanizaciones, bodegas y comercios para mejorar control operativo, prevención y evidencia ante incidentes.",
+        "Cuando CONXIMA diseña e instala CCTV con cámaras IP, NVR y monitoreo remoto, entrega una plataforma lista para supervisión local o a distancia."
+      ],
+      incluye: [
+        "Diseño del sistema de videovigilancia",
+        "Cámaras de seguridad IP",
+        "Grabador de video en red (NVR)",
+        "Discos duros de videovigilancia",
+        "Monitores de visualización",
+        "Infraestructura de red",
+        "Cableado estructurado",
+        "Fuente de energía y respaldo",
+        "Configuración del sistema",
+        "Monitoreo remoto",
+        "Capacitación al usuario"
+      ],
+      beneficios: [
+        "Aumenta prevención y capacidad de respuesta ante incidentes.",
+        "Genera evidencia visual para auditoría e investigación.",
+        "Mejora supervisión de operaciones en tiempo real."
+      ],
+      idealPara: [
+        "Empresas, bodegas y comercios",
+        "Urbanizaciones, conjuntos y espacios comunes",
+        "Procesos que requieren evidencia y monitoreo constante"
+      ]
+    }
+  },
+  {
     slug: "sistemas-de-alarma",
     title: "Sistemas de Alarma",
     resumen:
@@ -145,7 +184,7 @@ export const servicios: Servicio[] = [
       "CONXIMA redes"
     ],
     resumen:
-      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios tecnológicos para empresas en Guayaquil y Ecuador.",
+      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios para empresas en Guayaquil y Ecuador.",
     imagen: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
     badges: ["UTP / FTP", "Racks y gabinetes", "Crecimiento ordenado"],
     detalle: {
@@ -257,45 +296,6 @@ export const servicios: Servicio[] = [
       ]
     }
   },
-  {
-    slug: "cctv",
-    title: "Circuito Cerrado de Televisión (CCTV)",
-    resumen:
-      "Vigilancia, grabación y monitoreo en tiempo real con cámaras IP, NVR y acceso remoto para operación continua.",
-    imagen: "/images/servicios/cctv.jpg",
-    badges: ["Videovigilancia", "NVR", "Monitoreo remoto"],
-    detalle: {
-      queHace:
-        "Permite vigilar, grabar y monitorear áreas en tiempo real mediante cámaras conectadas a un sistema de grabación y visualización.",
-      descripcion: [
-        "Es una solución utilizada en casas, empresas, urbanizaciones, bodegas y comercios para mejorar control operativo, prevención y evidencia ante incidentes.",
-        "Cuando CONXIMA diseña e instala CCTV con cámaras IP, NVR y monitoreo remoto, entrega una plataforma lista para supervisión local o a distancia."
-      ],
-      incluye: [
-        "Diseño del sistema de videovigilancia",
-        "Cámaras de seguridad IP",
-        "Grabador de video en red (NVR)",
-        "Discos duros de videovigilancia",
-        "Monitores de visualización",
-        "Infraestructura de red",
-        "Cableado estructurado",
-        "Fuente de energía y respaldo",
-        "Configuración del sistema",
-        "Monitoreo remoto",
-        "Capacitación al usuario"
-      ],
-      beneficios: [
-        "Aumenta prevención y capacidad de respuesta ante incidentes.",
-        "Genera evidencia visual para auditoría e investigación.",
-        "Mejora supervisión de operaciones en tiempo real."
-      ],
-      idealPara: [
-        "Empresas, bodegas y comercios",
-        "Urbanizaciones, conjuntos y espacios comunes",
-        "Procesos que requieren evidencia y monitoreo constante"
-      ]
-    }
-  }
 ];
 
 function normalizeServicioSlug(slug: string): string {

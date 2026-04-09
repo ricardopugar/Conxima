@@ -1,21 +1,73 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
+import ServiciosBentoCatalog, {
+  type CatalogItem
+} from "@/app/servicios/components/ServiciosBentoCatalog";
 import { servicios } from "@/data/servicios";
 import { buildMetadata } from "@/lib/seo";
+
+const serviceMap = new Map(servicios.map((servicio) => [servicio.slug, servicio]));
+
+const buildServiceCatalogItem = (slug: string): CatalogItem => {
+  const servicio = serviceMap.get(slug);
+
+  if (!servicio) {
+    throw new Error(`Servicio no encontrado en catalogo: ${slug}`);
+  }
+
+  return {
+    slug: servicio.slug,
+    title: servicio.title,
+    resumen: servicio.resumen,
+    imagen: servicio.imagen
+  };
+};
+
+const catalogItems: CatalogItem[] = [
+  buildServiceCatalogItem("cableado-estructurado"),
+  buildServiceCatalogItem("cctv"),
+  {
+    slug: "ciberseguridad",
+    title: "Ciberseguridad",
+    resumen:
+      "Proteccion de red, usuarios, accesos y datos para empresas que necesitan operar con mas control y menos riesgo.",
+    imagen: "/images/fortigate.jpg",
+    href: "/ciberseguridad",
+    ctaLabel: "Ver ciberseguridad"
+  },
+  {
+    slug: "puntos-de-datos",
+    title: "Puntos de Datos",
+    resumen:
+      "Implementacion ordenada de salidas de red para puestos, camaras, telefonia y equipos conectados sobre una infraestructura profesional.",
+    imagen: "/images/servicios-landing/infraestructura de red y gabinetes .png",
+    href: "/servicios/cableado-estructurado",
+    ctaLabel: "Cotizar puntos"
+  },
+  ...servicios
+    .filter((servicio) =>
+      !["cableado-estructurado", "cctv"].includes(servicio.slug)
+    )
+    .map((servicio) => ({
+      slug: servicio.slug,
+      title: servicio.title,
+      resumen: servicio.resumen,
+      imagen: servicio.imagen
+    }))
+];
 
 export const metadata: Metadata = buildMetadata({
   title: "Servicios de seguridad, redes y conectividad | CONXIMA",
   description:
-    "Catálogo de servicios de infraestructura de red, cableado estructurado, fibra óptica, ciberseguridad y seguridad electrónica para empresas en Ecuador.",
+    "Catalogo de servicios de infraestructura de red, cableado estructurado, fibra optica, ciberseguridad y seguridad electronica para empresas en Ecuador.",
   path: "/servicios",
   keywords: [
-    "servicios tecnológicos para empresas en Ecuador",
+    "servicios tecnologicos para empresas en Ecuador",
     "cableado estructurado en Ecuador",
     "infraestructura de red en Guayaquil",
-    "seguridad electrónica y telecomunicaciones",
+    "seguridad electronica y telecomunicaciones",
     "ciberseguridad CONXIMA"
   ]
 });
@@ -34,53 +86,7 @@ export default function ServiciosPage() {
           <span className="text-slate-200">Servicios</span>
         </div>
 
-        <header className="mt-5">
-          <h1 className="type-title text-3xl md:text-5xl">
-            Servicios de seguridad, redes y conectividad
-          </h1>
-          <p className="mt-3 max-w-3xl text-slate-300">
-            Acompañamos proyectos de infraestructura de red, cableado
-            estructurado, fibra óptica, ciberseguridad y seguridad electrónica
-            para empresas en Guayaquil y Ecuador.
-          </p>
-        </header>
-
-        <section className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {servicios.map((servicio) => (
-            <article
-              key={servicio.slug}
-              className="overflow-hidden rounded-2xl bg-[var(--color-card)] ring-1 ring-white/10 transition hover:ring-white/20"
-            >
-              {servicio.imagen ? (
-                <div className="relative h-44 w-full">
-                  <Image
-                    src={encodeURI(servicio.imagen)}
-                    alt={`Servicio de ${servicio.title} de CONXIMA`}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  />
-                </div>
-              ) : null}
-
-              <div className="p-5">
-                <h2 className="font-heading text-xl font-medium tracking-wide">
-                  {servicio.title}
-                </h2>
-                <p className="mt-2 text-sm text-slate-300">
-                  {servicio.resumen}
-                </p>
-
-                <Link
-                  href={`/servicios/${servicio.slug}`}
-                  className="mt-4 inline-flex items-center text-sm font-semibold text-[var(--color-secondary)] hover:underline"
-                >
-                  Ver detalle
-                </Link>
-              </div>
-            </article>
-          ))}
-        </section>
+        <ServiciosBentoCatalog items={catalogItems} />
       </main>
 
       <Footer />

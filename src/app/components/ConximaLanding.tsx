@@ -10,10 +10,35 @@ import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import InteractiveCTA from "./InteractiveCTA";
+import SocialActionGrid from "./SocialActionGrid";
 
 const HERO_VIDEO_SRC = "/videos/CONXIMA%201.mp4";
 const CONXIMA_WHATSAPP_URL =
   "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20solicitar%20asesor%C3%ADa.";
+const CONTACT_CHANNELS = [
+  { href: "mailto:info@conxima.com", label: "Correo", Icon: FiMail },
+  {
+    href: CONXIMA_WHATSAPP_URL,
+    label: "WhatsApp",
+    Icon: FaWhatsapp,
+    target: "_blank",
+    rel: "noopener noreferrer"
+  },
+  {
+    href: "https://www.facebook.com/conxima.ec",
+    label: "Facebook",
+    Icon: FaFacebookF,
+    target: "_blank",
+    rel: "noopener noreferrer"
+  },
+  {
+    href: "https://www.instagram.com/conximaec/",
+    label: "Instagram",
+    Icon: FaInstagram,
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }
+];
 
 function getBubbleLevel(
   hoveredIndex: number | null,
@@ -155,8 +180,8 @@ export default function ConximaLanding() {
   );
   const heroForegroundBlur = useTransform(
     heroScrollProgress,
-    [0, 0.45, 1],
-    ["blur(0px)", "blur(4px)", "blur(14px)"]
+    [0, 0.82, 1],
+    ["blur(0px)", "blur(1px)", "blur(18px)"]
   );
   const heroVeilOpacity = useTransform(heroScrollProgress, [0, 1], [0, 0.28]);
   const whoSectionY = useTransform(heroScrollProgress, [0, 0.65, 1], [56, 20, 0]);
@@ -530,7 +555,7 @@ export default function ConximaLanding() {
           >
             <h1 className="type-title text-[2rem] leading-[1.05] sm:text-4xl md:text-6xl">
               Tecnología al servicio de la
-              <BubbleHeroText text="Seguridad, red y conectividad" />
+              <BubbleHeroText text="Seguridad, redes y conectividad" />
             </h1>
             <p className="mt-5 max-w-2xl text-base text-slate-300 sm:text-lg lg:max-w-2xl">
               Soluciones integrales en telecomunicaciones, infraestructura de
@@ -685,25 +710,23 @@ export default function ConximaLanding() {
               ciberseguridad, fibra óptica y sistemas de seguridad integrados a
               tus operaciones en Ecuador.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
-              <Link
-                href="/servicios/cableado-estructurado"
-                className="text-[var(--color-secondary)] hover:underline"
-              >
-                Ver infraestructura de red
-              </Link>
-              <Link
-                href="/ciberseguridad"
-                className="text-[var(--color-secondary)] hover:underline"
-              >
-                Ver ciberseguridad
-              </Link>
-              <Link
-                href="/servicios/cableado-fibra-optica"
-                className="text-[var(--color-secondary)] hover:underline"
-              >
-                Ver fibra óptica
-              </Link>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <InteractiveCTA>
+                <Link
+                  href="/servicios/cableado-estructurado"
+                  className="btn-tech w-full justify-center rounded-full px-5 py-3 text-sm sm:w-auto"
+                >
+                  Solicitar diagnóstico de red
+                </Link>
+              </InteractiveCTA>
+              <InteractiveCTA>
+                <Link
+                  href="/servicios/cableado-fibra-optica"
+                  className="btn-outline-tech w-full justify-center rounded-full px-5 py-3 text-sm sm:w-auto"
+                >
+                  Cotizar fibra óptica
+                </Link>
+              </InteractiveCTA>
             </div>
           </header>
 
@@ -715,15 +738,14 @@ export default function ConximaLanding() {
                 desc: "Cableado, puntos de red, switches, racks y crecimiento ordenado de tu infraestructura.",
                 category: "Infraestructura",
                 src: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
+                ctaLabel: "Solicitar diagnóstico",
               },
               {
-                slug: "puntos-de-datos",
-                title: "Puntos de Datos",
-                legend: "Salidas de red para puestos, cámaras, telefonía y equipos conectados.",
-                desc: "Implementación ordenada de puntos de red y datos para conectar tu operación con estándar profesional.",
-                category: "Infraestructura",
-                src: "/images/servicios-landing/infraestructura de red y gabinetes .png",
-                href: "/servicios/cableado-estructurado",
+                slug: "cctv",
+                title: "Circuito Cerrado de Televisión (CCTV)",
+                desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.",
+                category: "Videovigilancia",
+                src: "/images/servicios/cctv.jpg",
               },
               {
                 slug: "ciberseguridad",
@@ -733,6 +755,16 @@ export default function ConximaLanding() {
                 category: "Protección digital",
                 src: "/images/fortigate.jpg",
                 href: "/ciberseguridad",
+              },
+              {
+                slug: "puntos-de-datos",
+                title: "Puntos de Datos",
+                legend: "Salidas de red para puestos, cámaras, telefonía y equipos conectados.",
+                desc: "Implementación ordenada de puntos de red y datos para conectar tu operación con estándar profesional.",
+                category: "Infraestructura",
+                src: "/images/servicios-landing/infraestructura de red y gabinetes .png",
+                href: "/servicios/cableado-estructurado",
+                ctaLabel: "Cotizar puntos",
               },
               {
                 slug: "servicios-en-la-nube",
@@ -747,13 +779,7 @@ export default function ConximaLanding() {
                 desc: "Tendido, fusión y certificación de enlaces de fibra para redes empresariales y backbone.",
                 category: "Conectividad",
                 src: "/images/servicios-landing/cableado de fibra optica.jpg",
-              },
-              {
-                slug: "cctv",
-                title: "Circuito Cerrado de Televisión (CCTV)",
-                desc: "Cámaras IP/analógicas, NVR/VMS y monitoreo remoto 24/7.",
-                category: "Videovigilancia",
-                src: "/images/servicios/cctv.jpg",
+                ctaLabel: "Cotizar fibra",
               },
               {
                 slug: "control-de-acceso",
@@ -884,7 +910,7 @@ export default function ConximaLanding() {
       <section id="contacto" className="section relative" data-tone="3">
         <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
-            <div className="lg:col-span-3 reveal" ref={setRevealRef(12)}>
+            <div className="order-2 lg:order-2 lg:col-span-3 reveal" ref={setRevealRef(12)}>
               <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs tracking-wider text-white/80 ring-1 ring-inset ring-white/10">
                 Contacto
               </span>
@@ -1035,7 +1061,7 @@ export default function ConximaLanding() {
               
             </div>
 
-            <aside className="lg:col-span-2 reveal" ref={setRevealRef(13)}>
+            <aside className="order-1 lg:order-1 lg:col-span-2 reveal" ref={setRevealRef(13)}>
               <div className="rounded-2xl bg-card/80 p-5 ring-1 ring-white/10 sm:p-6">
                 <h3 className="type-subtitle text-xl">Contacto</h3>
                 <ul className="mt-4 space-y-3 text-slate-200">
@@ -1059,37 +1085,13 @@ export default function ConximaLanding() {
 
                 <div className="mt-5">
                   <p className="text-xs uppercase tracking-[0.14em] text-slate-400">
-                    Redes sociales
+                    Canales directos
                   </p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <a
-                      href="https://www.facebook.com/conxima.ec"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Facebook de CONXIMA"
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-                    >
-                      <FaFacebookF className="h-4 w-4" aria-hidden />
-                    </a>
-                    <a
-                      href={CONXIMA_WHATSAPP_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="WhatsApp de CONXIMA"
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-                    >
-                      <FaWhatsapp className="h-4 w-4" aria-hidden />
-                    </a>
-                    <a
-                      href="https://www.instagram.com/conximaec/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Instagram de CONXIMA"
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-100 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-                    >
-                      <FaInstagram className="h-4 w-4" aria-hidden />
-                    </a>
-                  </div>
+                  <SocialActionGrid
+                    items={CONTACT_CHANNELS}
+                    className="mt-3"
+                    columnsClassName="grid-cols-2"
+                  />
                 </div>
 
                 {/* Botón de WhatsApp en la tarjeta de contacto */}
@@ -1153,6 +1155,7 @@ type ServiceCarouselItem = {
   category: string;
   src: string;
   href?: string;
+  ctaLabel?: string;
 };
 
 function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
@@ -1217,13 +1220,20 @@ function ServicesCarousel({ items }: { items: ServiceCarouselItem[] }) {
 function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
   const href = item.href ?? `/servicios/${item.slug}`;
   const isFeaturedCyberCard = item.slug === "ciberseguridad";
+  const isNetworkCta = [
+    "cableado-estructurado",
+    "puntos-de-datos",
+    "cableado-fibra-optica"
+  ].includes(item.slug);
   const badgeClassName = isFeaturedCyberCard
     ? "service-badge-featured"
     : "border-[color-mix(in_srgb,var(--color-secondary)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_18%,transparent)] text-[var(--color-secondary)]";
   const ctaClassName = isFeaturedCyberCard
     ? "service-cta service-cta--featured"
-    : "service-cta";
-  const ctaLabel = item.href ? "Ver sección" : "Ver servicio";
+    : isNetworkCta
+      ? "service-cta rounded-full border border-[var(--color-secondary)]/40 bg-[color-mix(in_srgb,var(--color-secondary)_16%,transparent)] px-3 py-1.5 text-[var(--color-secondary)]"
+      : "service-cta";
+  const ctaLabel = item.ctaLabel ?? (item.href ? "Ver sección" : "Ver servicio");
 
   return (
     <Link
@@ -1258,4 +1268,3 @@ function ServiceCarouselCard({ item }: { item: ServiceCarouselItem }) {
     </Link>
   );
 }
-

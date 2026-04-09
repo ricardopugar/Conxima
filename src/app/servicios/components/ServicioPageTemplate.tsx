@@ -48,6 +48,15 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
   const canonicalSlug =
     slug === "racks-y-gabinetes" ? "cableado-estructurado" : slug;
   const isStructuredCablingPage = canonicalSlug === "cableado-estructurado";
+  const isFiberPage = canonicalSlug === "cableado-fibra-optica";
+  const primaryCtaLabel = isStructuredCablingPage
+    ? "Solicitar diagnóstico de red"
+    : isFiberPage
+      ? "Cotizar fibra óptica"
+      : "Solicitar cotización";
+  const secondaryCtaLabel = isStructuredCablingPage
+    ? "Cotizar infraestructura"
+    : "Solicitar por email";
   const relatedLinks = [
     {
       href: "/servicios/cableado-estructurado",
@@ -135,7 +144,7 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
               <div className="mt-8 flex flex-wrap gap-3">
                 <InteractiveCTA>
                   <a href="/#contacto" className="btn-tech rounded-xl px-5 py-3">
-                    Solicitar cotización
+                    {primaryCtaLabel}
                   </a>
                 </InteractiveCTA>
                 <InteractiveCTA>
@@ -143,7 +152,7 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
                     className="btn-outline-tech rounded-xl px-5 py-3"
                     href="mailto:arivera@conxima.com,rguambo@conxima.com?subject=Cotizacion%20-%20Conxima"
                   >
-                    Solicitar por email
+                    {secondaryCtaLabel}
                   </a>
                 </InteractiveCTA>
               </div>

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa6";
+import NavbarSocialPingLink from "./NavbarSocialPingLink";
 
 const CONXIMA_WHATSAPP_URL =
   "https://wa.me/593939011017?text=Hola%20CONXIMA%2C%20quiero%20solicitar%20asesor%C3%ADa.";
@@ -35,34 +38,22 @@ export default function Footer() {
           </a>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <a
+        <div className="flex items-center justify-center gap-3">
+          <NavbarSocialPingLink
             href="https://www.facebook.com/conxima.ec"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook de CONXIMA"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-          >
-            <FaFacebookF className="h-4 w-4" aria-hidden />
-          </a>
-          <a
+            label="Facebook"
+            Icon={FaFacebookF}
+          />
+          <NavbarSocialPingLink
             href={CONXIMA_WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="WhatsApp de CONXIMA"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-          >
-            <FaWhatsapp className="h-4 w-4" aria-hidden />
-          </a>
-          <a
+            label="WhatsApp"
+            Icon={FaWhatsapp}
+          />
+          <NavbarSocialPingLink
             href="https://www.instagram.com/conximaec/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram de CONXIMA"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)]"
-          >
-            <FaInstagram className="h-4 w-4" aria-hidden />
-          </a>
+            label="Instagram"
+            Icon={FaInstagram}
+          />
         </div>
       </div>
     </footer>

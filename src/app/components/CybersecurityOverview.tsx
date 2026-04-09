@@ -342,7 +342,7 @@ function CybersecurityHero() {
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.1, delay: 0.15, ease: "easeInOut" }}
-          className="type-title mt-6 max-w-5xl text-balance text-3xl leading-tight text-zinc-50 sm:text-4xl md:text-5xl lg:text-7xl"
+          className="type-title mt-6 max-w-4xl text-balance text-[2rem] leading-tight text-zinc-50 sm:text-[2.35rem] md:text-[2.9rem] lg:text-[4rem]"
         >
           Protegemos redes, usuarios y datos con una estrategia de
           ciberseguridad para empresas en Ecuador.
