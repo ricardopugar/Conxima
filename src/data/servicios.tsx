@@ -170,57 +170,56 @@ export const servicios: Servicio[] = [
   },
   {
     slug: "cableado-estructurado",
-    title: "Infraestructura de Red y Cableado Estructurado",
-    pageTitle:
-      "Infraestructura de Red, Cableado Estructurado y Gabinetes de Comunicaciones",
-    seoTitle: "Cableado estructurado y redes en Ecuador | CONXIMA",
+    title: "Infraestructura de Red y Centro de Datos",
+    pageTitle: "Infraestructura de Red y Centro de Datos",
+    seoTitle: "Infraestructura de red y centro de datos en Ecuador | CONXIMA",
     seoDescription:
-      "Infraestructura de red, cableado estructurado, racks y gabinetes de comunicaciones para empresas en Guayaquil y Ecuador.",
+      "Infraestructura de red y centro de datos para empresas en Ecuador: conectividad, servidores, almacenamiento, energía, respaldo y gestión segura.",
     seoKeywords: [
-      "cableado estructurado en Ecuador",
+      "infraestructura de red y centro de datos",
       "infraestructura de red en Guayaquil",
-      "gabinetes de comunicaciones",
-      "certificación de puntos de red",
+      "data center en Ecuador",
+      "servidores y almacenamiento empresarial",
       "CONXIMA redes"
     ],
     resumen:
-      "Sistema físico integral para conectar, organizar y proteger redes de datos, internet, videovigilancia, telefonía y otros servicios para empresas en Guayaquil y Ecuador.",
+      "Conjunto integral de recursos físicos, tecnológicos y lógicos para conectar, procesar, almacenar, gestionar y proteger la información de una organización.",
     imagen: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
-    badges: ["UTP / FTP", "Racks y gabinetes", "Crecimiento ordenado"],
+    badges: [
+      "Redes y conectividad",
+      "Servidores y almacenamiento",
+      "Continuidad operativa"
+    ],
     detalle: {
       queHace:
-        "La infraestructura de red y el cableado estructurado constituyen el sistema físico que permite conectar y administrar redes de datos, internet, cámaras de seguridad, telefonía y otros sistemas tecnológicos dentro de una casa, oficina o empresa.",
+        "La infraestructura de red y centro de datos es el conjunto integral de recursos físicos, tecnológicos y lógicos que permiten la conectividad, procesamiento, almacenamiento, gestión y protección de la información dentro de una organización.",
       descripcion: [
-        "El cableado estructurado es la base de la red, ya que permite transmitir información entre los diferentes equipos mediante una instalación organizada y estandarizada. Este cableado se conecta a un punto central donde se encuentran los racks o gabinetes de telecomunicaciones, los cuales permiten instalar, proteger y organizar equipos de red como switches, patch paneles, servidores o grabadores de videovigilancia.",
-        "En CONXIMA diseñamos e implementamos infraestructura de red para empresas en Guayaquil y Ecuador, priorizando orden, escalabilidad, certificación y continuidad operativa según el tipo de operación."
+        "Este ecosistema garantiza la comunicación eficiente entre dispositivos, así como la operación continua y segura de los sistemas críticos del negocio.",
+        "En CONXIMA diseñamos, implementamos y administramos esta infraestructura con enfoque en rendimiento, continuidad, protección y crecimiento ordenado para empresas en Ecuador."
       ],
       incluye: [
-        "Instalación de cableado estructurado de red (UTP / FTP según requerimiento)",
-        "Puntos de red o salidas de datos",
-        "Patch panel",
-        "Patch cords",
-        "Switch de red",
-        "Rack o gabinete de telecomunicaciones",
-        "Bandejas o repisas para equipos",
-        "Organizadores de cable",
-        "Canalización del cableado (tubería, canaletas o ductos)",
-        "Sistema de ventilación para el rack",
-        "Regletas o PDU de energía",
-        "Sistema de seguridad para el gabinete",
-        "Etiquetado y organización del cableado",
-        "Espacio para crecimiento de la red",
-        "Certificación de red (si es requerido)",
-        "Documentación de la red (si es requerido)"
+        "Cableado estructurado (cobre y fibra óptica)",
+        "Equipos de red (routers, switches, access points, firewalls)",
+        "Puntos de red y conectividad inalámbrica",
+        "Racks y gabinetes de comunicaciones y servidores",
+        "Servidores físicos y virtuales",
+        "Sistemas de almacenamiento (NAS, SAN)",
+        "Sistemas de energía (UPS, reguladores, generadores)",
+        "Climatización y control ambiental",
+        "Sistemas de seguridad física y lógica (control de accesos, CCTV, ciberseguridad)",
+        "Sistemas de respaldo y recuperación de información (backups)",
+        "Monitoreo y gestión de la infraestructura",
+        "Configuración y administración de la red"
       ],
       beneficios: [
-        "Reduce fallas por instalaciones improvisadas y puntos críticos mal organizados.",
-        "Facilita la gestión del cableado, el mantenimiento y el crecimiento ordenado de la red.",
-        "Mejora la estabilidad operativa de datos, voz, internet y videovigilancia."
+        "Integra conectividad, procesamiento, almacenamiento y protección bajo una misma estrategia operativa.",
+        "Mejora la continuidad del negocio con respaldo, monitoreo y administración centralizada.",
+        "Reduce riesgos de indisponibilidad y facilita el crecimiento ordenado de la infraestructura."
       ],
       idealPara: [
-        "Oficinas, edificios corporativos y locales comerciales",
-        "Empresas con cuartos de telecomunicaciones o crecimiento planificado",
-        "Proyectos nuevos, ampliaciones o modernización de infraestructura"
+        "Empresas con sistemas críticos, crecimiento tecnológico o múltiples áreas conectadas",
+        "Organizaciones que requieren servidores, almacenamiento y respaldo centralizado",
+        "Proyectos nuevos, ampliaciones o modernización de infraestructura tecnológica"
       ]
     }
   },

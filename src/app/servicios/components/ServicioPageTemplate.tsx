@@ -50,7 +50,7 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
   const isStructuredCablingPage = canonicalSlug === "cableado-estructurado";
   const isFiberPage = canonicalSlug === "cableado-fibra-optica";
   const primaryCtaLabel = isStructuredCablingPage
-    ? "Solicitar diagnóstico de red"
+    ? "Solicitar diagnóstico de infraestructura"
     : isFiberPage
       ? "Cotizar fibra óptica"
       : "Solicitar cotización";
@@ -60,7 +60,7 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
   const relatedLinks = [
     {
       href: "/servicios/cableado-estructurado",
-      label: "Infraestructura de red y cableado estructurado"
+      label: "Infraestructura de red y centro de datos"
     },
     {
       href: "/ciberseguridad",
@@ -292,29 +292,29 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
                 Componentes y entregables clave
               </p>
               <h2 className="type-subtitle mt-3 text-2xl">
-                Cómo aterrizamos una infraestructura de red lista para crecer
+                Cómo aterrizamos una infraestructura de red y centro de datos lista para crecer
               </h2>
               <p className="mt-3 text-slate-300">
-                Una red empresarial bien diseñada no depende solo del cable. El
-                rendimiento, la trazabilidad y la capacidad de expansión también
-                dependen del tipo de medio, la organización del gabinete y la
-                calidad de la documentación final.
+                Una operación crítica no depende solo del cableado. El
+                rendimiento, la disponibilidad y la continuidad también dependen
+                de servidores, almacenamiento, energía, climatización, seguridad
+                y monitoreo centralizado.
               </p>
             </div>
 
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {[
                 {
-                  title: "Instalación de cableado UTP, FTP y fibra óptica",
-                  text: "Definimos el medio adecuado según distancia, interferencia, capacidad y criticidad de la operación para evitar sobrecostos y cuellos de botella."
+                  title: "Conectividad y distribución física",
+                  text: "Diseñamos cableado estructurado, puntos de red, equipos LAN/WAN y conectividad inalámbrica para que la comunicación entre áreas, dispositivos y servicios sea estable y escalable."
                 },
                 {
-                  title: "Racks, gabinetes, patch panels y ordenamiento",
-                  text: "Centralizamos equipos, bandejas, organizadores y puntos de terminación para facilitar mantenimiento, ventilación, seguridad física y futuras ampliaciones."
+                  title: "Centro de datos, energía y ambiente",
+                  text: "Integramos racks, gabinetes, servidores, almacenamiento, UPS, reguladores, climatización y control ambiental para sostener la operación tecnológica con mayor continuidad."
                 },
                 {
-                  title: "Certificación, etiquetado y documentación",
-                  text: "Dejamos la red identificada, probada y documentada para que el área técnica pueda crecer, auditar o intervenir con menos fricción."
+                  title: "Protección, respaldo y gestión",
+                  text: "Sumamos seguridad física y lógica, monitoreo, backups, administración y documentación para que la infraestructura pueda operar, recuperarse y crecer con menos riesgo."
                 }
               ].map((item) => (
                 <article
@@ -330,8 +330,8 @@ export function ServicioPageTemplate({ slug }: { slug: string }) {
             </div>
 
             <p className="mt-6 text-sm text-slate-300">
-              Si además necesitas proteger el tráfico y segmentar accesos,
-              puedes complementar esta base con nuestra{" "}
+              Si además necesitas fortalecer el perímetro y segmentar accesos,
+              puedes complementar esta infraestructura con nuestra{" "}
               <Link
                 href="/ciberseguridad"
                 className="text-[var(--color-secondary)] hover:underline"

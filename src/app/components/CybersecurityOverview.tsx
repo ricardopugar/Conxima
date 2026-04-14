@@ -10,10 +10,10 @@ import { FiArrowRight } from "react-icons/fi";
 import InteractiveCTA from "./InteractiveCTA";
 
 const CYBERSECURITY_CAPABILITIES = [
-  "Protección perimetral",
-  "Acceso remoto seguro",
-  "Visibilidad del tráfico",
-  "Control de políticas"
+  "FortiGate y NGFW",
+  "LAN, WAN y SD-WAN",
+  "VPN y ZTNA",
+  "FortiGuard en tiempo real"
 ];
 
 const CYBERSECURITY_PILLARS = [
@@ -34,13 +34,16 @@ const CYBERSECURITY_PILLARS = [
   }
 ];
 
-const CYBERSECURITY_PARTNERS = [
-  {
-    name: "Fortinet",
-    href: "/ciberseguridad/fortinet",
-    logo: "/images/fortinetlogo.png",
-    description: "Firewall, VPN y seguridad perimetral para redes empresariales."
-  }
+const FORTINET_SOLUTIONS = [
+  "Firewalls de próxima generación (FortiGate)",
+  "Seguridad de red (LAN, WAN y SD-WAN)",
+  "VPN y acceso seguro (ZTNA)",
+  "Prevención de intrusiones (IPS)",
+  "Protección de usuarios y dispositivos",
+  "Seguridad para centros de datos y nube",
+  "Control de aplicaciones y filtrado web",
+  "FortiGuard e inteligencia de amenazas",
+  "Monitoreo, gestión y soporte especializado"
 ] as const;
 
 const CYBERSECURITY_SOLUTIONS = [
@@ -67,10 +70,23 @@ const CYBERSECURITY_SOLUTIONS = [
   }
 ];
 
+const FORTINET_HIGHLIGHTS = [
+  {
+    label: "Cobertura",
+    text: "Red, usuarios, aplicaciones, acceso remoto y datos sobre una plataforma integrada."
+  },
+  {
+    label: "Security Fabric",
+    text: "Protección centralizada, automatizada y de alto rendimiento en toda la infraestructura."
+  },
+  {
+    label: "Partner CONXIMA",
+    text: "Desde 2025 ofrecemos soluciones oficiales, implementación y soporte especializado."
+  }
+] as const;
+
 const GRID_BOX_SIZE = 32;
 const BEAM_WIDTH_OFFSET = 1;
-
-type CybersecurityPartner = (typeof CYBERSECURITY_PARTNERS)[number];
 
 type WindowSize = {
   width: number | undefined;
@@ -261,69 +277,6 @@ function GradientGrid() {
   );
 }
 
-function PartnerMarqueeTile({ partner }: { partner: CybersecurityPartner }) {
-  return (
-    <Link
-      href={partner.href}
-      className="group flex h-24 min-w-[220px] items-center justify-center rounded-[1.4rem] border border-white/10 bg-black px-6 py-4 shadow-[0_16px_36px_rgba(0,0,0,0.24)] transition hover:border-white/20 hover:bg-black/95"
-      aria-label={`Ver partner ${partner.name}`}
-    >
-      <Image
-        src={partner.logo}
-        alt={`Logo de ${partner.name}`}
-        width={150}
-        height={56}
-        className="h-auto w-[140px] object-contain"
-      />
-    </Link>
-  );
-}
-
-function PartnerMarqueeTrack({
-  partners,
-  reverse = false
-}: {
-  partners: readonly CybersecurityPartner[];
-  reverse?: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ translateX: reverse ? "-100%" : "0%" }}
-      animate={{ translateX: reverse ? "0%" : "-100%" }}
-      transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
-      className="flex gap-4 px-2"
-    >
-      {partners.map((partner, index) => (
-        <PartnerMarqueeTile
-          key={`${partner.name}-${partner.href}-${index}`}
-          partner={partner}
-        />
-      ))}
-    </motion.div>
-  );
-}
-
-function CybersecurityPartnersMarquee() {
-  const row = Array.from({ length: 4 }, (_, index) => {
-    return CYBERSECURITY_PARTNERS[index % CYBERSECURITY_PARTNERS.length];
-  });
-
-  return (
-    <div className="mt-6">
-      <div className="flex overflow-hidden">
-        <PartnerMarqueeTrack partners={row} />
-        <PartnerMarqueeTrack partners={row} />
-        <PartnerMarqueeTrack partners={row} />
-      </div>
-      <div className="mt-4 flex overflow-hidden">
-        <PartnerMarqueeTrack partners={row} reverse />
-        <PartnerMarqueeTrack partners={row} reverse />
-        <PartnerMarqueeTrack partners={row} reverse />
-      </div>
-    </div>
-  );
-}
-
 function CybersecurityHero() {
   return (
     <section className="relative overflow-hidden bg-zinc-950">
@@ -397,43 +350,145 @@ function CybersecurityHero() {
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.1, delay: 0.75, ease: "easeInOut" }}
-          className="mt-12 w-full max-w-5xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 text-left shadow-[0_24px_64px_rgba(0,0,0,0.28)] backdrop-blur md:p-6"
+          className="mt-12 w-full max-w-6xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 text-left shadow-[0_24px_64px_rgba(0,0,0,0.28)] backdrop-blur md:p-6"
         >
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="grid gap-6 lg:grid-cols-[1.05fr,0.95fr]">
             <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-white/60">
-                Partners tecnológicos
-              </p>
-              <h2 className="type-title mt-2 text-2xl text-white md:text-3xl">
-                Soluciones respaldadas por fabricantes líderes
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm text-slate-300">
-                Hoy trabajamos con Fortinet para fortalecer seguridad
-                perimetral, acceso remoto seguro y control del tráfico en
-                entornos empresariales en Ecuador.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm text-slate-100">
-              Partner actual: <span className="font-heading text-white">Fortinet</span>
-            </div>
-          </div>
-
-          <CybersecurityPartnersMarquee />
-
-          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {[
-                "Evaluación de riesgos y necesidades reales",
-                "Diseño de arquitectura y políticas de seguridad",
-                "Implementación y acompañamiento local"
-            ].map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200"
-              >
-                {item}
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="text-xs uppercase tracking-[0.16em] text-white/60">
+                  Partner Fortinet
+                </p>
+                <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs uppercase tracking-[0.14em] text-slate-100">
+                  CONXIMA partner desde 2025
+                </span>
               </div>
-            ))}
+
+              <h2 className="type-title mt-3 max-w-3xl text-2xl text-white md:text-3xl">
+                Fortinet como plataforma integrada para proteger redes, usuarios y datos.
+              </h2>
+              <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-300">
+                Fortinet es una empresa multinacional líder en ciberseguridad,
+                especializada en el desarrollo de soluciones avanzadas que
+                protegen redes, aplicaciones, usuarios y datos frente a
+                amenazas digitales.
+              </p>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+                Su tecnología se basa en Security Fabric, una plataforma
+                integrada que permite protección centralizada, automatizada y
+                de alto rendimiento en toda la infraestructura tecnológica.
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {FORTINET_SOLUTIONS.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 rounded-[1.5rem] border border-[color-mix(in_srgb,var(--color-secondary)_35%,transparent)] bg-[color-mix(in_srgb,var(--color-secondary)_10%,transparent)] p-5">
+                <p className="text-xs uppercase tracking-[0.16em] text-white/65">
+                  Acompañamiento CONXIMA
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-200">
+                  Desde el año 2025, CONXIMA es partner de Fortinet, lo que nos
+                  permite ofrecer soluciones oficiales, asesoría especializada,
+                  implementación, soporte técnico y acompañamiento continuo en
+                  proyectos de ciberseguridad.
+                </p>
+
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                  <InteractiveCTA>
+                    <SplashButton href="/ciberseguridad/fortinet">
+                      Ver solución Fortinet
+                      <FiArrowRight />
+                    </SplashButton>
+                  </InteractiveCTA>
+                  <InteractiveCTA>
+                    <GhostButton href="/#contacto">
+                      Solicitar asesoría especializada
+                    </GhostButton>
+                  </InteractiveCTA>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="relative min-h-[22rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/30 p-3">
+                <div className="relative h-full min-h-[18rem] overflow-hidden rounded-[1.15rem]">
+                  <Image
+                    src="/images/fortinet%202.jpg"
+                    alt="Fortinet como partner de ciberseguridad de CONXIMA"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 42vw, 100vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/30 to-transparent" />
+
+                  <div className="absolute left-4 top-4 rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-white/60">
+                      Arquitectura unificada
+                    </p>
+                    <p className="font-heading mt-1 text-base text-white">
+                      Fortinet Security Fabric
+                    </p>
+                  </div>
+
+                  <div className="absolute inset-x-4 bottom-4 grid gap-3 sm:grid-cols-3">
+                    {FORTINET_HIGHLIGHTS.map((item) => (
+                      <article
+                        key={item.label}
+                        className="rounded-2xl border border-white/10 bg-black/55 p-4 backdrop-blur-md"
+                      >
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-white/60">
+                          {item.label}
+                        </p>
+                        <p className="mt-2 text-sm text-white">{item.text}</p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-[0.82fr,1.18fr]">
+                <article className="flex flex-col justify-between rounded-[1.5rem] border border-white/10 bg-black/35 p-5">
+                  <Image
+                    src="/images/fortinetlogo.png"
+                    alt="Logo de Fortinet"
+                    width={180}
+                    height={72}
+                    className="h-auto w-[140px] object-contain"
+                  />
+                  <p className="mt-6 text-sm leading-relaxed text-slate-300">
+                    Seguridad de red, visibilidad, acceso remoto seguro y
+                    operación continua con respaldo oficial del fabricante.
+                  </p>
+                </article>
+
+                <div className="relative min-h-[14rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/20">
+                  <Image
+                    src="/images/fortinet%203.jpg"
+                    alt="Soluciones Fortinet para redes empresariales y centros de datos"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 24vw, 100vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-white/60">
+                      Alcance de solución
+                    </p>
+                    <p className="mt-2 text-sm text-white">
+                      FortiGate, SD-WAN, ZTNA, filtrado web y protección para
+                      centros de datos y entornos en la nube.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -478,7 +533,7 @@ export default function CybersecurityOverview() {
                     href="/servicios/cableado-estructurado"
                     className="text-[var(--color-secondary)] hover:underline"
                   >
-                    solución de infraestructura de red y cableado estructurado
+                    solución de infraestructura de red y centro de datos
                   </Link>
                   .
                 </p>

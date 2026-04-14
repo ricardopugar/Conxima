@@ -202,13 +202,17 @@ function CoverageCard() {
 function ServiceCard({ item }: { item: CatalogItem }) {
   const href = item.href ?? `/servicios/${item.slug}`;
   const metaLabel = getMetaLabel(item.slug);
+  const isFeaturedCyberCard = item.slug === "ciberseguridad";
   const ctaLabel =
     item.ctaLabel ??
     (item.slug === "cableado-estructurado"
-      ? "Solicitar diagnostico de red"
+      ? "Solicitar diagnostico de infraestructura"
       : item.slug === "cableado-fibra-optica"
         ? "Cotizar fibra optica"
         : "Ver detalle");
+  const ctaClassName = isFeaturedCyberCard
+    ? "text-[#f7d774] drop-shadow-[0_0_16px_rgba(247,215,116,0.18)] group-hover:text-[#fde68a]"
+    : "text-[var(--color-secondary)]";
 
   return (
     <Link
@@ -227,7 +231,9 @@ function ServiceCard({ item }: { item: CatalogItem }) {
         <p className="mt-3 max-w-[28ch] text-sm leading-6 text-neutral-200/85 transition-colors duration-500 group-hover:text-neutral-50">
           {item.resumen}
         </p>
-        <div className="mt-5 inline-flex max-w-full items-center gap-2 text-sm font-medium text-[var(--color-secondary)]">
+        <div
+          className={`mt-5 inline-flex max-w-full items-center gap-2 text-sm font-medium transition-colors duration-300 ${ctaClassName}`}
+        >
           <span className="truncate">{ctaLabel}</span>
           <FiArrowUpRight className="h-4 w-4 shrink-0" />
         </div>

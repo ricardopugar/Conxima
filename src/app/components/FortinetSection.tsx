@@ -262,7 +262,7 @@ function FortinetHero() {
   return (
     <section id="fortinet" className="relative overflow-hidden bg-zinc-950">
       <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(0,124,198,0.18),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.14),transparent_28%)]" />
-      <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-24 text-center md:px-8 md:py-32">
+      <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-20 text-center sm:py-24 md:px-8 md:py-32">
         <motion.div
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -276,7 +276,7 @@ function FortinetHero() {
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.1, delay: 0.15, ease: "easeInOut" }}
-          className="type-title mt-6 max-w-5xl text-balance text-3xl leading-tight text-zinc-50 sm:text-4xl md:text-5xl lg:text-7xl"
+          className="type-title mt-6 max-w-4xl text-balance text-[2rem] leading-tight text-zinc-50 sm:text-[2.35rem] md:text-[2.9rem] lg:text-[4rem]"
         >
           FortiGate con CONXIMA para proteger la red, los usuarios y la
           información crítica de tu empresa en Ecuador.
@@ -334,11 +334,11 @@ function FortinetHero() {
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.1, delay: 0.75, ease: "easeInOut" }}
-          className="mt-12 w-full max-w-6xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 text-left shadow-[0_24px_64px_rgba(0,0,0,0.28)] backdrop-blur md:p-6"
+          className="mt-12 w-full max-w-6xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-4 text-left shadow-[0_24px_64px_rgba(0,0,0,0.28)] backdrop-blur sm:p-5 md:p-6"
         >
           <div className="grid gap-5 lg:grid-cols-[1.12fr,0.88fr]">
-            <div className="relative min-h-[22rem] overflow-hidden rounded-[1.4rem] border border-white/10 bg-black/30 p-3">
-              <div className="relative h-full min-h-[18rem] overflow-hidden rounded-[1.1rem]">
+            <div className="relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-black/30 p-3">
+              <div className="relative min-h-[18rem] overflow-hidden rounded-[1.1rem] sm:min-h-[22rem]">
                 <Image
                   src="/images/fortigate.jpg"
                   alt="Implementación FortiGate con CONXIMA"
@@ -364,7 +364,7 @@ function FortinetHero() {
                   </div>
                 </div>
 
-                <div className="absolute inset-x-4 bottom-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="absolute inset-x-4 bottom-4 hidden gap-3 sm:grid sm:grid-cols-3">
                   {FORTIGATE_SCENARIOS.map((card) => (
                     <article
                       key={card.title}
@@ -376,6 +376,19 @@ function FortinetHero() {
                     </article>
                   ))}
                 </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:hidden">
+                {FORTIGATE_SCENARIOS.map((card) => (
+                  <article
+                    key={`${card.title}-mobile`}
+                    className="rounded-2xl border border-white/10 bg-black/45 p-4 backdrop-blur-md"
+                  >
+                    <p className="type-subtitle text-sm text-white">
+                      {card.title}
+                    </p>
+                  </article>
+                ))}
               </div>
             </div>
 
@@ -395,7 +408,7 @@ function FortinetHero() {
                   </p>
                 </div>
 
-                <div className="rounded-[1.35rem] border border-white/10 bg-black/50 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.2)]">
+                <div className="w-full rounded-[1.35rem] border border-white/10 bg-black/50 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.2)] md:w-auto">
                   <Image
                     src="/images/fortinetlogo.png"
                     alt="Logo de Fortinet"
@@ -454,7 +467,7 @@ export default function FortinetSection() {
         className="section relative overflow-hidden"
         data-tone="2"
       >
-        <div className="mx-auto max-w-7xl px-4 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="rounded-[1.75rem] border border-white/10 bg-[var(--color-card)]/80 p-6 shadow-[0_18px_40px_rgba(0,0,0,0.2)] md:p-8">
               <h2 className="type-subtitle text-2xl">
@@ -537,9 +550,9 @@ export default function FortinetSection() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap">
                 <InteractiveCTA>
-                  <a href="/#contacto" className="btn-tech">
+                  <a href="/#contacto" className="btn-tech block w-full text-center md:w-auto">
                     Hablar con un especialista
                   </a>
                 </InteractiveCTA>
@@ -548,7 +561,7 @@ export default function FortinetSection() {
                     href={FORTIGATE_WA_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="btn-outline-tech"
+                    className="btn-outline-tech block w-full text-center md:w-auto"
                   >
                     Escribir por WhatsApp
                   </a>

@@ -109,7 +109,7 @@ const CYBER_FLYOUT_ITEMS: FlyoutItem[] = [
   {
     href: "/ciberseguridad",
     title: "Ciberseguridad",
-    description: "Visión general, enfoque CONXIMA y partners tecnológicos."
+    description: "Visión general, enfoque CONXIMA y partner Fortinet."
   },
   {
     href: "/ciberseguridad/fortinet",

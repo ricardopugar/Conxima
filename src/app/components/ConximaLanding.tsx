@@ -760,9 +760,9 @@ export default function ConximaLanding() {
               Seguridad electrónica, redes y telecomunicaciones
             </h2>
             <p className="mt-3 max-w-3xl text-slate-300">
-              Implementamos infraestructura de red, cableado estructurado,
-              ciberseguridad, fibra óptica y sistemas de seguridad integrados a
-              tus operaciones en Ecuador.
+              Implementamos infraestructura de red y centro de datos, cableado
+              estructurado, ciberseguridad, fibra óptica y sistemas de
+              seguridad integrados a tus operaciones en Ecuador.
             </p>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <InteractiveCTA>
@@ -770,7 +770,7 @@ export default function ConximaLanding() {
                   href="/servicios/cableado-estructurado"
                   className="btn-tech w-full justify-center rounded-full px-5 py-3 text-sm sm:w-auto"
                 >
-                  Solicitar diagnóstico de red
+                  Solicitar diagnóstico de infraestructura
                 </Link>
               </InteractiveCTA>
               <InteractiveCTA>
@@ -788,8 +788,8 @@ export default function ConximaLanding() {
             items={[
               {
                 slug: "cableado-estructurado",
-                title: "Infraestructura de Red",
-                desc: "Cableado, puntos de red, switches, racks y crecimiento ordenado de tu infraestructura.",
+                title: "Infraestructura de Red y Centro de Datos",
+                desc: "Redes, racks, servidores, almacenamiento y continuidad para una operación conectada y segura.",
                 category: "Infraestructura",
                 src: "/images/servicios-landing/infraestructura de red y gabinetes2 .png",
                 ctaLabel: "Solicitar diagnóstico",
@@ -805,7 +805,7 @@ export default function ConximaLanding() {
                 slug: "ciberseguridad",
                 title: "Ciberseguridad",
                 legend: "Protección de redes, usuarios y datos frente a amenazas digitales.",
-                desc: "Estrategias, soluciones y partners para blindar la operación tecnológica de tu empresa.",
+                desc: "Estrategias, soluciones y acompañamiento para blindar la operación tecnológica de tu empresa.",
                 category: "Protección digital",
                 src: "/images/fortigate.jpg",
                 href: "/ciberseguridad",
